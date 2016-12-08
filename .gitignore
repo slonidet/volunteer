@@ -1,0 +1,13 @@
+.idea/
+/.project
+/.pydevproject
+/.settings/
+*~
+*.pyc
+*.pyo
+/.hg/
+public/
+settings_local.py
+*.sqlite*
+__pycache__/
+/.vagrant/

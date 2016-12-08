@@ -1,0 +1,10 @@
+Django==1.10.4
+django-debug-toolbar==1.6
+djangorestframework==3.5.3
+django-crispy-forms==1.6.1
+django-filter==1.0.1
+pytz==2016.10
+pillow==3.4.2
+
+gunicorn==19.6.0
+fabric3

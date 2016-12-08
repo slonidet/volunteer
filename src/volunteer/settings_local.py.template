@@ -1,0 +1,15 @@
+"""
+Django developers settings for conf project.
+"""
+
+DEBUG = True
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': '',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+    },
+}
