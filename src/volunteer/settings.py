@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
 
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +59,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'volunteer.urls'
+
+AUTH_USER_MODEL = 'users.User'
 
 TEMPLATES = [
     {
@@ -171,4 +174,5 @@ if DEBUG:
 
     # additional modules for development
     INSTALLED_APPS += ('debug_toolbar', )
-    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
+    MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] \
+                 + MIDDLEWARE
