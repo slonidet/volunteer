@@ -99,6 +99,31 @@ class Profile(models.Model):
         (GENDER_MALE, _('мужчина')),
         (GENDER_FEMALE, _('женщина')),
     )
+    ENGLISH_ELEMENTARY = 'elementary'
+    ENGLISH_INTERMEDIATE = 'intermediate'
+    ENGLISH_UPPER_INTERMEDIATE = 'upper intermediate'
+    ENGLISH_FLUENT = 'fluent'
+    ENGLISH_CHOICES = (
+        (ENGLISH_ELEMENTARY, _('начинающий')),
+        (ENGLISH_INTERMEDIATE, _('средний')),
+        (ENGLISH_UPPER_INTERMEDIATE, _('выше среднего')),
+        (ENGLISH_FLUENT, _('свободно')),
+    )
+    ATTRACT_EXPERIENCE = 'experience'
+    ATTRACT_MEETING = 'meeting'
+    ATTRACT_HELPING = 'helping'
+    ATTRACT_CONTRIBUTING = 'contributing'
+    ATTRACT_NEW_INTERESTING = 'new interesting'
+    ATTRACT_DISCOVERY = 'discovery'
+    ATTRACTING_CHOICES = (
+        (ATTRACT_EXPERIENCE, _('получение нового опыта')),
+        (ATTRACT_MEETING, _('встречи с новыми людьми')),
+        (ATTRACT_HELPING, _('возможность помогать другим')),
+        (ATTRACT_CONTRIBUTING, _('вклад в общее дело')),
+        (ATTRACT_NEW_INTERESTING, _('новые интересы')),
+        (ATTRACT_DISCOVERY, _('открытие для себя новых сфер')),
+    )
+
 
     user = models.OneToOneField(User, related_name='profile')
     first_name = models.CharField(_('имя'), max_length=30)
@@ -114,14 +139,41 @@ class Profile(models.Model):
     residence = models.TextField(_('фактическое место жительства'))
     place_of_study = models.CharField(_('место учёбы'), max_length=265)
     speciality = models.CharField(
-        _('специальность/направление подготовки, курс'), max_length=256)
+        _('специальность/направление подготовки, курс'), max_length=256
+    )
     working = models.BooleanField(_('работаю'))
     work_place = models.CharField(_('место работы'), max_length=256)
     position = models.CharField(_('должность'), max_length=128)
     employer_phone = PhoneField(
-        _('контактный телефон работодателя'), blank=True)
+        _('контактный телефон работодателя'), blank=True
+    )
     phone = PhoneField(_('контактный телефон'))
-    email = models.EmailField(_('электронная почта'))
+    english = models.CharField(
+        _('владение английским языком'), choices=ENGLISH_CHOICES, max_length=32
+    )
+    # TODO: may be blank
+    other_language = models.CharField(
+        _('владение другими языками'), max_length=256
+    )
+    has_volunteer_experience = models.BooleanField(
+        _('опыт волонтёрской деятельности')
+    )
+    # TODO: may be blank if has_volunteer_experience field is false
+    experience_in_sport_events = models.TextField(
+        _('Спортивные мероприятия, в которых принимал участие в качестве '
+          'волонтера, описание своих выполняемых функций в каждом из '
+          'мероприятий')
+    )
+    # TODO: may be blank
+    experience_in_other_events = models.TextField(
+        _('Иные мероприятия, в которых принимал участие в качестве волонтера, '
+          'описание своих выполняемых функций в каждом из мероприятий')
+    )
+    attracting = models.CharField(
+        _('Что привлекает в волонтерской деятельности?'),
+        choices=ATTRACTING_CHOICES, max_length=32
+    )
+
 
     # photo = models.ImageField('Фото', upload_to='user/photo/')
     # accredited_photo = models.ImageField('Фото', upload_to='user/acc_photo/')
