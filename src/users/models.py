@@ -5,6 +5,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+from volunteer.fields import PhoneField
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -87,8 +89,81 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
 
 
-# class Profile(models.Model):
-#     """
-#     User profile
-#     """
-#     user = models.OneToOneField(User, related_name='profile')
+class Profile(models.Model):
+    """
+    User profile
+    """
+    GENDER_MALE = 'male'
+    GENDER_FEMALE = 'female'
+    GENDER_CHOICES = (
+        (GENDER_MALE, _('мужчина')),
+        (GENDER_FEMALE, _('женщина')),
+    )
+
+    user = models.OneToOneField(User, related_name='profile')
+    first_name = models.CharField(_('имя'), max_length=30)
+    last_name = models.CharField(_('фамилия'), max_length=30)
+    middle_name = models.CharField(_('отчество'), max_length=30)
+    gender = models.CharField(_('пол'), choices=GENDER_CHOICES, max_length=8)
+    birthday = models.DateField(_('дата рождения'))
+    birthplace = models.TextField(_('место рождения'))
+    passport_number = models.PositiveSmallIntegerField(_('номер паспорта'))
+    passport_issued = models.CharField(_('паспорт выдан'), max_length=256)
+    passport_issued_date = models.DateField(_('дата выдачи паспорта'))
+    registration = models.TextField(_('адрес места жительства'))
+    residence = models.TextField(_('фактическое место жительства'))
+    place_of_study = models.CharField(_('место учёбы'), max_length=265)
+    speciality = models.CharField(
+        _('специальность/направление подготовки, курс'), max_length=256)
+    working = models.BooleanField(_('работаю'))
+    work_place = models.CharField(_('место работы'), max_length=256)
+    position = models.CharField(_('должность'), max_length=128)
+    employer_phone = PhoneField(
+        _('контактный телефон работодателя'), blank=True)
+    phone = PhoneField(_('контактный телефон'))
+    email = models.EmailField(_('электронная почта'))
+
+    # photo = models.ImageField('Фото', upload_to='user/photo/')
+    # accredited_photo = models.ImageField('Фото', upload_to='user/acc_photo/')
+
+
+    # Пол* (тип: select)
+    # Почтовый индекс* (тип: input) (ссылка на возможность найти по адресу свой индекс)
+    # Место учебы* (тип: input + select) (возможность выбрать из списка или если их заведение не представлено, самостоятельно заполнить)
+    # Специальность/направление подготовки* (тип: input)
+    # Не работаю (тип: checkbox, в случае выбора скрываются поля “место работы”, “должность”, “адрес места работы”)
+    # Место работы* (тип: input)
+    # Должность* (тип: input)
+    # Контактные телефоны работодателя (тип: input)
+    # Ссылка на профиль в “Вконтакте” (тип: input)
+    # Ссылка на профиль в “Одноклассники” (тип: input)
+    # Ссылка на профиль в “Facebook” (тип: input)
+    # Ссылка на профиль в “Twitter” (тип: input)
+    # Владение английским языком* (тип: select) (с пояснением уровня подготовки)
+    # Владение другими иностранными языками* (тип: textarea)
+    # Спортивные мероприятия, в которых принимал участие в качестве волонтера, описание своих выполняемых функций в каждом из мероприятий * (тип: textarea)
+    # Иные мероприятия, в которых принимал участие в качестве волонтера, описание своих выполняемых функций в каждом из мероприятий * (тип: textarea)
+    # Что именно привлекает в волонтерской деятельности?* (тип: select)
+    # Каких навыков и знаний в волонтерской деятельности не хватает?* (тип: textarea)
+    # Что Вы хотите получить от участия в качестве городского волонтера в Чемпионате мира по футболу FIFA 2018 в России? (укажите не более 4-х вариантов)* (тип: select)
+    # Описание своих сильных сторон* (тип: textarea)
+    # Описание своих слабых сторон* (тип: textarea)
+    # Описание хобби? * (тип: textarea)
+    # Оценить себя по шкале от 1 до 10 по указанным качествам * (тип: select)
+    # Выбор желаемого функционального направления деятельности волонтера на ЧМ 2018* :(тип: select)
+    # (со справкой по каждому направлению, не более трех вариантов)
+    # Выбор периода работы во время Чемпионата* (тип: select)
+    # Выбор смены работы во время Чемпионата* (тип: select)
+    # Наличие каких-либо медицинских противопоказаний по состоянию здоровья к осуществлению работы? * (тип: textarea)
+    # Иные значимые сведения (тип: textarea)
+    # Сведения о ближайших родственниках* (множественный тип)
+    # Указание размера одежды (жен) * (тип: select)
+    # Указание размера одежды (муж) * (тип: select)
+    # Указание размера обуви * (тип: textarea)
+
+    class Meta:
+        verbose_name = _('профиль пользователя')
+        verbose_name_plural = _('профили пользователей')
+
+    def __str__(self):
+        return '{0} {1}'.format(self.first_name, self.last_name)
