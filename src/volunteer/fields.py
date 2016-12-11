@@ -31,7 +31,6 @@ class PhoneValidator(RegexValidator):
 
 
 class PhoneField(models.CharField):
-
     default_validators = [PhoneValidator()]
     description = _('Номер телефона')
 

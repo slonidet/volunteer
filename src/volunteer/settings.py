@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
     'crispy_forms',
+    'multiselectfield',
 
     'users.apps.UsersConfig',
 ]

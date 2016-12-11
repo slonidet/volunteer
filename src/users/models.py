@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from multiselectfield import MultiSelectField
 
 from volunteer.fields import PhoneField
 
@@ -123,6 +124,31 @@ class Profile(models.Model):
         (ATTRACT_NEW_INTERESTING, _('новые интересы')),
         (ATTRACT_DISCOVERY, _('открытие для себя новых сфер')),
     )
+    BENEFIT_COMMAND_EXPERIENCE = 'command experience'
+    BENEFIT_COMMUNICATION = 'communication'
+    BENEFIT_PERSONAL_GROWTH = 'personal growth'
+    BENEFIT_KNOWLEDGE = 'knowledge'
+    BENEFIT_RELATION = 'relation'
+    BENEFIT_FOREIGN_LANGUGE = 'foreign language'
+    BENEFIT_SEE_EVENT_INSIDE = 'see event inside'
+    BENEFIT_PART_OF = 'part of'
+    BENEFIT_OPPORTUNITY = 'opportunity'
+    BENEFIT_ACCEPTANCE = 'acceptance'
+    BENEFIT_RESPECT = 'respect'
+    BENEFIT_CHOICES = (
+        (BENEFIT_COMMAND_EXPERIENCE, _('получение нового уникального опыта и навыков работы в команде')),
+        (BENEFIT_COMMUNICATION, _('расширение круга общения')),
+        (BENEFIT_PERSONAL_GROWTH, _('личностный рост и самореализация')),
+        (BENEFIT_KNOWLEDGE, _('расширение интересов и знаний')),
+        (BENEFIT_RELATION, _('новые связи и потенциальные возможности')),
+        (BENEFIT_FOREIGN_LANGUGE, _('практика иностранных языков и широкое межкультурное общение')),
+        (BENEFIT_SEE_EVENT_INSIDE, _('шанс увидеть мероприятие изнутри')),
+        (BENEFIT_PART_OF, _('возможность почувствовать себя значимой частью мега-события')),
+        (BENEFIT_OPPORTUNITY, _('открытие новых перспектив')),
+        (BENEFIT_ACCEPTANCE, _('признание окружающих')),
+        (BENEFIT_RESPECT, _('гордость и уважение близких')),
+    )
+
 
 
     user = models.OneToOneField(User, related_name='profile')
@@ -145,9 +171,9 @@ class Profile(models.Model):
     work_place = models.CharField(_('место работы'), max_length=256)
     position = models.CharField(_('должность'), max_length=128)
     employer_phone = PhoneField(
-        _('контактный телефон работодателя'), blank=True
+        _('контактный телефон работодателя'), blank=True, max_length=20
     )
-    phone = PhoneField(_('контактный телефон'))
+    phone = PhoneField(_('контактный телефон'), max_length=20)
     english = models.CharField(
         _('владение английским языком'), choices=ENGLISH_CHOICES, max_length=32
     )
@@ -173,7 +199,14 @@ class Profile(models.Model):
         _('Что привлекает в волонтерской деятельности?'),
         choices=ATTRACTING_CHOICES, max_length=32
     )
-
+    lacking = models.TextField(
+        _('Каких навыков и знаний в волонтерской деятельности не хватает?')
+    )
+    benefits = MultiSelectField(
+        _('Что Вы хотите получить от участия в качестве городского волонтера '
+          'в Чемпионате мира по футболу FIFA 2018 в России?'),
+        choices=BENEFIT_CHOICES, max_choices=4,
+    )
 
     # photo = models.ImageField('Фото', upload_to='user/photo/')
     # accredited_photo = models.ImageField('Фото', upload_to='user/acc_photo/')

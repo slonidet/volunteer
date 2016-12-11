@@ -3,6 +3,7 @@ django-debug-toolbar==1.6
 djangorestframework==3.5.3
 django-crispy-forms==1.6.1
 django-filter==1.0.1
+django-multiselectfield==0.1.4
 
 pytz==2016.10
 pillow==3.4.2
