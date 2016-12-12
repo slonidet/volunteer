@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '192.168.33.10',
+    'volunteer.1m8.ru',
 ]
 
 
