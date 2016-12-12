@@ -10,7 +10,14 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        read_only_fields = ('is_superuser', 'is_staff', )
+        fields = (
+            'id', 'last_login', 'is_superuser', 'username', 'is_staff',
+            'is_active', 'date_joined',
+        )
+        read_only_fields = (
+            'is_superuser', 'is_staff', 'is_active', 'last_login',
+            'date_joined',
+        )
         extra_kwargs = {
             'password': {'write_only': True, 'required': False}
         }
@@ -22,7 +29,6 @@ class UserSerializer(serializers.ModelSerializer):
             )
 
         validated_data['password'] = make_password(validated_data['password'])
-
         instance = self._user_update_or_create(validated_data)
 
         return instance

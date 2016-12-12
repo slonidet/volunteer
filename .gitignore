@@ -11,3 +11,4 @@ settings_local.py
 *.sqlite*
 __pycache__/
 /.vagrant/
+ubuntu-xenial-16.04-cloudimg-console.log

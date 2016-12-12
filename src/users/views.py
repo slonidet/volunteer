@@ -14,6 +14,11 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.filter(~Q(username='AnonymousUser'))
     serializer_class = UserSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        return queryset.select_related('profile')
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.is_superuser:

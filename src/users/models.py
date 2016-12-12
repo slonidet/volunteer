@@ -1,12 +1,12 @@
-from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from multiselectfield import MultiSelectField
 
-from volunteer.fields import PhoneField
+from core.fields import PhoneField
 
 
 class UserManager(BaseUserManager):
@@ -148,8 +148,6 @@ class Profile(models.Model):
         (BENEFIT_ACCEPTANCE, _('признание окружающих')),
         (BENEFIT_RESPECT, _('гордость и уважение близких')),
     )
-
-
 
     user = models.OneToOneField(User, related_name='profile')
     first_name = models.CharField(_('имя'), max_length=30)

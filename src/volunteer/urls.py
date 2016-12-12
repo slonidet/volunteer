@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^api-auth/',  # Adding login to the Browsable API
         include('rest_framework.urls', namespace='rest_framework')),
 
-    # url(r'^api/', include('conf.urls_api')),
+    url(r'^api/', include('volunteer.urls_api')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
