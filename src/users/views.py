@@ -5,7 +5,8 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from users.serializers import UserSerializer
+from users.models import Profile
+from users.serializers import UserSerializer, ProfileSerializer
 
 User = get_user_model()
 
@@ -31,3 +32,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    filter_fields = ('user', )

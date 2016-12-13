@@ -8,4 +8,5 @@ def api_root(request, format=None):
     return Response({
         'user-auth': reverse('users:auth', request=request, format=format),
         'users': reverse('users:user-list', request=request, format=format),
+        'users-profiles': reverse('users:profile-list', request=request, format=format),
     })

@@ -3,6 +3,8 @@ from django.contrib.auth.hashers import make_password
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
+from users.models import Profile
+
 User = get_user_model()
 
 
@@ -59,5 +61,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    # Фото для аккредитации (заполняется администратором)* (тип: file)
-    pass
+    class Meta:
+        model = Profile
+        fields = '__all__'
+        read_only_fields = ('photo', )

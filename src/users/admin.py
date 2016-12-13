@@ -3,8 +3,10 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.admin import (
     UserAdmin as BaseUserAdmin, UserChangeForm as BaseUserChangeForm,
-    UserCreationForm as BaseUserCreationForm
+    UserCreationForm as BaseUserCreationForm,
 )
+
+from users.models import Profile
 
 User = get_user_model()
 
@@ -45,4 +47,9 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ('groups', 'user_permissions',)
 
 
+class ProfileAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(User, UserAdmin)
+admin.site.register(Profile, ProfileAdmin)

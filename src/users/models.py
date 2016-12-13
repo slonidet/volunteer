@@ -43,6 +43,9 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+    User model
+    """
     username = models.EmailField(_('email address'), unique=True)
     is_staff = models.BooleanField(
         _('staff status'),
@@ -211,7 +214,9 @@ class Profile(models.Model):
     )
 
     user = models.OneToOneField(User, related_name='profile')
-    photo = models.ImageField('Фото', upload_to='user/photo/')
+    photo = models.ImageField(
+        _('фото'), upload_to='user/photo/', blank=True, null=True
+    )
     first_name = models.CharField(_('имя'), max_length=30)
     last_name = models.CharField(_('фамилия'), max_length=30)
     middle_name = models.CharField(_('отчество'), max_length=30)
@@ -228,7 +233,9 @@ class Profile(models.Model):
         _('специальность/направление подготовки, курс'), max_length=256
     )
     working = models.BooleanField(_('работаю'))
-    work_place = models.CharField(_('место работы'), max_length=256)
+    work_place = models.CharField(
+        _('место работы'), max_length=256, blank=True
+    )
     position = models.CharField(_('должность'), max_length=128)
     employer_phone = PhoneField(
         _('контактный телефон работодателя'), blank=True, max_length=20
@@ -237,23 +244,19 @@ class Profile(models.Model):
     english = models.CharField(
         _('владение английским языком'), choices=ENGLISH_CHOICES, max_length=32
     )
-    # TODO: may be blank
     other_language = models.CharField(
-        _('владение другими языками'), max_length=256
+        _('владение другими языками'), max_length=256, blank=True
     )
-    has_experience = models.BooleanField(
-        _('опыт волонтёрской деятельности')
-    )
-    # TODO: may be blank if has_volunteer_experience field is false
+    has_experience = models.BooleanField(_('опыт волонтёрской деятельности'))
     experience_in_sport_events = models.TextField(
         _('спортивные мероприятия, в которых принимал участие в качестве '
           'волонтера, описание своих выполняемых функций в каждом из '
-          'мероприятий')
+          'мероприятий'), blank=True
     )
-    # TODO: may be blank
     experience_in_other_events = models.TextField(
         _('иные мероприятия, в которых принимал участие в качестве волонтера, '
-          'описание своих выполняемых функций в каждом из мероприятий')
+          'описание своих выполняемых функций в каждом из мероприятий'),
+        blank=True
     )
     attracting = models.CharField(
         _('что привлекает в волонтерской деятельности?'),
@@ -321,7 +324,7 @@ class Profile(models.Model):
     )
     work_shift = models.CharField(
         _('смена работы во время чемпионата'), choices=WORK_SHIFT_CHOICES,
-
+        max_length=8
     )
     participate_in_other = models.NullBooleanField(
         _('готовы ли Вы принимать участие в других мероприятиях, '
@@ -332,10 +335,12 @@ class Profile(models.Model):
         _('наличие медицинских противопоказаний к осуществлению работы?'),
     )
     clothes_size_male = models.PositiveSmallIntegerField(
-        _('мужской размер одежды'), choices=CLOTHES_SIZE_MALE_CHOICES
+        _('мужской размер одежды'), choices=CLOTHES_SIZE_MALE_CHOICES,
+        blank=True, null=True
     )
     clothes_size_female = models.PositiveSmallIntegerField(
-        _('женский размер одежды'), choices=CLOTHES_SIZE_FEMALE_CHOICES
+        _('женский размер одежды'), choices=CLOTHES_SIZE_FEMALE_CHOICES,
+        blank=True, null=True
     )
     shoe_size = models.PositiveSmallIntegerField(
         _('размер обуви'), choices=SHOE_SIZE_CHOICES
