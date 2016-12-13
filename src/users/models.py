@@ -225,7 +225,7 @@ class Profile(models.Model):
     gender = models.CharField(_('пол'), choices=GENDER_CHOICES, max_length=8)
     birthday = models.DateField(_('дата рождения'))
     birthplace = models.TextField(_('место рождения'))
-    passport_number = models.PositiveSmallIntegerField(_('номер паспорта'))
+    passport_number = models.CharField(_('номер паспорта'), max_length=10)
     passport_issued = models.CharField(_('паспорт выдан'), max_length=256)
     passport_issued_date = models.DateField(_('дата выдачи паспорта'))
     registration_address = models.TextField(_('адрес места жительства'))
