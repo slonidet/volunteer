@@ -20,9 +20,7 @@ class AuthTokenView(ObtainAuthToken):
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
 
-        return Response({
-            'token': token.key, 'user': user.id, 'profile': user.profile.id
-        })
+        return Response({'user': user.id, 'token': token.key})
 
 
 class UserViewSet(viewsets.ModelViewSet):

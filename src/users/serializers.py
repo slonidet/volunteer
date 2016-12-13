@@ -14,11 +14,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'id', 'last_login', 'is_superuser', 'username', 'is_staff',
-            'is_active', 'date_joined', 'profile'
+            'is_active', 'date_joined', 'profile', 'password',
         )
         read_only_fields = (
             'is_superuser', 'is_staff', 'is_active', 'last_login',
-            'date_joined',
+            'date_joined', 'profile',
         )
         extra_kwargs = {
             'password': {'write_only': True, 'required': False}
@@ -36,6 +36,15 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
+        try_change_username = (
+            'username' in validated_data and
+            instance.username != validated_data['username']
+        )
+        if try_change_username:
+            raise serializers.ValidationError(
+                {'username': _('Нельзя изменять email пользователя')}
+            )
+
         if 'password' in validated_data:
             instance.set_password(validated_data['password'])
             validated_data['password'] = instance.password
