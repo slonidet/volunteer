@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import status
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -21,6 +21,12 @@ class AuthTokenView(ObtainAuthToken):
         token, created = Token.objects.get_or_create(user=user)
 
         return Response({'user': user.id, 'token': token.key})
+
+
+class UserRegistrationView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = ()
 
 
 class UserViewSet(viewsets.ModelViewSet):
