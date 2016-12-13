@@ -213,7 +213,9 @@ class Profile(models.Model):
         (SHOE_SIZE_46, _('46')), (SHOE_SIZE_47, _('46')),
     )
 
-    user = models.OneToOneField(User, related_name='profile')
+    user = models.OneToOneField(
+        User, related_name='profile', verbose_name=_('пользователь')
+    )
     photo = models.ImageField(
         _('фото'), upload_to='user/photo/', blank=True, null=True
     )
