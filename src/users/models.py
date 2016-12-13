@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.core.mail import send_mail
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -148,8 +149,69 @@ class Profile(models.Model):
         (BENEFIT_ACCEPTANCE, _('признание окружающих')),
         (BENEFIT_RESPECT, _('гордость и уважение близких')),
     )
+    WORK_PERIOD_FIRST = 'first'
+    WORK_PERIOD_SECOND = 'second'
+    WORK_PERIOD_THIRD = 'third'
+    WORK_PERIOD_ANY = 'any'
+    WORK_PERIOD_CHOICES = (
+        (WORK_PERIOD_FIRST, _('13 – 23 июня 2018 года')),
+        (WORK_PERIOD_SECOND, _('24 июня – 4 июля 2018 года')),
+        (WORK_PERIOD_THIRD, _('5 – 15 июля 2018 года')),
+        (WORK_PERIOD_ANY, _('в любой указанный период')),
+    )
+    WORK_SHIFT_FIRST = 'first'
+    WORK_SHIFT_SECOND = 'second'
+    WORK_SHIFT_CHOICES = (
+        (WORK_SHIFT_FIRST, _('10:00 – 16:00')),
+        (WORK_SHIFT_SECOND, _('16:00 – 22:00')),
+    )
+    CLOTHES_SIZE_42 = 42
+    CLOTHES_SIZE_44 = 44
+    CLOTHES_SIZE_46 = 46
+    CLOTHES_SIZE_48 = 48
+    CLOTHES_SIZE_50 = 50
+    CLOTHES_SIZE_52 = 52
+    CLOTHES_SIZE_54 = 54
+    CLOTHES_SIZE_56 = 56
+    CLOTHES_SIZE_58 = 58
+    CLOTHES_SIZE_MALE_CHOICES = (
+        (CLOTHES_SIZE_42, _('XXS (42)')), (CLOTHES_SIZE_44, _('XS (44)')),
+        (CLOTHES_SIZE_46, _('S (46)')), (CLOTHES_SIZE_48, _('M (48)')),
+        (CLOTHES_SIZE_50, _('L (50)')), (CLOTHES_SIZE_52, _('XL (52)')),
+        (CLOTHES_SIZE_54, _('XXL (54)')), (CLOTHES_SIZE_56, _('2XL (56)')),
+        (CLOTHES_SIZE_58, _('3XL (58)')),
+    )
+    CLOTHES_SIZE_FEMALE_CHOICES = (
+        (CLOTHES_SIZE_42, _('XS (42)')), (CLOTHES_SIZE_44, _('S (44)')),
+        (CLOTHES_SIZE_46, _('M (46)')), (CLOTHES_SIZE_48, _('L (48)')),
+        (CLOTHES_SIZE_50, _('XL (50)')), (CLOTHES_SIZE_52, _('XXL (52)')),
+    )
+    SHOE_SIZE_34 = 34
+    SHOE_SIZE_35 = 35
+    SHOE_SIZE_36 = 36
+    SHOE_SIZE_37 = 37
+    SHOE_SIZE_38 = 38
+    SHOE_SIZE_39 = 39
+    SHOE_SIZE_40 = 40
+    SHOE_SIZE_41 = 41
+    SHOE_SIZE_42 = 42
+    SHOE_SIZE_43 = 43
+    SHOE_SIZE_44 = 44
+    SHOE_SIZE_45 = 45
+    SHOE_SIZE_46 = 46
+    SHOE_SIZE_47 = 47
+    SHOE_SIZE_CHOICES = (
+        (SHOE_SIZE_34, _('34')), (SHOE_SIZE_35, _('35')),
+        (SHOE_SIZE_36, _('36')), (SHOE_SIZE_37, _('37')),
+        (SHOE_SIZE_38, _('38')), (SHOE_SIZE_39, _('39')),
+        (SHOE_SIZE_40, _('40')), (SHOE_SIZE_41, _('41')),
+        (SHOE_SIZE_42, _('42')), (SHOE_SIZE_43, _('43')),
+        (SHOE_SIZE_44, _('44')), (SHOE_SIZE_45, _('45')),
+        (SHOE_SIZE_46, _('46')), (SHOE_SIZE_47, _('46')),
+    )
 
     user = models.OneToOneField(User, related_name='profile')
+    photo = models.ImageField('Фото', upload_to='user/photo/')
     first_name = models.CharField(_('имя'), max_length=30)
     last_name = models.CharField(_('фамилия'), max_length=30)
     middle_name = models.CharField(_('отчество'), max_length=30)
@@ -159,8 +221,8 @@ class Profile(models.Model):
     passport_number = models.PositiveSmallIntegerField(_('номер паспорта'))
     passport_issued = models.CharField(_('паспорт выдан'), max_length=256)
     passport_issued_date = models.DateField(_('дата выдачи паспорта'))
-    registration = models.TextField(_('адрес места жительства'))
-    residence = models.TextField(_('фактическое место жительства'))
+    registration_address = models.TextField(_('адрес места жительства'))
+    residential_address = models.TextField(_('фактическое место жительства'))
     place_of_study = models.CharField(_('место учёбы'), max_length=265)
     speciality = models.CharField(
         _('специальность/направление подготовки, курс'), max_length=256
@@ -179,70 +241,105 @@ class Profile(models.Model):
     other_language = models.CharField(
         _('владение другими языками'), max_length=256
     )
-    has_volunteer_experience = models.BooleanField(
+    has_experience = models.BooleanField(
         _('опыт волонтёрской деятельности')
     )
     # TODO: may be blank if has_volunteer_experience field is false
     experience_in_sport_events = models.TextField(
-        _('Спортивные мероприятия, в которых принимал участие в качестве '
+        _('спортивные мероприятия, в которых принимал участие в качестве '
           'волонтера, описание своих выполняемых функций в каждом из '
           'мероприятий')
     )
     # TODO: may be blank
     experience_in_other_events = models.TextField(
-        _('Иные мероприятия, в которых принимал участие в качестве волонтера, '
+        _('иные мероприятия, в которых принимал участие в качестве волонтера, '
           'описание своих выполняемых функций в каждом из мероприятий')
     )
     attracting = models.CharField(
-        _('Что привлекает в волонтерской деятельности?'),
+        _('что привлекает в волонтерской деятельности?'),
         choices=ATTRACTING_CHOICES, max_length=32
     )
     lacking = models.TextField(
-        _('Каких навыков и знаний в волонтерской деятельности не хватает?')
+        _('каких навыков и знаний в волонтерской деятельности не хватает?')
     )
     benefits = MultiSelectField(
-        _('Что Вы хотите получить от участия в качестве городского волонтера '
+        _('что Вы хотите получить от участия в качестве городского волонтера '
           'в Чемпионате мира по футболу FIFA 2018 в России?'),
         choices=BENEFIT_CHOICES, max_choices=4,
     )
+    interesting_tourist_information = models.PositiveSmallIntegerField(
+        _('информационно-туристическая служба'),
+        validators=[MinValueValidator(1), MaxValueValidator(4)]
+    )
+    interesting_transportation = models.PositiveSmallIntegerField(
+        _('транспортная служба'),
+        validators=[MinValueValidator(1), MaxValueValidator(4)]
+    )
+    interesting_language = models.PositiveSmallIntegerField(
+        _('лингвистическая служба'),
+        validators=[MinValueValidator(1), MaxValueValidator(4)]
+    )
+    interesting_festival = models.PositiveSmallIntegerField(
+        _('фестиваль болельщиков FIFA'),
+        validators=[MinValueValidator(1), MaxValueValidator(4)]
+    )
+    strengths = models.TextField(_('описание своих сильных сторон'))
+    weaknesses = models.TextField(_('описание своих слабых сторон'))
+    hobby = models.TextField(_('описание хобби'))
+    evaluationResponsibility = models.PositiveSmallIntegerField(
+        _('ответственность'),
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
+    evaluationStressResistance = models.PositiveSmallIntegerField(
+        _('стрессоустойчивость'),
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
+    evaluationCommunicability = models.PositiveSmallIntegerField(
+        _('коммуникабельность'),
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
+    evaluationDiligence = models.PositiveSmallIntegerField(
+        _('исполнительность'),
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
+    evaluationGoodwill = models.PositiveSmallIntegerField(
+        _('доброжелательность'),
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
+    evaluationTeamworkSkills = models.PositiveSmallIntegerField(
+        _('умение работать в команде'),
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
+    has_сar = models.BooleanField(_('имею автомобиль'))
+    car_detail = models.CharField(
+        _('категория водительского удостоверения и стаж вождения'),
+        max_length=256, blank=True
+    )
+    work_period = models.CharField(
+        _('период работы во время чемпионата'), choices=WORK_PERIOD_CHOICES,
+        max_length=8
+    )
+    work_shift = models.CharField(
+        _('смена работы во время чемпионата'), choices=WORK_SHIFT_CHOICES,
 
-    # photo = models.ImageField('Фото', upload_to='user/photo/')
-    # accredited_photo = models.ImageField('Фото', upload_to='user/acc_photo/')
-
-
-    # Пол* (тип: select)
-    # Почтовый индекс* (тип: input) (ссылка на возможность найти по адресу свой индекс)
-    # Место учебы* (тип: input + select) (возможность выбрать из списка или если их заведение не представлено, самостоятельно заполнить)
-    # Специальность/направление подготовки* (тип: input)
-    # Не работаю (тип: checkbox, в случае выбора скрываются поля “место работы”, “должность”, “адрес места работы”)
-    # Место работы* (тип: input)
-    # Должность* (тип: input)
-    # Контактные телефоны работодателя (тип: input)
-    # Ссылка на профиль в “Вконтакте” (тип: input)
-    # Ссылка на профиль в “Одноклассники” (тип: input)
-    # Ссылка на профиль в “Facebook” (тип: input)
-    # Ссылка на профиль в “Twitter” (тип: input)
-    # Владение английским языком* (тип: select) (с пояснением уровня подготовки)
-    # Владение другими иностранными языками* (тип: textarea)
-    # Спортивные мероприятия, в которых принимал участие в качестве волонтера, описание своих выполняемых функций в каждом из мероприятий * (тип: textarea)
-    # Иные мероприятия, в которых принимал участие в качестве волонтера, описание своих выполняемых функций в каждом из мероприятий * (тип: textarea)
-    # Что именно привлекает в волонтерской деятельности?* (тип: select)
-    # Каких навыков и знаний в волонтерской деятельности не хватает?* (тип: textarea)
-    # Что Вы хотите получить от участия в качестве городского волонтера в Чемпионате мира по футболу FIFA 2018 в России? (укажите не более 4-х вариантов)* (тип: select)
-    # Описание своих сильных сторон* (тип: textarea)
-    # Описание своих слабых сторон* (тип: textarea)
-    # Описание хобби? * (тип: textarea)
-    # Оценить себя по шкале от 1 до 10 по указанным качествам * (тип: select)
-    # Выбор желаемого функционального направления деятельности волонтера на ЧМ 2018* :(тип: select)
-    # (со справкой по каждому направлению, не более трех вариантов)
-    # Выбор периода работы во время Чемпионата* (тип: select)
-    # Выбор смены работы во время Чемпионата* (тип: select)
-    # Наличие каких-либо медицинских противопоказаний по состоянию здоровья к осуществлению работы? * (тип: textarea)
-    # Иные значимые сведения (тип: textarea)
-    # Сведения о ближайших родственниках* (множественный тип)
-    # Указание размера одежды (жен) * (тип: select)
-    # Указание размера одежды (муж) * (тип: select)
-    # Указание размера обуви * (тип: textarea)
+    )
+    participate_in_other = models.NullBooleanField(
+        _('готовы ли Вы принимать участие в других мероприятиях, '
+          'осуществляемых в рамках подготовки и проведения игр ЧМ-2018?'),
+        blank=True, null=True
+    )
+    contraindications = models.TextField(
+        _('наличие медицинских противопоказаний к осуществлению работы?'),
+    )
+    clothes_size_male = models.PositiveSmallIntegerField(
+        _('мужской размер одежды'), choices=CLOTHES_SIZE_MALE_CHOICES
+    )
+    clothes_size_female = models.PositiveSmallIntegerField(
+        _('женский размер одежды'), choices=CLOTHES_SIZE_FEMALE_CHOICES
+    )
+    shoe_size = models.PositiveSmallIntegerField(
+        _('размер обуви'), choices=SHOE_SIZE_CHOICES
+    )
 
     class Meta:
         verbose_name = _('профиль пользователя')
