@@ -74,3 +74,17 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = '__all__'
         read_only_fields = ('photo', )
+
+
+class AuthProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('photo', 'first_name', 'last_name', 'gender', 'birthday')
+
+
+class AuthUserSerializer(serializers.ModelSerializer):
+    profile = AuthProfileSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'profile')

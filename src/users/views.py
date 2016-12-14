@@ -3,30 +3,16 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import status
 from rest_framework import viewsets, generics
+from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
 
 from users.models import Profile
-from users.serializers import UserSerializer, ProfileSerializer
+from users.serializers import (
+    UserSerializer, ProfileSerializer,
+    AuthUserSerializer)
 
 User = get_user_model()
-
-
-class AuthTokenView(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-
-        return Response({'user': user.id, 'token': token.key})
-
-
-class UserRegistrationView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = ()
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -55,3 +41,23 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = ProfileSerializer
     filter_fields = ('user', )
+
+
+class AuthTokenView(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        user_serializer = AuthUserSerializer(user)
+        token, created = Token.objects.get_or_create(user=user)
+
+        return Response({
+            'user': user_serializer.data,
+            'token': token.key
+        })
+
+
+class UserRegistrationView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = ()

@@ -2,8 +2,9 @@ from django.conf.urls import url
 from rest_framework import routers
 
 from users.views import (
-    UserViewSet, ProfileViewSet, AuthTokenView, UserRegistrationView
+    UserViewSet, ProfileViewSet, UserRegistrationView, AuthTokenView
 )
+
 
 router = routers.DefaultRouter()
 router.register('profiles', ProfileViewSet, base_name='profile')
