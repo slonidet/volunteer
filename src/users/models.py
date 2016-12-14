@@ -230,11 +230,15 @@ class Profile(models.Model):
     passport_issued_date = models.DateField(_('дата выдачи паспорта'))
     registration_address = models.TextField(_('адрес места жительства'))
     residential_address = models.TextField(_('фактическое место жительства'))
-    place_of_study = models.CharField(_('место учёбы'), max_length=265)
-    speciality = models.CharField(
-        _('специальность/направление подготовки, курс'), max_length=256
+    is_studying = models.BooleanField(_('учусь'))
+    place_of_study = models.CharField(
+        _('место учёбы'), max_length=265, blank=True
     )
-    working = models.BooleanField(_('работаю'))
+    speciality = models.CharField(
+        _('специальность/направление подготовки, курс'), max_length=256,
+        blank=True
+    )
+    is_working = models.BooleanField(_('работаю'))
     work_place = models.CharField(
         _('место работы'), max_length=256, blank=True
     )
