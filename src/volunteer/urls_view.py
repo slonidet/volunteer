@@ -10,10 +10,6 @@ def api_root(request, format=None):
         'user-registration': reverse(
             'users:registration', request=request, format=format
         ),
-        'user-activation': reverse(
-            'users:activation', request=request, format=format,
-            kwargs={'user_id': 1, 'token': 'tokentokentokentokentokentoken11'}
-        ),
         'user-auth': reverse('users:auth', request=request, format=format),
         'users-profiles': reverse(
             'users:profile-list', request=request, format=format
