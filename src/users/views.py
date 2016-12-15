@@ -28,6 +28,15 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return queryset.select_related('profile')
 
+    def filter_queryset(self, queryset):
+        qs = super().filter_queryset(queryset)
+        user = self.request.user
+
+        if user.is_superuser:
+            return qs
+
+        return qs.filter(id=user.id)
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.is_superuser:
@@ -45,6 +54,15 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = ProfileSerializer
     filter_fields = ('user', )
+
+    def filter_queryset(self, queryset):
+        qs = super().filter_queryset(queryset)
+        user = self.request.user
+
+        if user.is_superuser:
+            return qs
+
+        return qs.filter(user=user)
 
 
 class AuthTokenView(ObtainAuthToken):
@@ -102,4 +120,4 @@ class UserActivationView(views.APIView):
             user.is_active = True
             user.save()
 
-        return redirect('index')
+        return redirect('/login')

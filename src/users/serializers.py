@@ -73,6 +73,18 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = '__all__'
 
+    def validate_user(self, value):
+        try:
+            user = self.context['request'].user
+        except KeyError:
+            return value
+
+        if not user.is_superuser and value != user:
+            raise serializers.ValidationError(
+                _('Нельзя изменять анкеты других пользоватетей'))
+
+        return value
+
 
 class AuthProfileSerializer(serializers.ModelSerializer):
     class Meta:
