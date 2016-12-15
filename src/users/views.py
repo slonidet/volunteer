@@ -13,7 +13,7 @@ from rest_framework.reverse import reverse
 from users.models import Profile
 from users.serializers import (
     UserSerializer, ProfileSerializer,
-    AuthUserSerializer)
+    AuthUserSerializer, UserRegistrationSerializer)
 from users.tokens import RegisterTokenGenerator
 
 User = get_user_model()
@@ -81,17 +81,17 @@ class AuthTokenView(ObtainAuthToken):
 
 class UserRegistrationView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserRegistrationSerializer
     permission_classes = ()
 
     def create(self, request, *args, **kwargs):
-        data = request.data
-        # deactivate user
-        data['is_active'] = False
-
-        serializer = self.get_serializer(data=data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+
+        # deactivate user
+        user.is_active = False
+        user.save()
 
         # send activation email
         token = RegisterTokenGenerator().make_token(user)

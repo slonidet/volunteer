@@ -9,7 +9,6 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = (
@@ -66,6 +65,14 @@ class UserSerializer(serializers.ModelSerializer):
             self.set_user_groups(instance, system_groups)
 
         return instance
+
+
+class UserRegistrationSerializer(UserSerializer):
+    class Meta(UserSerializer.Meta):
+        read_only_fields = (
+            'is_active', 'is_superuser', 'is_staff', 'last_login',
+            'date_joined', 'profile'
+        )
 
 
 class ProfileSerializer(serializers.ModelSerializer):
