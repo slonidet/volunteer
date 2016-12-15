@@ -126,10 +126,12 @@ class UserActivationView(views.APIView):
 class SendMail(views.APIView):
     def get(self, request, email):
         from django.core.mail import send_mail
-        send_mail(
+        result = send_mail(
             'Subject here',
             'Here is the message.',
             'root@1m8.ru',
             [email],
             fail_silently=False,
         )
+
+        return Response({'result': result})
