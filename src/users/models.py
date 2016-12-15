@@ -1,7 +1,6 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.core.mail import send_mail
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -212,6 +211,39 @@ class Profile(models.Model):
         (SHOE_SIZE_44, _('44')), (SHOE_SIZE_45, _('45')),
         (SHOE_SIZE_46, _('46')), (SHOE_SIZE_47, _('46')),
     )
+    INTERESTING_1 = 1
+    INTERESTING_2 = 2
+    INTERESTING_3 = 3
+    INTERESTING_4 = 4
+    INTERESTING_CHOICES = (
+        (INTERESTING_1, _('1')),
+        (INTERESTING_2, _('2')),
+        (INTERESTING_3, _('3')),
+        (INTERESTING_4, _('4')),
+    )
+    EVALUATION_1 = 1
+    EVALUATION_2 = 2
+    EVALUATION_3 = 3
+    EVALUATION_4 = 4
+    EVALUATION_5 = 5
+    EVALUATION_6 = 6
+    EVALUATION_7 = 7
+    EVALUATION_8 = 8
+    EVALUATION_9 = 9
+    EVALUATION_10 = 10
+    EVALUATION_CHOICES = (
+        (EVALUATION_1, _('1')),
+        (EVALUATION_2, _('2')),
+        (EVALUATION_3, _('3')),
+        (EVALUATION_4, _('4')),
+        (EVALUATION_5, _('5')),
+        (EVALUATION_6, _('6')),
+        (EVALUATION_7, _('7')),
+        (EVALUATION_8, _('8')),
+        (EVALUATION_9, _('9')),
+        (EVALUATION_10, _('10')),
+    )
+
 
     user = models.OneToOneField(
         User, related_name='profile', verbose_name=_('пользователь')
@@ -277,47 +309,37 @@ class Profile(models.Model):
         choices=BENEFIT_CHOICES, max_choices=4,
     )
     interesting_tourist_information = models.PositiveSmallIntegerField(
-        _('информационно-туристическая служба'),
-        validators=[MinValueValidator(1), MaxValueValidator(4)]
+        _('информационно-туристическая служба'), choices=INTERESTING_CHOICES
     )
     interesting_transportation = models.PositiveSmallIntegerField(
-        _('транспортная служба'),
-        validators=[MinValueValidator(1), MaxValueValidator(4)]
+        _('транспортная служба'), choices=INTERESTING_CHOICES
     )
     interesting_language = models.PositiveSmallIntegerField(
-        _('лингвистическая служба'),
-        validators=[MinValueValidator(1), MaxValueValidator(4)]
+        _('лингвистическая служба'), choices=INTERESTING_CHOICES
     )
     interesting_festival = models.PositiveSmallIntegerField(
-        _('фестиваль болельщиков FIFA'),
-        validators=[MinValueValidator(1), MaxValueValidator(4)]
+        _('фестиваль болельщиков FIFA'), choices=INTERESTING_CHOICES
     )
     strengths = models.TextField(_('описание своих сильных сторон'))
     weaknesses = models.TextField(_('описание своих слабых сторон'))
     hobby = models.TextField(_('описание хобби'))
     evaluation_responsibility = models.PositiveSmallIntegerField(
-        _('ответственность'),
-        validators=[MinValueValidator(1), MaxValueValidator(10)]
+        _('ответственность'), choices=EVALUATION_CHOICES
     )
     evaluation_stress_resistance = models.PositiveSmallIntegerField(
-        _('стрессоустойчивость'),
-        validators=[MinValueValidator(1), MaxValueValidator(10)]
+        _('стрессоустойчивость'), choices=EVALUATION_CHOICES
     )
     evaluation_communicability = models.PositiveSmallIntegerField(
-        _('коммуникабельность'),
-        validators=[MinValueValidator(1), MaxValueValidator(10)]
+        _('коммуникабельность'), choices=EVALUATION_CHOICES
     )
     evaluation_diligence = models.PositiveSmallIntegerField(
-        _('исполнительность'),
-        validators=[MinValueValidator(1), MaxValueValidator(10)]
+        _('исполнительность'), choices=EVALUATION_CHOICES
     )
     evaluation_goodwill = models.PositiveSmallIntegerField(
-        _('доброжелательность'),
-        validators=[MinValueValidator(1), MaxValueValidator(10)]
+        _('доброжелательность'), choices=EVALUATION_CHOICES
     )
     evaluation_teamwork_skills = models.PositiveSmallIntegerField(
-        _('умение работать в команде'),
-        validators=[MinValueValidator(1), MaxValueValidator(10)]
+        _('умение работать в команде'), choices=EVALUATION_CHOICES
     )
     has_car = models.BooleanField(_('имею автомобиль'))
     car_detail = models.CharField(
