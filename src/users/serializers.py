@@ -78,7 +78,7 @@ class UserRegistrationSerializer(UserSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     benefits = serializers.MultipleChoiceField(
         choices=Profile.BENEFIT_CHOICES,
-        label=Profile._meta.get_field('benefits').verbose_name
+        label=Profile._meta.get_field('benefits').verbose_name,
     )
 
     class Meta:
@@ -93,7 +93,15 @@ class ProfileSerializer(serializers.ModelSerializer):
 
         if not user.is_superuser and value != user:
             raise serializers.ValidationError(
-                _('Нельзя изменять анкеты других пользоватетей'))
+                _('нельзя изменять анкеты других пользоватетей'))
+
+        return value
+
+    def validate_benefits(self, value):
+        if len(value) > 4:
+            raise serializers.ValidationError(
+                _('нельзя выбрать более 4-х значени')
+            )
 
         return value
 
