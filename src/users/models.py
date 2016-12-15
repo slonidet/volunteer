@@ -319,7 +319,7 @@ class Profile(models.Model):
         _('умение работать в команде'),
         validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
-    has_сar = models.BooleanField(_('имею автомобиль'))
+    has_car = models.BooleanField(_('имею автомобиль'))
     car_detail = models.CharField(
         _('категория водительского удостоверения и стаж вождения'),
         max_length=256, blank=True
