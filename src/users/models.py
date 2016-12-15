@@ -295,27 +295,27 @@ class Profile(models.Model):
     strengths = models.TextField(_('описание своих сильных сторон'))
     weaknesses = models.TextField(_('описание своих слабых сторон'))
     hobby = models.TextField(_('описание хобби'))
-    evaluationResponsibility = models.PositiveSmallIntegerField(
+    evaluation_responsibility = models.PositiveSmallIntegerField(
         _('ответственность'),
         validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
-    evaluationStressResistance = models.PositiveSmallIntegerField(
+    evaluation_stress_resistance = models.PositiveSmallIntegerField(
         _('стрессоустойчивость'),
         validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
-    evaluationCommunicability = models.PositiveSmallIntegerField(
+    evaluation_communicability = models.PositiveSmallIntegerField(
         _('коммуникабельность'),
         validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
-    evaluationDiligence = models.PositiveSmallIntegerField(
+    evaluation_diligence = models.PositiveSmallIntegerField(
         _('исполнительность'),
         validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
-    evaluationGoodwill = models.PositiveSmallIntegerField(
+    evaluation_goodwill = models.PositiveSmallIntegerField(
         _('доброжелательность'),
         validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
-    evaluationTeamworkSkills = models.PositiveSmallIntegerField(
+    evaluation_teamwork_skills = models.PositiveSmallIntegerField(
         _('умение работать в команде'),
         validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
