@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ty(tul70er_)lmfwf3u!(nw1j7crzq6ke+7ppyz^^*l6sqj+os'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '192.168.33.10',
@@ -104,7 +104,7 @@ DATABASES = {
 
 # Email
 
-DEFAULT_FROM_EMAIL = 'admin@volonter61.ru'
+# DEFAULT_FROM_EMAIL = 'admin@volonter61.ru'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
