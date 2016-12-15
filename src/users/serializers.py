@@ -76,6 +76,11 @@ class UserRegistrationSerializer(UserSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    benefits = serializers.MultipleChoiceField(
+        choices=Profile.BENEFIT_CHOICES,
+        label=Profile._meta.get_field('benefits').verbose_name
+    )
+
     class Meta:
         model = Profile
         fields = '__all__'
