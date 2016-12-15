@@ -96,7 +96,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 class AuthProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('photo', 'first_name', 'last_name', 'gender', 'birthday')
+        fields = (
+            'id', 'photo', 'first_name', 'last_name', 'gender', 'birthday'
+        )
 
 
 class AuthUserSerializer(serializers.ModelSerializer):
