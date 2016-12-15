@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '192.168.33.10',
     'volunteer.1m8.ru',
+    'volonter61.ru',
 ]
 
 
@@ -99,6 +100,12 @@ DATABASES = {
         },
     }
 }
+
+
+# Email
+
+DEFAULT_FROM_EMAIL = 'admin@volonter61.ru'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 # Password validation
