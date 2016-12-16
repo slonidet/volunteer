@@ -10,10 +10,11 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from users.models import Profile
+from users.models import Profile, ProfileAttachment
 from users.serializers import (
     UserSerializer, ProfileSerializer,
-    AuthUserSerializer, UserRegistrationSerializer)
+    AuthUserSerializer, UserRegistrationSerializer,
+    ProfileAttachmentSerializer)
 from users.tokens import RegisterTokenGenerator
 
 User = get_user_model()
@@ -54,6 +55,20 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = ProfileSerializer
     filter_fields = ('user', )
+
+    def filter_queryset(self, queryset):
+        qs = super().filter_queryset(queryset)
+        user = self.request.user
+
+        if user.is_superuser:
+            return qs
+
+        return qs.filter(user=user)
+
+
+class ProfileAttachmentViewSet(viewsets.ModelViewSet):
+    queryset = ProfileAttachment.objects.all()
+    serializer_class = ProfileAttachmentSerializer
 
     def filter_queryset(self, queryset):
         qs = super().filter_queryset(queryset)

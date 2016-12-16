@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import make_password
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
-from users.models import Profile
+from users.models import Profile, ProfileAttachment
 
 User = get_user_model()
 
@@ -104,6 +104,12 @@ class ProfileSerializer(serializers.ModelSerializer):
             )
 
         return value
+
+
+class ProfileAttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfileAttachment
+        fields = '__all__'
 
 
 class AuthProfileSerializer(serializers.ModelSerializer):

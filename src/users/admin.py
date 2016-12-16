@@ -6,7 +6,7 @@ from django.contrib.auth.admin import (
     UserCreationForm as BaseUserCreationForm,
 )
 
-from users.models import Profile
+from users.models import Profile, ProfileAttachment
 
 User = get_user_model()
 
@@ -51,5 +51,10 @@ class ProfileAdmin(admin.ModelAdmin):
     pass
 
 
+class ProfileAttachmentAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Profile, ProfileAdmin)
+admin.site.register(ProfileAttachment, ProfileAttachmentAdmin)

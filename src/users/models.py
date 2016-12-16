@@ -250,9 +250,6 @@ class Profile(models.Model):
     user = models.OneToOneField(
         User, related_name='profile', verbose_name=_('пользователь')
     )
-    photo = models.ImageField(
-        _('фото'), upload_to='user/photo/', blank=True, null=True
-    )
     first_name = models.CharField(_('имя'), max_length=30)
     last_name = models.CharField(_('фамилия'), max_length=30)
     middle_name = models.CharField(_('отчество'), max_length=30)
@@ -377,8 +374,23 @@ class Profile(models.Model):
     )
 
     class Meta:
-        verbose_name = _('профиль пользователя')
-        verbose_name_plural = _('профили пользователей')
+        verbose_name = _('анкета пользователя')
+        verbose_name_plural = _('анкеты пользователей')
 
     def __str__(self):
         return '{0} {1}'.format(self.first_name, self.last_name)
+
+
+class ProfileAttachment(models.Model):
+    """
+    User profile attachments
+    """
+    user = models.OneToOneField(
+        User, related_name='profile_attachments',
+        verbose_name=_('пользователь')
+    )
+    photo = models.ImageField(_('фото'), upload_to='user/photo/')
+
+    class Meta:
+        verbose_name = _('файл анкеты пользователя')
+        verbose_name_plural = _('файлы анкет пользователей')

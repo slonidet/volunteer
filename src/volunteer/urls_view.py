@@ -11,7 +11,10 @@ def api_root(request, format=None):
             'users:registration', request=request, format=format
         ),
         'user-auth': reverse('users:auth', request=request, format=format),
-        'users-profiles': reverse(
+        'user-profiles': reverse(
             'users:profile-list', request=request, format=format
+        ),
+        'user-profile-attachments': reverse(
+            'users:profile-attachment-list', request=request, format=format
         ),
     })
