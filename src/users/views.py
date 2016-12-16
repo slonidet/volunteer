@@ -12,9 +12,9 @@ from rest_framework.reverse import reverse
 
 from users.models import Profile, ProfileAttachment
 from users.serializers import (
-    UserSerializer, ProfileSerializer,
-    AuthUserSerializer, UserRegistrationSerializer,
-    ProfileAttachmentSerializer)
+    UserSerializer, ProfileSerializer, AuthUserSerializer,
+    ProfileAttachmentSerializer
+)
 from users.tokens import RegisterTokenGenerator
 
 User = get_user_model()
@@ -69,6 +69,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 class ProfileAttachmentViewSet(viewsets.ModelViewSet):
     queryset = ProfileAttachment.objects.all()
     serializer_class = ProfileAttachmentSerializer
+    filter_fields = ('user', )
 
     def filter_queryset(self, queryset):
         qs = super().filter_queryset(queryset)
@@ -96,7 +97,7 @@ class AuthTokenView(ObtainAuthToken):
 
 class UserRegistrationView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserRegistrationSerializer
+    serializer_class = UserSerializer
     permission_classes = ()
 
     def create(self, request, *args, **kwargs):

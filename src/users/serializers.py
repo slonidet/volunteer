@@ -12,11 +12,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'last_login', 'is_superuser', 'username', 'is_staff',
-            'is_active', 'date_joined', 'profile', 'password',
+            'id', 'username', 'is_superuser', 'is_staff', 'password',
+            'date_joined', 'last_login', 'profile', 'profile_attachment'
         )
         read_only_fields = (
-            'is_superuser', 'is_staff', 'last_login', 'date_joined', 'profile'
+            'is_superuser', 'is_staff', 'last_login', 'date_joined', 'profile',
+            'profile_attachment'
         )
         extra_kwargs = {
             'password': {'write_only': True, 'required': False}
@@ -65,14 +66,6 @@ class UserSerializer(serializers.ModelSerializer):
             self.set_user_groups(instance, system_groups)
 
         return instance
-
-
-class UserRegistrationSerializer(UserSerializer):
-    class Meta(UserSerializer.Meta):
-        read_only_fields = (
-            'is_active', 'is_superuser', 'is_staff', 'last_login',
-            'date_joined', 'profile'
-        )
 
 
 class ProfileSerializer(serializers.ModelSerializer):
