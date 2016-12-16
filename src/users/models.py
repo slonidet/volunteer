@@ -139,14 +139,17 @@ class Profile(models.Model):
     BENEFIT_ACCEPTANCE = 'acceptance'
     BENEFIT_RESPECT = 'respect'
     BENEFIT_CHOICES = (
-        (BENEFIT_COMMAND_EXPERIENCE, _('получение нового уникального опыта и навыков работы в команде')),
+        (BENEFIT_COMMAND_EXPERIENCE,
+         _('получение нового уникального опыта и навыков работы в команде')),
         (BENEFIT_COMMUNICATION, _('расширение круга общения')),
         (BENEFIT_PERSONAL_GROWTH, _('личностный рост и самореализация')),
         (BENEFIT_KNOWLEDGE, _('расширение интересов и знаний')),
         (BENEFIT_RELATION, _('новые связи и потенциальные возможности')),
-        (BENEFIT_FOREIGN_LANGUGE, _('практика иностранных языков и широкое межкультурное общение')),
+        (BENEFIT_FOREIGN_LANGUGE,
+         _('практика иностранных языков и широкое межкультурное общение')),
         (BENEFIT_SEE_EVENT_INSIDE, _('шанс увидеть мероприятие изнутри')),
-        (BENEFIT_PART_OF, _('возможность почувствовать себя значимой частью мега-события')),
+        (BENEFIT_PART_OF,
+         _('возможность почувствовать себя значимой частью мега-события')),
         (BENEFIT_OPPORTUNITY, _('открытие новых перспектив')),
         (BENEFIT_ACCEPTANCE, _('признание окружающих')),
         (BENEFIT_RESPECT, _('гордость и уважение близких')),
@@ -243,7 +246,6 @@ class Profile(models.Model):
         (EVALUATION_9, _('9')),
         (EVALUATION_10, _('10')),
     )
-
 
     user = models.OneToOneField(
         User, related_name='profile', verbose_name=_('пользователь')

@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 
-from users.views import SendMail
+from core.views import SendMail
 from volunteer.urls_view import api_root
 
 

@@ -8,7 +8,7 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/api'), name='index'),
-    url(r'^admin/', admin.site.urls),
+    url(r'^sysadmin/', admin.site.urls),
     url(r'^api-auth/',  # Adding login to the Browsable API
         include('rest_framework.urls', namespace='rest_framework')),
 
