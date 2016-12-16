@@ -111,6 +111,18 @@ class ProfileAttachmentSerializer(serializers.ModelSerializer):
         model = ProfileAttachment
         fields = '__all__'
 
+    def validate_user(self, value):
+        try:
+            user = self.context['request'].user
+        except KeyError:
+            return value
+
+        if not user.is_superuser and value != user:
+            raise serializers.ValidationError(
+                _('нельзя изменять фото других пользоватетей'))
+
+        return value
+
 
 class AuthProfileSerializer(serializers.ModelSerializer):
     class Meta:
