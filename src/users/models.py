@@ -273,7 +273,9 @@ class Profile(models.Model):
     work_place = models.CharField(
         _('место работы'), max_length=256, blank=True, null=True
     )
-    position = models.CharField(_('должность'), max_length=128)
+    position = models.CharField(
+        _('должность'), max_length=128, blank=True, null=True
+    )
     employer_phone = PhoneField(
         _('контактный телефон работодателя'), blank=True, null=True,
         max_length=20
