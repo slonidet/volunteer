@@ -389,7 +389,7 @@ class ProfileAttachment(models.Model):
     User profile attachments
     """
     user = models.OneToOneField(
-        User, related_name='profile_attachments',
+        User, related_name='profile_attachment',
         verbose_name=_('пользователь')
     )
     photo = models.ImageField(_('фото'), upload_to='user/photo/')

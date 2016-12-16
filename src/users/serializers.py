@@ -128,13 +128,22 @@ class AuthProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = (
-            'id', 'photo', 'first_name', 'last_name', 'gender', 'birthday'
+            'id', 'first_name', 'last_name', 'gender', 'birthday'
         )
+
+
+class AuthProfileAttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfileAttachment
+        fields = '__all__'
 
 
 class AuthUserSerializer(serializers.ModelSerializer):
     profile = AuthProfileSerializer(read_only=True)
+    profile_attachment = AuthProfileAttachmentSerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'is_superuser', 'profile')
+        fields = (
+            'id', 'username', 'is_superuser', 'profile', 'profile_attachment'
+        )
