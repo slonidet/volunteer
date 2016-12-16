@@ -263,37 +263,38 @@ class Profile(models.Model):
     residential_address = models.TextField(_('фактическое место жительства'))
     is_studying = models.BooleanField(_('учусь'))
     place_of_study = models.CharField(
-        _('место учёбы'), max_length=265, blank=True
+        _('место учёбы'), max_length=265, blank=True, null=True
     )
     speciality = models.CharField(
         _('специальность/направление подготовки, курс'), max_length=256,
-        blank=True
+        blank=True, null=True
     )
     is_working = models.BooleanField(_('работаю'))
     work_place = models.CharField(
-        _('место работы'), max_length=256, blank=True
+        _('место работы'), max_length=256, blank=True, null=True
     )
     position = models.CharField(_('должность'), max_length=128)
     employer_phone = PhoneField(
-        _('контактный телефон работодателя'), blank=True, max_length=20
+        _('контактный телефон работодателя'), blank=True, null=True,
+        max_length=20
     )
     phone = PhoneField(_('контактный телефон'), max_length=20)
     english = models.CharField(
         _('владение английским языком'), choices=ENGLISH_CHOICES, max_length=32
     )
     other_language = models.CharField(
-        _('владение другими языками'), max_length=256, blank=True
+        _('владение другими языками'), max_length=256, blank=True, null=True
     )
     has_experience = models.BooleanField(_('опыт волонтёрской деятельности'))
     experience_in_sport_events = models.TextField(
         _('спортивные мероприятия, в которых принимал участие в качестве '
           'волонтера, описание своих выполняемых функций в каждом из '
-          'мероприятий'), blank=True
+          'мероприятий'), blank=True, null=True
     )
     experience_in_other_events = models.TextField(
         _('иные мероприятия, в которых принимал участие в качестве волонтера, '
           'описание своих выполняемых функций в каждом из мероприятий'),
-        blank=True
+        blank=True, null=True
     )
     attracting = models.CharField(
         _('что привлекает в волонтерской деятельности?'),
@@ -343,7 +344,7 @@ class Profile(models.Model):
     has_car = models.BooleanField(_('имею автомобиль'))
     car_detail = models.CharField(
         _('категория водительского удостоверения и стаж вождения'),
-        max_length=256, blank=True
+        max_length=256, blank=True, null=True
     )
     work_period = models.CharField(
         _('период работы во время чемпионата'), choices=WORK_PERIOD_CHOICES,
