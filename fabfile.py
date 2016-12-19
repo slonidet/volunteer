@@ -52,7 +52,7 @@ def _update_project():
 
 
 def _restart_project():
-    sudo('supervisorctl restart {0}:'.format(PROJECT_NAME))
+    sudo('supervisorctl restart {0}:v_test_gunicorn'.format(PROJECT_NAME))
 
 
 def _collect_static():
