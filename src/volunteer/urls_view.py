@@ -6,12 +6,15 @@ from rest_framework.reverse import reverse
 @api_view(['GET'])
 def api_root(request, format=None):
     return Response({
+        'user': reverse('user:current-user', request=request, format=format),
         'user-authentication': reverse(
             'user:authentication', request=request, format=format),
         'user-registration': reverse(
             'user:registration', request=request, format=format),
         'user-activation': reverse(
-            'user:activation', request=request, format=format),
+            'user:activation', request=request, format=format,
+            kwargs={'user_id': 1, 'token': 'tokentokentokentokentokentokento'}
+        ),
 
         'users': reverse('users:user-list', request=request, format=format),
         'users-profiles': reverse(

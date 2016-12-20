@@ -1,35 +1,19 @@
-from django.contrib.auth import get_user_model
-from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
-from rest_framework import status
-from rest_framework import viewsets
+from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
 
+from users.mixins import ExcludeAnonymousViewMixin
 from users.models import Profile, ProfileAttachment
+from users.models import User
 from users.serializers import (
     UserSerializer, ProfileSerializer, ProfileAttachmentSerializer
 )
 
-User = get_user_model()
 
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.filter(~Q(username='AnonymousUser'))
+class UserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
+    queryset = User.objects.select_related('profile')
     serializer_class = UserSerializer
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-
-        return queryset.select_related('profile')
-
-    def filter_queryset(self, queryset):
-        qs = super().filter_queryset(queryset)
-        user = self.request.user
-
-        if user.is_superuser:
-            return qs
-
-        return qs.filter(id=user.id)
+    permission_classes = (permissions.IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

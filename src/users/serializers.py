@@ -1,19 +1,18 @@
-from django.contrib.auth import get_user_model
+from users.models import User
 from django.contrib.auth.hashers import make_password
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
 from users.models import Profile, ProfileAttachment
 
-User = get_user_model()
-
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'username', 'is_superuser', 'is_staff', 'password',
-            'date_joined', 'last_login', 'profile', 'profile_attachment'
+            'id', 'username', 'is_active', 'is_superuser', 'is_staff',
+            'password', 'date_joined', 'last_login', 'profile',
+            'profile_attachment'
         )
         read_only_fields = (
             'is_superuser', 'is_staff', 'last_login', 'date_joined', 'profile',
@@ -35,15 +34,6 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        try_change_username = (
-            'username' in validated_data and
-            instance.username != validated_data['username']
-        )
-        if try_change_username:
-            raise serializers.ValidationError(
-                {'username': _('Нельзя изменять email пользователя')}
-            )
-
         if 'password' in validated_data:
             instance.set_password(validated_data['password'])
             validated_data['password'] = instance.password
