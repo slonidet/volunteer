@@ -9,7 +9,7 @@ class RegisterTokenGenerator(object):
 
     def make_token(self, user):
         if not isinstance(user, User):
-            raise Exception('user must be a User instance')
+            raise Exception('current must be a User instance')
 
         control_string = "{salt}{user_id}{user_date_joined}".format(
             salt=self._salt, user_id=user.id,
