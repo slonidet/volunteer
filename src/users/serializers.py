@@ -68,18 +68,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = '__all__'
 
-    def validate_user(self, value):
-        try:
-            user = self.context['request'].user
-        except KeyError:
-            return value
-
-        if not user.is_superuser and value != user:
-            raise serializers.ValidationError(
-                _('нельзя изменять анкеты других пользоватетей'))
-
-        return value
-
     def validate_benefits(self, value):
         if len(value) > 4:
             raise serializers.ValidationError(

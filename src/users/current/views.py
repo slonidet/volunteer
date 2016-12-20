@@ -6,11 +6,14 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.generics import (
     get_object_or_404, CreateAPIView, RetrieveUpdateAPIView
 )
+from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from users.current.serializers import AuthUserSerializer, CurrentUserSerializer
+from users.current.serializers import AuthUserSerializer, CurrentUserSerializer, \
+    CurrentUserProfileSerializer
 from users.current.tokens import RegisterTokenGenerator
+from users.models import Profile
 from users.views import User
 from users.mixins import ExcludeAnonymousViewMixin
 
@@ -82,8 +85,20 @@ class CurrentUserView(ExcludeAnonymousViewMixin, RetrieveUpdateAPIView):
         user = self.request.user
         queryset = self.filter_queryset(self.get_queryset())
         obj = get_object_or_404(queryset, pk=user.pk)
+        self.check_object_permissions(self.request, obj)
 
-        # May raise a permission denied
+        return obj
+
+
+class CurrentUserProfileView(CreateModelMixin, RetrieveUpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = CurrentUserProfileSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def get_object(self):
+        user = self.request.user
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = get_object_or_404(queryset, user=user)
         self.check_object_permissions(self.request, obj)
 
         return obj

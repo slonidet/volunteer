@@ -32,15 +32,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = ProfileSerializer
     filter_fields = ('user', )
-
-    def filter_queryset(self, queryset):
-        qs = super().filter_queryset(queryset)
-        user = self.request.user
-
-        if user.is_superuser:
-            return qs
-
-        return qs.filter(user=user)
+    permission_classes = (permissions.IsAdminUser, )
 
 
 class ProfileAttachmentViewSet(viewsets.ModelViewSet):
