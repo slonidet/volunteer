@@ -397,3 +397,6 @@ class ProfileAttachment(models.Model):
     class Meta:
         verbose_name = _('файл анкеты пользователя')
         verbose_name_plural = _('файлы анкет пользователей')
+
+    def __str__(self):
+        return self.id

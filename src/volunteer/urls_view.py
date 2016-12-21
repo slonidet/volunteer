@@ -17,4 +17,11 @@ def api_root(request, format=None):
         'user-profile-attachments': reverse(
             'users:profile-attachment-list', request=request, format=format
         ),
+
+        'gallery-photo-albums': reverse(
+            'gallery:photo-album-list', request=request, format=format),
+        'gallery-photos': reverse(
+            'gallery:photo-list', request=request, format=format),
+        'gallery-videos': reverse(
+            'gallery:video-list', request=request, format=format),
     })
