@@ -16,11 +16,11 @@ class Photo(models.Model):
     album = models.ForeignKey(
         'Album', verbose_name=_('альбом'), related_name='photos'
     )
-    name = models.CharField(_('имя'), max_length=128)
-    url = models.FileField(_('фото'), upload_to=album_dir)
+    original = models.FileField(_('фото'), upload_to=album_dir)
     order = models.PositiveSmallIntegerField(
         _('порядок сортировки'), blank=True, null=True
     )
+    date = models.DateField(_('дата'), auto_now_add=True)
 
     class Meta:
         verbose_name = _('фото')
@@ -36,7 +36,7 @@ class Album(models.Model):
     Photo albums
     """
     name = models.CharField(_('имя'), max_length=128)
-    date = models.DateField(_('дата события'), auto_now_add=True)
+    date = models.DateField(_('дата'), auto_now_add=True)
     order = models.PositiveSmallIntegerField(
         _('порядок сортировки'), blank=True, null=True, unique=True
     )
@@ -53,15 +53,16 @@ class Video(models.Model):
     """
     Links to youtube videos
     """
-    name = models.CharField(_('имя'), max_length=128)
+    description = models.CharField(_('имя'), max_length=128)
     url = models.URLField(_('url'))
     order = models.PositiveSmallIntegerField(
         _('порядок сортировки'), blank=True, null=True, unique=True
     )
+    date = models.DateField(_('дата'), auto_now_add=True)
 
     class Meta:
         verbose_name = _('видео')
         verbose_name_plural = _('видео')
 
     def __str__(self):
-        return self.name
+        return self.description
