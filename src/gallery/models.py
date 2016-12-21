@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -28,7 +30,7 @@ class Photo(models.Model):
         unique_together = ('album', 'order')
 
     def __str__(self):
-        return self.name
+        return os.path.basename(self.original.name)
 
 
 class Album(models.Model):
