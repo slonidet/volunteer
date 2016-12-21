@@ -1,6 +1,7 @@
 import os
 
 from django.db import models
+from sorl.thumbnail import ImageField
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -18,7 +19,7 @@ class Photo(models.Model):
     album = models.ForeignKey(
         'Album', verbose_name=_('альбом'), related_name='photos'
     )
-    original = models.FileField(_('фото'), upload_to=album_dir)
+    original = ImageField(_('фото'), upload_to=album_dir)
     order = models.PositiveSmallIntegerField(
         _('порядок сортировки'), blank=True, null=True
     )

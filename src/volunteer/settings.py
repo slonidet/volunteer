@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'multiselectfield',
+    'sorl.thumbnail',
 
     'users.apps.UsersConfig',
     'gallery.apps.GalleryConfig',
