@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'multiselectfield',
 
     'users.apps.UsersConfig',
+    'gallery.apps.GalleryConfig',
 ]
 
 MIDDLEWARE = [
