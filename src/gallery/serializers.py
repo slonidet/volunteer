@@ -5,8 +5,12 @@ from gallery.models import Photo, Album, Video
 
 
 class PhotoSerializer(serializers.ModelSerializer):
-    thumb = HyperlinkedSorlImageField(
-        '128x128', options={"crop": "center"}, source='origin', read_only=True
+    original = HyperlinkedSorlImageField(
+        '1280x1024', options={'upscale': False}
+    )
+    thumbnail = HyperlinkedSorlImageField(
+        '432x280', options={"crop": "center"},
+        source='original', read_only=True
     )
 
     class Meta:
