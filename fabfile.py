@@ -25,6 +25,7 @@ ENV_ACTIVATE = '{0}/env/bin/activate'.format(BASE_DIR)
 
 def deploy(role='test'):
     execute(_update_project, role=role)
+    execute(_install_requirements, role=role)
     execute(_migrate_databases, role=role)
     execute(_collect_static, role=role)
     execute(_restart_project, role=role)
@@ -65,7 +66,7 @@ def _migrate_databases():
         run('python src/manage.py migrate')
 
 
-def _install_requirements(update=True):
+def _install_requirements(update=False):
     with cd(PROJECT_DIR), prefix('source {0}'.format(ENV_ACTIVATE)):
         if update:
             run('pip install -U -r requirements.txt')
