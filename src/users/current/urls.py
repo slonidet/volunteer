@@ -17,5 +17,4 @@ urlpatterns = [
     url(r'profile-attachment/$',
         views.CurrentUserProfileAttachmentView.as_view(),
         name='current-user-profile-attachment'),
-
 ]

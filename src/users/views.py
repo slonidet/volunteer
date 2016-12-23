@@ -37,5 +37,3 @@ class ProfileAttachmentViewSet(viewsets.ModelViewSet):
     queryset = ProfileAttachment.objects.all()
     serializer_class = ProfileAttachmentSerializer
     filter_fields = ('user', )
-
-
