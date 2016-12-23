@@ -20,7 +20,7 @@ class Photo(models.Model):
     )
     original = models.ImageField(_('фото'), upload_to=album_dir)
     order = models.PositiveSmallIntegerField(
-        _('порядок сортировки'), blank=True, null=True
+        _('порядок сортировки'), blank=True, null=True, default=None
     )
     date = models.DateField(_('дата'), auto_now_add=True)
 
@@ -40,7 +40,8 @@ class Album(models.Model):
     name = models.CharField(_('имя'), max_length=128)
     date = models.DateField(_('дата'), auto_now_add=True)
     order = models.PositiveSmallIntegerField(
-        _('порядок сортировки'), blank=True, null=True, unique=True
+        _('порядок сортировки'), blank=True, null=True, unique=True,
+        default=None
     )
 
     class Meta:
@@ -58,7 +59,8 @@ class Video(models.Model):
     description = models.CharField(_('имя'), max_length=128)
     url = models.URLField(_('url'))
     order = models.PositiveSmallIntegerField(
-        _('порядок сортировки'), blank=True, null=True, unique=True
+        _('порядок сортировки'), blank=True, null=True, unique=True,
+        default=None
     )
     date = models.DateField(_('дата'), auto_now_add=True)
 
