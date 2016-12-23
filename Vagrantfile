@@ -64,5 +64,6 @@ Vagrant.configure("2") do |config|
      apt-get update
      apt-get install -y gcc python3-dev
      apt-get install -y mysql-server libmysqlclient-dev
+     apt-get install -y redis-server
   SHELL
 end

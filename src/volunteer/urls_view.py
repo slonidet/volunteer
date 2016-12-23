@@ -28,4 +28,6 @@ def api_root(request, format=None):
             'gallery:photo-list', request=request, format=format),
         'gallery-videos': reverse(
             'gallery:video-list', request=request, format=format),
+
+        'news': reverse('news:news-list', request=request, format=format),
     })

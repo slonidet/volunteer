@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -16,11 +18,11 @@ class Photo(models.Model):
     album = models.ForeignKey(
         'Album', verbose_name=_('альбом'), related_name='photos'
     )
-    name = models.CharField(_('имя'), max_length=128)
-    url = models.FileField(_('фото'), upload_to=album_dir)
+    original = models.ImageField(_('фото'), upload_to=album_dir)
     order = models.PositiveSmallIntegerField(
-        _('порядок сортировки'), blank=True, null=True
+        _('порядок сортировки'), blank=True, null=True, default=None
     )
+    date = models.DateField(_('дата'), auto_now_add=True)
 
     class Meta:
         verbose_name = _('фото')
@@ -28,7 +30,7 @@ class Photo(models.Model):
         unique_together = ('album', 'order')
 
     def __str__(self):
-        return self.name
+        return os.path.basename(self.original.name)
 
 
 class Album(models.Model):
@@ -36,9 +38,10 @@ class Album(models.Model):
     Photo albums
     """
     name = models.CharField(_('имя'), max_length=128)
-    date = models.DateField(_('дата события'), auto_now_add=True)
+    date = models.DateField(_('дата'), auto_now_add=True)
     order = models.PositiveSmallIntegerField(
-        _('порядок сортировки'), blank=True, null=True, unique=True
+        _('порядок сортировки'), blank=True, null=True, unique=True,
+        default=None
     )
 
     class Meta:
@@ -53,15 +56,17 @@ class Video(models.Model):
     """
     Links to youtube videos
     """
-    name = models.CharField(_('имя'), max_length=128)
+    description = models.CharField(_('имя'), max_length=128)
     url = models.URLField(_('url'))
     order = models.PositiveSmallIntegerField(
-        _('порядок сортировки'), blank=True, null=True, unique=True
+        _('порядок сортировки'), blank=True, null=True, unique=True,
+        default=None
     )
+    date = models.DateField(_('дата'), auto_now_add=True)
 
     class Meta:
         verbose_name = _('видео')
         verbose_name_plural = _('видео')
 
     def __str__(self):
-        return self.name
+        return self.description

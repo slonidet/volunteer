@@ -47,9 +47,11 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'multiselectfield',
+    'sorl.thumbnail',
 
     'users.apps.UsersConfig',
     'gallery.apps.GalleryConfig',
+    'news.apps.NewsConfig',
 ]
 
 MIDDLEWARE = [
@@ -109,6 +111,14 @@ DATABASES = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
+# Solr thumbnail settings
+
+THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
+THUMBNAIL_REDIS_DB = 0
+THUMBNAIL_REDIS_HOST = 'localhost'
+THUMBNAIL_REDIS_PORT = 6379
+
+
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -157,7 +167,7 @@ MEDIA_ROOT = os.path.join(
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
-        'rest_framework.pagination.PageNumberPagination',
+        'rest_framework.pagination.LimitOffsetPagination',
 
     'PAGE_SIZE': 100,
 
