@@ -10,10 +10,12 @@ from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from users.current.serializers import AuthUserSerializer, CurrentUserSerializer, \
-    CurrentUserProfileSerializer
+from users.current.mixins import CurrentUserViewMixin
+from users.current.serializers import AuthUserSerializer, \
+    CurrentUserSerializer, CurrentUserProfileSerializer, \
+    CurrentUserProfileAttachmentSerializer
 from users.current.tokens import RegisterTokenGenerator
-from users.models import Profile
+from users.models import Profile, ProfileAttachment
 from users.views import User
 from users.mixins import ExcludeAnonymousViewMixin
 
@@ -66,7 +68,7 @@ class AuthTokenView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['current']
+        user = serializer.validated_data['user']
         user_serializer = AuthUserSerializer(user)
         token, created = Token.objects.get_or_create(user=user)
 
@@ -76,29 +78,27 @@ class AuthTokenView(ObtainAuthToken):
         })
 
 
-class CurrentUserView(ExcludeAnonymousViewMixin, RetrieveUpdateAPIView):
+class CurrentUserViewView(ExcludeAnonymousViewMixin, CurrentUserViewMixin,
+                          RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = CurrentUserSerializer
     permission_classes = (permissions.IsAuthenticated, )
 
-    def get_object(self):
-        user = self.request.user
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(queryset, pk=user.pk)
-        self.check_object_permissions(self.request, obj)
 
-        return obj
-
-
-class CurrentUserProfileView(CreateModelMixin, RetrieveUpdateAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = CurrentUserProfileSerializer
+class BaseProfileView(CurrentUserViewMixin, CreateModelMixin,
+                      RetrieveUpdateAPIView):
     permission_classes = (permissions.IsAuthenticated, )
+    user_pk_lookup_field = 'user__pk'
 
-    def get_object(self):
-        user = self.request.user
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(queryset, user=user)
-        self.check_object_permissions(self.request, obj)
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
-        return obj
+
+class CurrentUserProfileView(BaseProfileView):
+    queryset = Profile.objects.select_related('user').all()
+    serializer_class = CurrentUserProfileSerializer
+
+
+class CurrentUserProfileAttachmentView(BaseProfileView):
+    queryset = ProfileAttachment.objects.select_related('user').all()
+    serializer_class = CurrentUserProfileAttachmentSerializer

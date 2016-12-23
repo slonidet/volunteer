@@ -1,8 +1,35 @@
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
+from users.current.mixins import CurrentUserSerializerMixin
 from users.models import Profile, ProfileAttachment
-from users.serializers import User, UserSerializer, ProfileSerializer
+from users.serializers import User, UserSerializer, ProfileSerializer, \
+    ProfileAttachmentSerializer
+
+
+class AuthProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = (
+            'id', 'first_name', 'last_name', 'gender', 'birthday'
+        )
+
+
+class AuthProfileAttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfileAttachment
+        fields = '__all__'
+
+
+class AuthUserSerializer(serializers.ModelSerializer):
+    profile = AuthProfileSerializer(read_only=True)
+    profile_attachment = AuthProfileAttachmentSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'id', 'username', 'is_superuser', 'profile', 'profile_attachment'
+        )
 
 
 class CurrentUserSerializer(UserSerializer):
@@ -30,43 +57,13 @@ class CurrentUserSerializer(UserSerializer):
         return super().update(instance, validated_data)
 
 
-class CurrentUserProfileSerializer(ProfileSerializer):
-    class Meta(ProfileSerializer.Meta):
-        exclude = ('user', )
-
-    # def validate_user(self, value):
-    #     try:
-    #         user = self.context['request'].user
-    #     except KeyError:
-    #         return value
-    #
-    #     if not user.is_superuser and value != user:
-    #         raise serializers.ValidationError(
-    #             _('нельзя изменять анкеты других пользоватетей'))
-    #
-    #     return value
+class CurrentUserProfileSerializer(CurrentUserSerializerMixin,
+                                   ProfileSerializer):
+    class Meta(CurrentUserSerializerMixin.Meta, ProfileSerializer.Meta):
+        pass
 
 
-class AuthProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = (
-            'id', 'first_name', 'last_name', 'gender', 'birthday'
-        )
-
-
-class AuthProfileAttachmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProfileAttachment
-        fields = '__all__'
-
-
-class AuthUserSerializer(serializers.ModelSerializer):
-    profile = AuthProfileSerializer(read_only=True)
-    profile_attachment = AuthProfileAttachmentSerializer(read_only=True)
-
-    class Meta:
-        model = User
-        fields = (
-            'id', 'username', 'is_superuser', 'profile', 'profile_attachment'
-        )
+class CurrentUserProfileAttachmentSerializer(CurrentUserSerializerMixin,
+                                             ProfileAttachmentSerializer):
+    class Meta(CurrentUserSerializerMixin.Meta, ProfileSerializer.Meta):
+        pass
