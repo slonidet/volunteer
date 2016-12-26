@@ -15,7 +15,7 @@ def api_root(request, format=None):
         'user-registration': reverse('user:registration', **params),
         'user-activation': reverse(
             'user:activation', **params,
-            kwargs={'user_id': 1, 'token': 'tokentokentokentokentokentokento'}
+            kwargs={'user_id': 1, 'token': '76d80224611fc919a5d54f0ff9fba446'}
         ),
         'user-profile': reverse('user:current-user-profile', **params),
         'user-profile-attachment': reverse(
