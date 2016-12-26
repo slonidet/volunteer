@@ -73,7 +73,7 @@ class AuthTokenView(ObtainAuthToken):
         token, created = Token.objects.get_or_create(user=user)
 
         return Response({
-            'current': user_serializer.data,
+            'user': user_serializer.data,
             'token': token.key
         })
 

@@ -26,7 +26,6 @@ SECRET_KEY = 'ty(tul70er_)lmfwf3u!(nw1j7crzq6ke+7ppyz^^*l6sqj+os'
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    '192.168.33.10',
     'volunteer.1m8.ru',
     'volonter61.ru',
 ]
