@@ -1,6 +1,7 @@
 from rest_framework import routers
 
-from gallery.views import AlbumViewSet, PhotoViewSet, VideoViewSet
+from gallery.views import AlbumViewSet, PhotoViewSet, \
+    VideoViewSet
 
 router = routers.DefaultRouter()
 router.register('photo-album', AlbumViewSet, base_name='photo-album')

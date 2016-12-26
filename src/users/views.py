@@ -10,7 +10,7 @@ from users.serializers import (
 )
 
 
-class UserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
+class AdminUserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
     queryset = User.objects.select_related('profile')
     serializer_class = UserSerializer
 
@@ -27,13 +27,13 @@ class UserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class ProfileViewSet(viewsets.ModelViewSet):
+class AdminProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = ProfileSerializer
     filter_fields = ('user', )
 
 
-class ProfileAttachmentViewSet(viewsets.ModelViewSet):
+class AdminProfileAttachmentViewSet(viewsets.ModelViewSet):
     queryset = ProfileAttachment.objects.all()
     serializer_class = ProfileAttachmentSerializer
     filter_fields = ('user', )
