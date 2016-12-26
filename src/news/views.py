@@ -1,12 +1,12 @@
 from rest_framework import viewsets
 
 from news.models import News
-from news.serializers import NewsSerializer
+from news.serializers import AdminNewsSerializer, NewsSerializer
 
 
 class AdminNewsViewSet(viewsets.ModelViewSet):
     queryset = News.objects.all()
-    serializer_class = NewsSerializer
+    serializer_class = AdminNewsSerializer
     filter_fields = ('is_public',)
 
 
