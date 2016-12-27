@@ -3,11 +3,11 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 
 from users.mixins import ExcludeAnonymousViewMixin
-from users.models import Profile, ProfileAttachment
+from users.models import Profile, ProfileAttachment, Story
 from users.models import User
 from users.serializers import (
-    UserSerializer, ProfileSerializer, ProfileAttachmentSerializer
-)
+    UserSerializer, ProfileSerializer, ProfileAttachmentSerializer,
+    StorySerializer)
 
 
 class UserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
@@ -37,3 +37,9 @@ class ProfileAttachmentViewSet(viewsets.ModelViewSet):
     queryset = ProfileAttachment.objects.all()
     serializer_class = ProfileAttachmentSerializer
     filter_fields = ('user', )
+
+
+class AdminStoryViewSet(viewsets.ModelViewSet):
+    queryset = Story.objects.all()
+    serializer_class = StorySerializer
+    filter_fields = ('is_approve', )
