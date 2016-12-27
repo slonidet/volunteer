@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.core.mail import send_mail
@@ -5,6 +7,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from multiselectfield import MultiSelectField
+from dateutil.relativedelta import relativedelta
 
 from core.fields import PhoneField
 
@@ -383,6 +386,10 @@ class Profile(models.Model):
     def __str__(self):
         return '{0} {1}'.format(self.first_name, self.last_name)
 
+    @property
+    def age(self):
+        return relativedelta(date.today(), self.birthday).years
+
 
 class ProfileAttachment(models.Model):
     """
@@ -410,6 +417,7 @@ class Story(models.Model):
         Profile, related_name='story', verbose_name=_('пользователь')
     )
     text = models.TextField(_('текст'))
+    about_yourself = models.CharField(_('о себе'), max_length=1024)
     is_public = models.BooleanField(_('опубликовано'), default=False)
     admin_comment = models.TextField(
         _('коментарий администратора'), blank=True, null=True

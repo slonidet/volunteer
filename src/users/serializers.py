@@ -83,7 +83,20 @@ class ProfileAttachmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class StorySerializer(serializers.ModelSerializer):
+class StoryProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('first_name', 'last_name', 'age')
+
+
+class AdminStorySerializer(serializers.ModelSerializer):
+    profile = StoryProfileSerializer(read_only=True)
+
     class Meta:
         model = Story
         fields = '__all__'
+
+
+class StorySerializer(AdminStorySerializer):
+    class Meta(AdminStorySerializer.Meta):
+        fields = ('text', 'about_yourself', 'profile')
