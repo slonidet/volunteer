@@ -91,6 +91,10 @@ class StoryProfileSerializer(serializers.ModelSerializer):
 
 class AdminStorySerializer(serializers.ModelSerializer):
     profile = StoryProfileSerializer(read_only=True)
+    profile_photo = serializers.ImageField(
+        label='Фото', source='profile.user.profile_attachment.photo',
+        read_only=True
+    )
 
     class Meta:
         model = Story
@@ -99,4 +103,4 @@ class AdminStorySerializer(serializers.ModelSerializer):
 
 class StorySerializer(AdminStorySerializer):
     class Meta(AdminStorySerializer.Meta):
-        fields = ('text', 'about_yourself', 'profile')
+        fields = ('text', 'about_yourself', 'profile', 'profile_photo')
