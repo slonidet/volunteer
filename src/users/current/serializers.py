@@ -1,6 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
-from rest_framework.generics import get_object_or_404
 
 from users.current.mixins import CurrentUserSerializerMixin
 from users.models import Profile, ProfileAttachment
@@ -78,7 +77,12 @@ class CurrentUserStorySerializer(AdminStorySerializer):
         read_only_fields = ('is_public', 'admin_comment')
 
     def create(self, validated_data):
-        validated_data['profile'] = get_object_or_404(
-            Profile, user=self.context['request'].user
-        )
+        try:
+            profile = Profile.objects.get(user=self.context['request'].user)
+        except Profile.DoesNotExist:
+            raise serializers.ValidationError(
+                {'profile': _('Необходимо заполнить анкету')}
+            )
+        validated_data['profile'] = profile
+
         return super().create(validated_data)
