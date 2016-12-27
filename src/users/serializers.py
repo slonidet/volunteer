@@ -1,4 +1,4 @@
-from users.models import User
+from users.models import User, Story
 from django.contrib.auth.hashers import make_password
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
@@ -80,4 +80,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 class ProfileAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfileAttachment
+        fields = '__all__'
+
+
+class StorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Story
         fields = '__all__'

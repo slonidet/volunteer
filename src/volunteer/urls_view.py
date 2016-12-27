@@ -20,11 +20,11 @@ def api_root(request, format=None):
         'user-profile': reverse('user:current-user-profile', **params),
         'user-profile-attachment': reverse(
             'user:current-user-profile-attachment', **params),
-
         'admin:users': reverse('adm:users:user-list', **params),
         'admin:users-profiles': reverse('adm:users:profile-list', **params),
         'admin:users-profile-attachments': reverse(
             'adm:users:profile-attachment-list', **params),
+        'admin:users-stories': reverse('adm:users:story-list', **params),
 
         'admin:gallery-photo-albums': reverse(
             'adm:gallery:photo-album-list', **params),

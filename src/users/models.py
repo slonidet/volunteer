@@ -400,3 +400,17 @@ class ProfileAttachment(models.Model):
 
     def __str__(self):
         return self.id
+
+
+class Story(models.Model):
+    """
+    User story
+    """
+    profile = models.OneToOneField(
+        Profile, related_name='story', verbose_name=_('пользователь')
+    )
+    text = models.TextField(_('текст'))
+    is_approve = models.BooleanField(_('утверждено'), default=False)
+    admin_comment = models.TextField(
+        _('коментарий администратора'), blank=True, null=True
+    )
