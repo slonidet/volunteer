@@ -43,8 +43,8 @@ class AdminProfileAttachmentViewSet(viewsets.ModelViewSet):
 
 
 class AdminStoryViewSet(StoryRelatedViewMixin, mixins.RetrieveModelMixin,
-                        mixins.UpdateModelMixin, mixins.DestroyModelMixin,
-                        mixins.ListModelMixin, GenericViewSet):
+                        mixins.UpdateModelMixin, mixins.ListModelMixin,
+                        GenericViewSet):
     queryset = Story.objects.all()
     serializer_class = AdminStorySerializer
     filter_fields = ('is_public', )
