@@ -20,6 +20,7 @@ def api_root(request, format=None):
         'user-profile': reverse('user:current-user-profile', **params),
         'user-profile-attachment': reverse(
             'user:current-user-profile-attachment', **params),
+        'user-story': reverse('user:current-user-story', **params),
 
         'users-stories': reverse('users:story-list', **params),
 

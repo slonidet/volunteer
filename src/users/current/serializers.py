@@ -1,10 +1,11 @@
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
 
 from users.current.mixins import CurrentUserSerializerMixin
 from users.models import Profile, ProfileAttachment
 from users.serializers import User, UserSerializer, ProfileSerializer, \
-    ProfileAttachmentSerializer
+    ProfileAttachmentSerializer, AdminStorySerializer
 
 
 class AuthProfileSerializer(serializers.ModelSerializer):
@@ -67,3 +68,17 @@ class CurrentUserProfileAttachmentSerializer(CurrentUserSerializerMixin,
                                              ProfileAttachmentSerializer):
     class Meta(CurrentUserSerializerMixin.Meta, ProfileSerializer.Meta):
         pass
+
+
+class CurrentUserStorySerializer(AdminStorySerializer):
+    class Meta(AdminStorySerializer.Meta):
+        fields = (
+            'text', 'about_yourself', 'profile', 'admin_comment', 'is_public'
+        )
+        read_only_fields = ('is_public', 'admin_comment')
+
+    def create(self, validated_data):
+        validated_data['profile'] = get_object_or_404(
+            Profile, user=self.context['request'].user
+        )
+        return super().create(validated_data)

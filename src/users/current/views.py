@@ -1,5 +1,6 @@
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _, ugettext
+from rest_framework import exceptions
 from rest_framework import views, status, permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -13,11 +14,11 @@ from rest_framework.reverse import reverse
 from users.current.mixins import CurrentUserViewMixin
 from users.current.serializers import AuthUserSerializer, \
     CurrentUserSerializer, CurrentUserProfileSerializer, \
-    CurrentUserProfileAttachmentSerializer
+    CurrentUserProfileAttachmentSerializer, CurrentUserStorySerializer
 from users.current.tokens import RegisterTokenGenerator
-from users.models import Profile, ProfileAttachment
+from users.models import Profile, ProfileAttachment, Story
 from users.views import User
-from users.mixins import ExcludeAnonymousViewMixin
+from users.mixins import ExcludeAnonymousViewMixin, StoryRelatedViewMixin
 
 
 class UserRegistrationView(ExcludeAnonymousViewMixin, CreateAPIView):
@@ -78,15 +79,14 @@ class AuthTokenView(ObtainAuthToken):
         })
 
 
-class CurrentUserViewView(ExcludeAnonymousViewMixin, CurrentUserViewMixin,
-                          RetrieveUpdateAPIView):
+class CurrentUserViewView(CurrentUserViewMixin, RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = CurrentUserSerializer
     permission_classes = (permissions.IsAuthenticated, )
 
 
-class BaseProfileView(CurrentUserViewMixin, CreateModelMixin,
-                      RetrieveUpdateAPIView):
+class BaseCurrentUserView(CurrentUserViewMixin, CreateModelMixin,
+                          RetrieveUpdateAPIView):
     permission_classes = (permissions.IsAuthenticated, )
     user_pk_lookup_field = 'user__pk'
 
@@ -94,11 +94,29 @@ class BaseProfileView(CurrentUserViewMixin, CreateModelMixin,
         return self.create(request, *args, **kwargs)
 
 
-class CurrentUserProfileView(BaseProfileView):
+class CurrentUserProfileView(BaseCurrentUserView):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = CurrentUserProfileSerializer
 
 
-class CurrentUserProfileAttachmentView(BaseProfileView):
+class CurrentUserProfileAttachmentView(BaseCurrentUserView):
     queryset = ProfileAttachment.objects.select_related('user').all()
     serializer_class = CurrentUserProfileAttachmentSerializer
+
+
+class CurrentUserStoryView(StoryRelatedViewMixin, BaseCurrentUserView):
+    queryset = Story.objects.all()
+    user_pk_lookup_field = 'profile__user__pk'
+    serializer_class = CurrentUserStorySerializer
+
+    def create(self, request, *args, **kwargs):
+        # TODO: сделать ограничение на создание, пока не утверждена анкета
+        return super().create(request, args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.is_public:
+            raise exceptions.PermissionDenied(
+                _('Нельзя редактировать историю после публикации'))
+
+        return super().update(request, *args, **kwargs)

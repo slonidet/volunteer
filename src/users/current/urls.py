@@ -17,4 +17,6 @@ urlpatterns = [
     url(r'profile-attachment/$',
         views.CurrentUserProfileAttachmentView.as_view(),
         name='current-user-profile-attachment'),
+    url(r'story/$', views.CurrentUserStoryView.as_view(),
+        name='current-user-story'),
 ]

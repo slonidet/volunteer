@@ -1,6 +1,8 @@
 from django.utils.translation import ugettext_lazy as _
+from rest_framework import mixins
 from rest_framework import status, viewsets
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
 from users.mixins import ExcludeAnonymousViewMixin, StoryRelatedViewMixin
 from users.models import Profile, ProfileAttachment, Story
@@ -40,7 +42,9 @@ class AdminProfileAttachmentViewSet(viewsets.ModelViewSet):
     filter_fields = ('user', )
 
 
-class AdminStoryViewSet(StoryRelatedViewMixin, viewsets.ModelViewSet):
+class AdminStoryViewSet(StoryRelatedViewMixin, mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin, mixins.DestroyModelMixin,
+                        mixins.ListModelMixin, GenericViewSet):
     queryset = Story.objects.all()
     serializer_class = AdminStorySerializer
     filter_fields = ('is_public', )
