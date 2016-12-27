@@ -410,7 +410,7 @@ class Story(models.Model):
         Profile, related_name='story', verbose_name=_('пользователь')
     )
     text = models.TextField(_('текст'))
-    is_approve = models.BooleanField(_('утверждено'), default=False)
+    is_public = models.BooleanField(_('опубликовано'), default=False)
     admin_comment = models.TextField(
         _('коментарий администратора'), blank=True, null=True
     )

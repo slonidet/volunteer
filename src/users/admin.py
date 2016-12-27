@@ -1,5 +1,5 @@
 from django.contrib import admin
-from users.models import User
+from users.models import User, Story
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.admin import (
     UserAdmin as BaseUserAdmin, UserChangeForm as BaseUserChangeForm,
@@ -53,6 +53,11 @@ class ProfileAttachmentAdmin(admin.ModelAdmin):
     pass
 
 
+class StoryAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(ProfileAttachment, ProfileAttachmentAdmin)
+admin.site.register(Story, StoryAdmin)

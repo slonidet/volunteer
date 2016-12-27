@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import status, viewsets
 from rest_framework.response import Response
+from rest_framework import permissions
 
 from users.mixins import ExcludeAnonymousViewMixin
 from users.models import Profile, ProfileAttachment, Story
@@ -39,7 +40,15 @@ class ProfileAttachmentViewSet(viewsets.ModelViewSet):
     filter_fields = ('user', )
 
 
-class AdminStoryViewSet(viewsets.ModelViewSet):
+class StoryViewSet(viewsets.ModelViewSet):
     queryset = Story.objects.all()
     serializer_class = StorySerializer
-    filter_fields = ('is_approve', )
+    filter_fields = ('is_public', )
+    permission_classes = (permissions.DjangoModelPermissionsOrAnonReadOnly, )
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if not self.request.user.has_module_perms('users'):
+            queryset = queryset.filter(is_public=True)
+
+        return queryset

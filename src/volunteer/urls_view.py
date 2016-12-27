@@ -25,6 +25,7 @@ def api_root(request, format=None):
         'users-profiles': reverse('users:profile-list', **params),
         'users-profile-attachments': reverse(
             'users:profile-attachment-list', **params),
+        'users-stories': reverse('users:story-list', **params),
 
         'gallery-photo-albums': reverse('gallery:photo-album-list', **params),
         'gallery-photos': reverse('gallery:photo-list', **params),
