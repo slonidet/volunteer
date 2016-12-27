@@ -11,7 +11,7 @@ from users.serializers import (
     StorySerializer)
 
 
-class UserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
+class AdminUserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
     queryset = User.objects.select_related('profile')
     serializer_class = UserSerializer
 
@@ -28,27 +28,19 @@ class UserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class ProfileViewSet(viewsets.ModelViewSet):
+class AdminProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = ProfileSerializer
     filter_fields = ('user', )
 
 
-class ProfileAttachmentViewSet(viewsets.ModelViewSet):
+class AdminProfileAttachmentViewSet(viewsets.ModelViewSet):
     queryset = ProfileAttachment.objects.all()
     serializer_class = ProfileAttachmentSerializer
     filter_fields = ('user', )
 
 
-class StoryViewSet(viewsets.ModelViewSet):
+class AdminStoryViewSet(viewsets.ModelViewSet):
     queryset = Story.objects.all()
     serializer_class = StorySerializer
     filter_fields = ('is_public', )
-    permission_classes = (permissions.DjangoModelPermissionsOrAnonReadOnly, )
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        if not self.request.user.has_module_perms('users'):
-            queryset = queryset.filter(is_public=True)
-
-        return queryset

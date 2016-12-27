@@ -4,7 +4,7 @@ from core.serializers import HyperlinkedSorlImageField
 from news.models import News
 
 
-class NewsSerializer(serializers.ModelSerializer):
+class AdminNewsSerializer(serializers.ModelSerializer):
     image = HyperlinkedSorlImageField(
         '600x400', options={'upscale': False}
     )
@@ -16,3 +16,9 @@ class NewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
         fields = '__all__'
+
+
+class NewsSerializer(AdminNewsSerializer):
+    class Meta:
+        model = News
+        exclude = ('is_public', )
