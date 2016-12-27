@@ -59,14 +59,16 @@ class CurrentUserSerializer(UserSerializer):
 
 class CurrentUserProfileSerializer(CurrentUserSerializerMixin,
                                    ProfileSerializer):
-    class Meta(CurrentUserSerializerMixin.Meta, ProfileSerializer.Meta):
-        pass
+
+    class Meta(CurrentUserSerializerMixin.Meta):
+        model = Profile
 
 
 class CurrentUserProfileAttachmentSerializer(CurrentUserSerializerMixin,
                                              ProfileAttachmentSerializer):
-    class Meta(CurrentUserSerializerMixin.Meta, ProfileSerializer.Meta):
-        pass
+
+    class Meta(CurrentUserSerializerMixin.Meta):
+        model = ProfileAttachment
 
 
 class CurrentUserStorySerializer(AdminStorySerializer):
