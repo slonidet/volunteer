@@ -5,7 +5,7 @@ from rest_framework.reverse import reverse
 
 
 @api_view(['GET'])
-@permission_classes((permissions.IsAdminUser,))
+@permission_classes((permissions.IsAuthenticated,))
 def api_root(request, format=None):
     params = {'request': request, 'format': format}
 
@@ -43,6 +43,7 @@ def api_root(request, format=None):
 
         'admin:news': reverse('adm:news:news-list', **params),
         'news': reverse('news:news-list', **params),
+
 
         'admin:static-pages': reverse('adm:static:page-list', **params),
         'static-pages': reverse('static:page-list', **params),

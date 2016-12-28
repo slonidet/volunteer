@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'gallery.apps.GalleryConfig',
     'news.apps.NewsConfig',
     'static.apps.StaticConfig',
+    'permissions.apps.PermissionsConfig',
 ]
 
 MIDDLEWARE = [
@@ -172,7 +173,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
 
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.DjangoModelPermissions',
+        'permissions.permissions.ViewDjangoModelPermissions',
     ),
 
     'DEFAULT_AUTHENTICATION_CLASSES': (

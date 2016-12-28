@@ -3,6 +3,8 @@ import os
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from permissions.models import MetaPermissions
+
 
 def album_dir(instance, filename):
     return 'gallery/{album_id}/{filename}'.format(
@@ -24,7 +26,7 @@ class Photo(models.Model):
     )
     date = models.DateField(_('дата'), auto_now_add=True)
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('фото')
         verbose_name_plural = _('фото')
         unique_together = ('album', 'order')
@@ -44,7 +46,7 @@ class Album(models.Model):
         default=None
     )
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('альбом')
         verbose_name_plural = _('альбомы')
 
@@ -64,7 +66,7 @@ class Video(models.Model):
     )
     date = models.DateField(_('дата'), auto_now_add=True)
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('видео')
         verbose_name_plural = _('видео')
 

@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+from permissions.models import MetaPermissions
+
 
 class News(models.Model):
     """
@@ -13,7 +15,7 @@ class News(models.Model):
     is_public = models.BooleanField(_('опубликовано'), default=False)
     image = models.ImageField(_('фото'), blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('новость')
         verbose_name_plural = _('новости')
 

@@ -10,6 +10,7 @@ from multiselectfield import MultiSelectField
 from dateutil.relativedelta import relativedelta
 
 from core.fields import PhoneField
+from permissions.models import MetaPermissions
 
 
 class UserManager(BaseUserManager):
@@ -69,7 +70,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'username'
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
@@ -379,7 +380,7 @@ class Profile(models.Model):
         _('размер обуви'), choices=SHOE_SIZE_CHOICES
     )
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('анкета пользователя')
         verbose_name_plural = _('анкеты пользователей')
 
@@ -401,7 +402,7 @@ class ProfileAttachment(models.Model):
     )
     photo = models.ImageField(_('фото'), upload_to='user/photo/')
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('файл анкеты пользователя')
         verbose_name_plural = _('файлы анкет пользователей')
 
@@ -422,3 +423,10 @@ class Story(models.Model):
     admin_comment = models.TextField(
         _('коментарий администратора'), blank=True, null=True
     )
+
+    class Meta(MetaPermissions):
+        verbose_name = _('волонтёрская история')
+        verbose_name_plural = _('волонтёрские истории')
+
+    def __str__(self):
+        return self.id
