@@ -55,6 +55,7 @@ class AdminStoryViewSet(StoryRelatedViewMixin, mixins.RetrieveModelMixin,
 class StoryViewSet(StoryRelatedViewMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Story.objects.filter(is_public=True)
     serializer_class = StorySerializer
+    permission_classes = ()
 
 
 class AdminUserGroupViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
