@@ -130,6 +130,7 @@ class UserGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'name', 'users')
+        read_only_fields = ('name', )
 
     def create(self, validated_data):
         users = validated_data.pop('user_set', None)
