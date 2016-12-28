@@ -80,7 +80,8 @@ class AuthTokenView(ObtainAuthToken):
 
 
 class CurrentUserViewView(CurrentUserViewMixin, RetrieveUpdateAPIView):
-    queryset = User.objects.all()
+    queryset = User.objects.select_related(
+        'profile', 'profile_attachment').prefetch_related('groups')
     serializer_class = CurrentUserSerializer
     permission_classes = (permissions.IsAuthenticated, )
 

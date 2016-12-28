@@ -1,3 +1,5 @@
+from django.contrib.auth.models import Group
+
 from users.models import User, Story
 from django.contrib.auth.hashers import make_password
 from django.utils.translation import ugettext_lazy as _
@@ -6,17 +8,25 @@ from rest_framework import serializers
 from users.models import Profile, ProfileAttachment
 
 
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('id', 'name')
+
+
 class UserSerializer(serializers.ModelSerializer):
+    groups = GroupSerializer(many=True, read_only=True)
+
     class Meta:
         model = User
         fields = (
             'id', 'username', 'is_active', 'is_superuser', 'is_staff',
             'password', 'date_joined', 'last_login', 'profile',
-            'profile_attachment'
+            'profile_attachment', 'groups'
         )
         read_only_fields = (
             'is_superuser', 'is_staff', 'last_login', 'date_joined', 'profile',
-            'profile_attachment'
+            'profile_attachment', 'groups'
         )
         extra_kwargs = {
             'password': {'write_only': True, 'required': False}
@@ -56,6 +66,14 @@ class UserSerializer(serializers.ModelSerializer):
             self.set_user_groups(instance, system_groups)
 
         return instance
+
+
+class SimpleUserSerializer(serializers.ModelSerializer):
+    username = serializers.EmailField(label='Адрес электронной почты')
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'full_name')
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -104,3 +122,34 @@ class AdminStorySerializer(serializers.ModelSerializer):
 class StorySerializer(AdminStorySerializer):
     class Meta(AdminStorySerializer.Meta):
         fields = ('text', 'about_yourself', 'profile', 'profile_photo')
+
+
+class UserGroupSerializer(serializers.ModelSerializer):
+    users = SimpleUserSerializer(source='user_set', many=True, required=False)
+
+    class Meta:
+        model = Group
+        fields = ('id', 'name', 'users')
+
+    def create(self, validated_data):
+        users = validated_data.pop('user_set', None)
+        instance = super().create(validated_data)
+
+        if users is not None:
+            self.add_user_to_group(instance)
+
+        return instance
+
+    def update(self, instance, validated_data):
+        users = validated_data.pop('user_set', None)
+        instance = super().update(instance, validated_data)
+
+        if users is not None:
+            self.add_user_to_group(instance)
+
+        return instance
+
+    def add_user_to_group(self, group):
+        user_ids = [u['id'] for u in self.initial_data['users']]
+        users = User.objects.filter(pk__in=user_ids)
+        group.user_set.set(users)

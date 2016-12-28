@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import mixins
 from rest_framework import status, viewsets
@@ -9,12 +10,13 @@ from users.models import Profile, ProfileAttachment, Story
 from users.models import User
 from users.serializers import (
     UserSerializer, ProfileSerializer, ProfileAttachmentSerializer,
-    AdminStorySerializer, StorySerializer
-)
+    AdminStorySerializer, StorySerializer,
+    UserGroupSerializer)
 
 
 class AdminUserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
-    queryset = User.objects.select_related('profile')
+    queryset = User.objects.select_related(
+        'profile', 'profile_attachment').prefetch_related('groups')
     serializer_class = UserSerializer
 
     def destroy(self, request, *args, **kwargs):
@@ -53,3 +55,9 @@ class AdminStoryViewSet(StoryRelatedViewMixin, mixins.RetrieveModelMixin,
 class StoryViewSet(StoryRelatedViewMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Story.objects.filter(is_public=True)
     serializer_class = StorySerializer
+
+
+class AdminUserGroupViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                            mixins.ListModelMixin, GenericViewSet):
+    queryset = Group.objects.all().order_by('id')
+    serializer_class = UserGroupSerializer

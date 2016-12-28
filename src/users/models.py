@@ -78,14 +78,28 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         Returns the first_name plus the last_name, with a space in between.
         """
-        full_name = '%s %s' % (self.profile.first_name, self.profile.last_name)
-        return full_name.strip()
+        if self.profile:
+            full_name = '%s %s' % (self.profile.first_name, self.profile.last_name)
+            return full_name.strip()
+
+        return ''
+
+    @property
+    def full_name(self):
+        return self.get_full_name()
 
     def get_short_name(self):
         """
         Returns the short name for the user.
         """
-        return self.profile.first_name
+        if self.profile:
+            return self.profile.first_name
+
+        return ''
+
+    @property
+    def short_name(self):
+        return self.short_name()
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         """
