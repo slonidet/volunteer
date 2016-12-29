@@ -121,7 +121,7 @@ class AdminStorySerializer(serializers.ModelSerializer):
 
 class StorySerializer(AdminStorySerializer):
     class Meta(AdminStorySerializer.Meta):
-        fields = ('text', 'about_yourself', 'profile', 'profile_photo')
+        fields = ('id', 'text', 'about_yourself', 'profile', 'profile_photo')
 
 
 class UserGroupSerializer(serializers.ModelSerializer):
