@@ -18,6 +18,7 @@ class News(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('новость')
         verbose_name_plural = _('новости')
+        ordering = ('-date', )
 
     def __str__(self):
         return self.title
