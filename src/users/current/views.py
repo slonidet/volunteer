@@ -38,7 +38,7 @@ class UserRegistrationView(ExcludeAnonymousViewMixin, CreateAPIView):
         # send activation email
         token = RegisterTokenGenerator().make_token(user)
         activation_link = reverse(
-            'users:activation', kwargs={'user_id': user.id, 'token': token},
+            'user:activation', kwargs={'user_id': user.id, 'token': token},
             request=request
         )
         message = '{0}. {1}'.format(
