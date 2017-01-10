@@ -19,7 +19,7 @@ class CurrentUserSerializerMixin(object):
     """ Create object only for current (request) user """
     class Meta:
         fields = None
-        exclude = ('user', )
+        exclude = ('id', 'user', )
 
     def create(self, validated_data):
         user = self.context['request'].user

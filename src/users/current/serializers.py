@@ -74,7 +74,7 @@ class CurrentUserProfileAttachmentSerializer(CurrentUserSerializerMixin,
 class CurrentUserStorySerializer(AdminStorySerializer):
     class Meta(AdminStorySerializer.Meta):
         fields = (
-            'text', 'about_yourself', 'admin_comment', 'is_public'
+            'id', 'text', 'about_yourself', 'admin_comment', 'is_public'
         )
         read_only_fields = ('is_public', 'admin_comment')
 

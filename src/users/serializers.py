@@ -104,7 +104,7 @@ class ProfileAttachmentSerializer(serializers.ModelSerializer):
 class StoryProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('first_name', 'last_name', 'age')
+        fields = ('id', 'first_name', 'last_name', 'age')
 
 
 class AdminStorySerializer(serializers.ModelSerializer):
