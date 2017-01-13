@@ -8,6 +8,30 @@ from rest_framework import serializers
 from users.models import Profile, ProfileAttachment
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    benefits = serializers.MultipleChoiceField(
+        choices=Profile.BENEFIT_CHOICES,
+        label=Profile._meta.get_field('benefits').verbose_name,
+    )
+
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+    def validate_benefits(self, value):
+        if len(value) > 4:
+            raise serializers.ValidationError(
+                _('нельзя выбрать более 4-х значени')
+            )
+
+        return value
+
+
+class SimpleProfileSerializer(ProfileSerializer):
+    class Meta(ProfileSerializer.Meta):
+        fields = ('id', 'first_name', 'last_name', 'middle_name')
+
+
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
@@ -16,6 +40,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     groups = GroupSerializer(many=True, read_only=True)
+    profile = SimpleProfileSerializer(read_only=True)
 
     class Meta:
         model = User
@@ -74,25 +99,6 @@ class SimpleUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'full_name')
-
-
-class ProfileSerializer(serializers.ModelSerializer):
-    benefits = serializers.MultipleChoiceField(
-        choices=Profile.BENEFIT_CHOICES,
-        label=Profile._meta.get_field('benefits').verbose_name,
-    )
-
-    class Meta:
-        model = Profile
-        fields = '__all__'
-
-    def validate_benefits(self, value):
-        if len(value) > 4:
-            raise serializers.ValidationError(
-                _('нельзя выбрать более 4-х значени')
-            )
-
-        return value
 
 
 class ProfileAttachmentSerializer(serializers.ModelSerializer):
