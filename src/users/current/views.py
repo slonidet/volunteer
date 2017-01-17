@@ -99,6 +99,16 @@ class CurrentUserProfileView(BaseCurrentUserView):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = CurrentUserProfileSerializer
 
+    def perform_update(self, serializer):
+        if serializer.instance.status == Profile.STATUS_APPROVED:
+            raise exceptions.NotAcceptable(
+                _('Нельзя редактировать утверждённую анкету')
+            )
+
+        # set inspection status if user update profile
+        serializer.validated_data['status'] = Profile.STATUS_INSPECTION
+        serializer.save()
+
 
 class CurrentUserProfileAttachmentView(BaseCurrentUserView):
     queryset = ProfileAttachment.objects.select_related('user').all()

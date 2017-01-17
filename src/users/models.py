@@ -264,10 +264,23 @@ class Profile(models.Model):
         (EVALUATION_9, _('9')),
         (EVALUATION_10, _('10')),
     )
+    STATUS_INSPECTION = 'inspection'
+    STATUS_WORKING = 'working'
+    STATUS_APPROVED = 'approved'
+    STATUS_CHOICES = (
+        (STATUS_INSPECTION, _('на рассмотрении')),
+        (STATUS_WORKING, _('на доработке')),
+        (STATUS_APPROVED, _('утверждено')),
+    )
 
     user = models.OneToOneField(
         User, related_name='profile', verbose_name=_('пользователь')
     )
+    status = models.CharField(
+        _('статус'), choices=STATUS_CHOICES, max_length=10,
+        default=STATUS_INSPECTION
+    )
+    updated_at = models.DateTimeField(_('время обновления'), auto_now=True)
     first_name = models.CharField(_('имя'), max_length=30)
     last_name = models.CharField(_('фамилия'), max_length=30)
     middle_name = models.CharField(_('отчество'), max_length=30)
@@ -422,6 +435,13 @@ class ProfileAttachment(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class ProfileComment(models.Model):
+    profile = models.ForeignKey(Profile, related_name='comments',
+                                verbose_name=_('анкета'))
+    text = models.TextField(_('Текст'))
+    created_at = models.DateTimeField(_('время создания'), auto_now_add=True)
 
 
 class Story(models.Model):

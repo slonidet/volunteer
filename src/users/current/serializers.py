@@ -62,6 +62,7 @@ class CurrentUserProfileSerializer(CurrentUserSerializerMixin,
 
     class Meta(CurrentUserSerializerMixin.Meta):
         model = Profile
+        read_only_fields = ('status', )
 
 
 class CurrentUserProfileAttachmentSerializer(CurrentUserSerializerMixin,
