@@ -118,6 +118,7 @@ class CurrentUserProfileCommentView(ListAPIView):
     queryset = ProfileComment.objects.all()
     serializer_class = ProfileCommentSerializer
     user_pk_lookup_field = 'profile__user__pk'
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         queryset = super().get_queryset()
