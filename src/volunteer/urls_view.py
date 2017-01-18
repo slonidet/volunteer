@@ -28,6 +28,10 @@ def api_root(request, format=None):
         # Users
         'admin:users': reverse('adm:users:user-list', **params),
         'admin:users-profiles': reverse('adm:users:profile-list', **params),
+        'admin:users-profiles-comments': reverse(
+            'adm:users:profile-comments', **params, kwargs={'pk': 0}),
+        'admin:users-profiles-approve': reverse(
+            'adm:users:profile-approve', **params, kwargs={'pk': 0}),
         'admin:users-profile-attachments': reverse(
             'adm:users:profile-attachment-list', **params),
         'admin:users-stories': reverse('adm:users:story-list', **params),

@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'profile-attachment/$',
         views.CurrentUserProfileAttachmentView.as_view(),
         name='current-user-profile-attachment'),
-    url(r'profile/comments$', views.CurrentUserProfileCommentView.as_view(),
+    url(r'profile/comments/$', views.CurrentUserProfileCommentView.as_view(),
         name='current-user-profile-comments'),
     url(r'story/$', views.CurrentUserStoryView.as_view(),
         name='current-user-story'),
