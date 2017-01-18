@@ -11,7 +11,8 @@ from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from users.current.mixins import CurrentUserViewMixin
+from users.current.mixins import CurrentUserViewMixin, \
+    NotAllowEditApprovedProfileMixin
 from users.current.serializers import AuthUserSerializer, \
     CurrentUserSerializer, CurrentUserProfileSerializer, \
     CurrentUserProfileAttachmentSerializer, CurrentUserStorySerializer
@@ -96,19 +97,21 @@ class BaseCurrentUserView(CurrentUserViewMixin, CreateModelMixin,
         return self.create(request, *args, **kwargs)
 
 
-class CurrentUserProfileView(BaseCurrentUserView):
+class CurrentUserProfileView(NotAllowEditApprovedProfileMixin,
+                             BaseCurrentUserView):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = CurrentUserProfileSerializer
 
     def perform_update(self, serializer):
-        if serializer.instance.status == Profile.STATUS_APPROVED:
-            raise exceptions.NotAcceptable(
-                _('Нельзя редактировать утверждённую анкету')
-            )
-
         # set inspection status if user update profile
         serializer.validated_data['status'] = Profile.STATUS_INSPECTION
-        serializer.save()
+        super().perform_update(serializer)
+
+
+class CurrentUserProfileAttachmentView(NotAllowEditApprovedProfileMixin,
+                                       BaseCurrentUserView):
+    queryset = ProfileAttachment.objects.select_related('user').all()
+    serializer_class = CurrentUserProfileAttachmentSerializer
 
 
 class CurrentUserProfileCommentView(ListAPIView):
@@ -124,18 +127,19 @@ class CurrentUserProfileCommentView(ListAPIView):
         return queryset.filter(**user_kwargs)
 
 
-class CurrentUserProfileAttachmentView(BaseCurrentUserView):
-    queryset = ProfileAttachment.objects.select_related('user').all()
-    serializer_class = CurrentUserProfileAttachmentSerializer
-
-
 class CurrentUserStoryView(StoryRelatedViewMixin, BaseCurrentUserView):
     queryset = Story.objects.all()
     user_pk_lookup_field = 'profile__user__pk'
     serializer_class = CurrentUserStorySerializer
 
     def create(self, request, *args, **kwargs):
-        # TODO: сделать ограничение на создание, пока не утверждена анкета
+        profile = Profile.objects.get(user=self.request.user)
+        if profile.status != Profile.STATUS_APPROVED:
+            raise exceptions.NotAcceptable(
+                _('Нельзя создать волонтёрскую итосрию пока анкета '
+                  'не утверждена администратором')
+            )
+
         return super().create(request, args, **kwargs)
 
     def update(self, request, *args, **kwargs):

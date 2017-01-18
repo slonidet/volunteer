@@ -3,7 +3,7 @@ from rest_framework import routers
 from users import views
 
 
-router = routers.DefaultRouter()
+router = routers.SimpleRouter()
 router.register('profiles', views.AdminProfileViewSet, base_name='profile')
 router.register('profile-attachments', views.AdminProfileAttachmentViewSet,
                 base_name='profile-attachment')

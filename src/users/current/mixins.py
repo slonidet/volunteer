@@ -1,4 +1,7 @@
+from rest_framework import exceptions
 from rest_framework.generics import get_object_or_404
+
+from users.models import Profile
 
 
 class CurrentUserViewMixin(object):
@@ -26,3 +29,14 @@ class CurrentUserSerializerMixin(object):
         validated_data['user'] = user
 
         return super().create(validated_data)
+
+
+class NotAllowEditApprovedProfileMixin(object):
+    """ User can't edit profile if admin approve it """
+    def perform_update(self, serializer):
+        if serializer.instance.status == Profile.STATUS_APPROVED:
+            raise exceptions.NotAcceptable(
+                _('Нельзя редактировать утверждённую анкету')
+            )
+
+        super().perform_update(serializer)

@@ -32,6 +32,13 @@ class SimpleProfileSerializer(ProfileSerializer):
         fields = ('id', 'first_name', 'last_name', 'middle_name')
 
 
+class ApproveProfileSerializer(ProfileSerializer):
+    class Meta(ProfileSerializer.Meta):
+        fields = ('id', 'updated_at', 'status')
+        read_only_fields = ('status', )
+        extra_kwargs = {'updated_at': {'read_only': False}}
+
+
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
