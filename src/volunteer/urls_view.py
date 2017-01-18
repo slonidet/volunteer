@@ -10,6 +10,7 @@ def api_root(request, format=None):
     params = {'request': request, 'format': format}
 
     return Response({
+        # Current User
         'user': reverse('user:current-user', **params),
         'user-authentication': reverse('user:authentication', **params),
         'user-registration': reverse('user:registration', **params),
@@ -20,32 +21,33 @@ def api_root(request, format=None):
         'user-profile': reverse('user:current-user-profile', **params),
         'user-profile-attachment': reverse(
             'user:current-user-profile-attachment', **params),
+        'user-profile-comments': reverse('user:current-user-profile-comments',
+                                         **params),
         'user-story': reverse('user:current-user-story', **params),
 
-        'users-stories': reverse('users:story-list', **params),
-
+        # Users
         'admin:users': reverse('adm:users:user-list', **params),
         'admin:users-profiles': reverse('adm:users:profile-list', **params),
         'admin:users-profile-attachments': reverse(
             'adm:users:profile-attachment-list', **params),
         'admin:users-stories': reverse('adm:users:story-list', **params),
         'admin:users-groups': reverse('adm:users:group-list', **params),
+        'users-stories': reverse('users:story-list', **params),
 
-
+        # Gallery
         'admin:gallery-photo-albums': reverse(
             'adm:gallery:photo-album-list', **params),
         'admin:gallery-photos': reverse('adm:gallery:photo-list', **params),
         'admin:gallery-videos': reverse('adm:gallery:video-list', **params),
-
         'gallery-photo-albums': reverse('gallery:photo-album-list', **params),
         'gallery-photos': reverse('gallery:photo-list', **params),
         'gallery-videos': reverse('gallery:video-list', **params),
 
-
+        # News
         'admin:news': reverse('adm:news:news-list', **params),
         'news': reverse('news:news-list', **params),
 
-
+        # Static pages
         'admin:static-pages': reverse('adm:static:page-list', **params),
         'static-pages': reverse('static:page-list', **params),
     })

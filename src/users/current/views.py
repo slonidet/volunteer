@@ -5,8 +5,8 @@ from rest_framework import views, status, permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.generics import (
-    get_object_or_404, CreateAPIView, RetrieveUpdateAPIView
-)
+    get_object_or_404, CreateAPIView, RetrieveUpdateAPIView,
+    ListAPIView)
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -16,7 +16,8 @@ from users.current.serializers import AuthUserSerializer, \
     CurrentUserSerializer, CurrentUserProfileSerializer, \
     CurrentUserProfileAttachmentSerializer, CurrentUserStorySerializer
 from users.current.tokens import RegisterTokenGenerator
-from users.models import Profile, ProfileAttachment, Story
+from users.models import Profile, ProfileAttachment, Story, ProfileComment
+from users.serializers import ProfileCommentSerializer
 from users.views import User
 from users.mixins import ExcludeAnonymousViewMixin, StoryRelatedViewMixin
 
@@ -108,6 +109,19 @@ class CurrentUserProfileView(BaseCurrentUserView):
         # set inspection status if user update profile
         serializer.validated_data['status'] = Profile.STATUS_INSPECTION
         serializer.save()
+
+
+class CurrentUserProfileCommentView(ListAPIView):
+    queryset = ProfileComment.objects.all()
+    serializer_class = ProfileCommentSerializer
+    user_pk_lookup_field = 'profile__user__pk'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        user_kwargs = {self.user_pk_lookup_field: user.pk}
+
+        return queryset.filter(**user_kwargs)
 
 
 class CurrentUserProfileAttachmentView(BaseCurrentUserView):
