@@ -5,6 +5,7 @@ from django.contrib.auth.admin import (
     UserAdmin as BaseUserAdmin, UserChangeForm as BaseUserChangeForm,
     UserCreationForm as BaseUserCreationForm,
 )
+from modeltranslation.admin import TranslationAdmin
 
 from users.models import Profile, ProfileAttachment
 
@@ -53,7 +54,7 @@ class ProfileAttachmentAdmin(admin.ModelAdmin):
     pass
 
 
-class StoryAdmin(admin.ModelAdmin):
+class StoryAdmin(TranslationAdmin):
     pass
 
 

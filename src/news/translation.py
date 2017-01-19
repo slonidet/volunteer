@@ -4,5 +4,7 @@ from news.models import News
 
 class NewsTranslationOptions(TranslationOptions):
     fields = ('title', 'body',)
+    required_languages = ('en',)
+
 
 translator.register(News, NewsTranslationOptions)
