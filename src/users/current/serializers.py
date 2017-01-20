@@ -4,7 +4,7 @@ from rest_framework import serializers
 from users.current.mixins import CurrentUserSerializerMixin
 from users.models import Profile, ProfileAttachment
 from users.serializers import User, UserSerializer, ProfileSerializer, \
-    ProfileAttachmentSerializer, AdminStorySerializer
+    ProfileAttachmentSerializer, StorySerializer
 
 
 class AuthProfileSerializer(serializers.ModelSerializer):
@@ -72,11 +72,11 @@ class CurrentUserProfileAttachmentSerializer(CurrentUserSerializerMixin,
         model = ProfileAttachment
 
 
-class CurrentUserStorySerializer(AdminStorySerializer):
-    class Meta(AdminStorySerializer.Meta):
-        fields = (
+class CurrentUserStorySerializer(StorySerializer):
+    class Meta(StorySerializer.Meta):
+        fields = [
             'id', 'text', 'about_yourself', 'admin_comment', 'is_public'
-        )
+        ]
         read_only_fields = ('is_public', 'admin_comment')
 
     def create(self, validated_data):
