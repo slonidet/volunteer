@@ -5,7 +5,7 @@ from static.models import Page
 
 class PageTranslationOptions(TranslationOptions):
     fields = ('title', 'body',)
-    required_languages = ('en', )
+    required_languages = ('ru', 'en',)
 
 
 translator.register(Page, PageTranslationOptions)

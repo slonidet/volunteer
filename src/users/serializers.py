@@ -136,6 +136,10 @@ class AdminStorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Story
         fields = '__all__'
+        extra_kwargs = {
+            'text_en': {'required': True},
+            'about_yourself_en': {'required': True},
+        }
 
 
 class StorySerializer(AdminStorySerializer):

@@ -28,6 +28,7 @@ def deploy(role='test'):
     execute(_install_requirements, role=role)
     execute(_migrate_databases, role=role)
     execute(_collect_static, role=role)
+    execute(_update_translation_fields, role=role)
     execute(_restart_project, role=role)
 
 
@@ -45,6 +46,10 @@ def load_fixture(fixture, role='test'):
 
 def load_all_fixtures(role='test'):
     execute(_load_fixtures, role=role)
+
+
+def update_translation_fields(role='test'):
+    execute(_update_translation_fields, role=role)
 
 
 def _update_project():
@@ -86,3 +91,8 @@ def _load_fixtures(fixture=None):
 
         for name in fixtures:
             run('python src/manage.py loaddata {0}'.format(name))
+
+
+def _update_translation_fields():
+    with cd(PROJECT_DIR), prefix('source {0}'.format(ENV_ACTIVATE)):
+        run('python src/manage.py update_translation_fields')

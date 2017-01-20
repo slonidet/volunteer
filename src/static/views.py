@@ -3,14 +3,14 @@ from rest_framework import viewsets
 from rest_framework.viewsets import GenericViewSet
 
 from static.models import Page
-from static.serializers import PageSerializer
+from static.serializers import PageSerializer, AdminPageSerializer
 
 
 class AdminPageViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
                        mixins.UpdateModelMixin, mixins.ListModelMixin,
                        GenericViewSet):
     queryset = Page.objects.all()
-    serializer_class = PageSerializer
+    serializer_class = AdminPageSerializer
 
 
 class PageViewSet(viewsets.ReadOnlyModelViewSet):
