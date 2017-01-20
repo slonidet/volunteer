@@ -2,8 +2,8 @@
 Model translation serializer mixin
 """
 
-from rest_framework import serializers
 from django.conf import settings
+from rest_framework import serializers
 from rest_framework.fields import empty
 
 
@@ -24,8 +24,18 @@ class BaseTranslationMixin(object):
 
         return translation_fields
 
+    @staticmethod
+    def exclude_fields(fields, exclude):
+        for field in exclude:
+            try:
+                fields.remove(field)
+            except ValueError:
+                pass
 
-class AdminTranslationSerializerMixin(BaseTranslationMixin):
+        return fields
+
+
+class AdminTranslationMixin(BaseTranslationMixin):
     """
     Translation serializer mixin for admin api
     """
@@ -35,10 +45,9 @@ class AdminTranslationSerializerMixin(BaseTranslationMixin):
         Hide original fields if using translation fields
         """
         fields = super().get_field_names(declared_fields, info)
-        for field in self.Meta.model_translation.fields:
-            fields.remove(field)
+        translation_fields = self.Meta.model_translation.fields
 
-        return fields
+        return self.exclude_fields(fields, translation_fields)
 
     def get_extra_kwargs(self):
         """
@@ -59,12 +68,7 @@ class AdminTranslationSerializerMixin(BaseTranslationMixin):
         return extra_kwargs
 
 
-class AdminTranslationModelSerializer(AdminTranslationSerializerMixin,
-                                      serializers.ModelSerializer):
-    pass
-
-
-class UserTranslationSerializerMixin(BaseTranslationMixin):
+class UserTranslationMixin(BaseTranslationMixin):
     """
     Translation serializer mixin for user api
     """
@@ -79,12 +83,15 @@ class UserTranslationSerializerMixin(BaseTranslationMixin):
         translation_fields = self.get_translation_fields(
             languages, self.Meta.model_translation.fields
         )
-        for field in translation_fields:
-            fields.remove(field)
 
-        return fields
+        return self.exclude_fields(fields, translation_fields)
 
 
-class UserTranslationModelSerializer(UserTranslationSerializerMixin,
+class AdminTranslationModelSerializer(AdminTranslationMixin,
+                                      serializers.ModelSerializer):
+    pass
+
+
+class UserTranslationModelSerializer(UserTranslationMixin,
                                      serializers.ModelSerializer):
     pass

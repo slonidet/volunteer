@@ -1,10 +1,13 @@
 from rest_framework import serializers
 
 from core.serializers import HyperlinkedSorlImageField
+from core.translation_serializers import AdminTranslationMixin, \
+    UserTranslationMixin
 from news.models import News
+from news.translation import NewsTranslationOptions
 
 
-class AdminNewsSerializer(serializers.ModelSerializer):
+class BaseNewsSerializer(serializers.ModelSerializer):
     image = HyperlinkedSorlImageField(
         '600x400', options={'upscale': False}
     )
@@ -15,14 +18,14 @@ class AdminNewsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = News
+        model_translation = NewsTranslationOptions
+
+
+class AdminNewsSerializer(AdminTranslationMixin, BaseNewsSerializer):
+    class Meta(BaseNewsSerializer.Meta):
         fields = '__all__'
-        # extra_kwargs = {
-        #     'title_en': {'required': True},
-        #     'body_en': {'required': True},
-        # }
 
 
-class NewsSerializer(AdminNewsSerializer):
-    class Meta:
-        model = News
+class NewsSerializer(UserTranslationMixin, BaseNewsSerializer):
+    class Meta(BaseNewsSerializer.Meta):
         exclude = ('is_public', )

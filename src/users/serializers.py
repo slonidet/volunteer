@@ -1,11 +1,14 @@
 from django.contrib.auth.models import Group
 
+from core.translation_serializers import AdminTranslationMixin, \
+    UserTranslationMixin
 from users.models import User, Story, ProfileComment
 from django.contrib.auth.hashers import make_password
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
 from users.models import Profile, ProfileAttachment
+from users.translation import StoryTranslationOptions
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -126,7 +129,7 @@ class StoryProfileSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'last_name', 'age')
 
 
-class AdminStorySerializer(serializers.ModelSerializer):
+class BaseStorySerializer(serializers.ModelSerializer):
     profile = StoryProfileSerializer(read_only=True)
     profile_photo = serializers.ImageField(
         label='Фото', source='profile.user.profile_attachment.photo',
@@ -135,19 +138,20 @@ class AdminStorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Story
+        model_translation = StoryTranslationOptions
+
+
+class AdminStorySerializer(AdminTranslationMixin, BaseStorySerializer):
+    class Meta(BaseStorySerializer.Meta):
         fields = '__all__'
-        extra_kwargs = {
-            'text_en': {'required': True},
-            'about_yourself_en': {'required': True},
-        }
 
 
-class StorySerializer(AdminStorySerializer):
-    class Meta(AdminStorySerializer.Meta):
-        fields = ('id', 'text', 'about_yourself', 'profile', 'profile_photo')
+class StorySerializer(UserTranslationMixin, BaseStorySerializer):
+    class Meta(BaseStorySerializer.Meta):
+        fields = ['id', 'text', 'about_yourself', 'profile', 'profile_photo']
 
 
-class UserGroupSerializer(serializers.ModelSerializer):
+class UserGroupSerializer(UserTranslationMixin, BaseStorySerializer):
     users = SimpleUserSerializer(source='user_set', many=True, required=False)
 
     class Meta:
