@@ -12,3 +12,4 @@ settings_local.py
 __pycache__/
 /.vagrant/
 ubuntu-xenial-16.04-cloudimg-console.log
+.DS_Store

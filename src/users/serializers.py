@@ -3,10 +3,14 @@ from django.contrib.auth.models import Group
 from core.translation_serializers import AdminTranslationMixin, \
     UserTranslationMixin
 from users.models import User, Story, ProfileComment
+from django.contrib.auth.password_validation import (
+    validate_password as validate
+)
 from django.contrib.auth.hashers import make_password
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
+from users.models import User, Story, ProfileComment
 from users.models import Profile, ProfileAttachment
 from users.translation import StoryTranslationOptions
 
@@ -66,6 +70,11 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True, 'required': False}
         }
+
+    def validate_password(self, password):
+        validate(password)
+
+        return password
 
     def create(self, validated_data):
         if 'password' not in validated_data:
