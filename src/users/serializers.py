@@ -2,7 +2,6 @@ from django.contrib.auth.models import Group
 
 from core.translation_serializers import AdminTranslationMixin, \
     UserTranslationMixin
-from users.models import User, Story, ProfileComment
 from django.contrib.auth.password_validation import (
     validate_password as validate
 )
