@@ -49,6 +49,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     User model
     """
+    ROLE_REGISTERED = 'registered'  # registered user
+    ROLE_CANDIDATE = 'candidate'    # create user profile
+    ROLE_TESTED = 'tested'          # user passed all tests
+    ROLE_INTERVIEWED = 'interviewed'  # user passed interview
+    ROLE_PREPARED = 'prepared'      # user passed training
+    ROLE_MAIN_TEAM = 'main'         # user approved for a specific position
+    ROLE_RESERVED = 'reserved'      # user in reserve
+    ROLE_CHOICES = (
+        (ROLE_REGISTERED, _('Зарегистрированный пользователь')),
+        (ROLE_CANDIDATE, _('Кандидат в волонтёры')),
+        (ROLE_TESTED, _('Кандидат в волонтеры, прошедший тестирование')),
+        (ROLE_INTERVIEWED,
+         _('Кандидат в волонтеры, прошедший отборочные процедуры')),
+        (ROLE_PREPARED, _('Подготовленный кандидат в волонтеры')),
+        (ROLE_MAIN_TEAM, _('Волонтер основного состава')),
+        (ROLE_RESERVED, _('Волонтер резерва')),
+    )
+
     username = models.EmailField(_('email address'), unique=True)
     is_staff = models.BooleanField(
         _('staff status'),
@@ -65,6 +83,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    role = models.CharField(_('роль'), max_length=12, choices=ROLE_CHOICES,
+                            default=ROLE_REGISTERED)
 
     objects = UserManager()
 
