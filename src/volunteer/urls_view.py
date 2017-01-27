@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from rest_framework import permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -8,8 +10,7 @@ from rest_framework.reverse import reverse
 @permission_classes((permissions.IsAuthenticated,))
 def api_root(request, format=None):
     params = {'request': request, 'format': format}
-
-    return Response({
+    links = {
         # Current User
         'user': reverse('user:current-user', **params),
         'user-authentication': reverse('user:authentication', **params),
@@ -54,4 +55,7 @@ def api_root(request, format=None):
         # Static pages
         'admin:static-pages': reverse('adm:static:page-list', **params),
         'static-pages': reverse('static:page-list', **params),
-    })
+    }
+    ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
+
+    return Response(ordered_links)
