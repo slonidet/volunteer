@@ -55,3 +55,5 @@ def api_root(request, format=None):
         'admin:static-pages': reverse('adm:static:page-list', **params),
         'static-pages': reverse('static:page-list', **params),
     })
+
+
