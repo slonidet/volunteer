@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from permissions.models import MetaPermissions
 from users.models import User
 
 
@@ -11,7 +12,7 @@ class Test(models.Model):
     name = models.CharField(_('Название теста'), max_length=150)
     time_available = models.IntegerField(_('Доступное время'))
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('Тест')
         verbose_name_plural = _('Тесты')
 
@@ -30,7 +31,7 @@ class Task(models.Model):
     questions_number = models.IntegerField(_('Количество вопросов'))
     expert_appraisal = models.BooleanField(_('Проверяется администратором'))
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('Задание')
         verbose_name_plural = _('Задания')
 
@@ -47,7 +48,7 @@ class Question(models.Model):
         Task, on_delete=models.CASCADE, verbose_name=_('Задание')
     )
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('Вопрос')
         verbose_name_plural = _('Вопросы')
 
@@ -71,7 +72,7 @@ class UserTest(models.Model):
         _('Время окончания тестирования'), auto_now_add=True
     )
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('Тест пользователя')
         verbose_name_plural = _('Тесты пользователя')
 
@@ -89,7 +90,7 @@ class AnswerOptions(models.Model):
     name = models.CharField(_('Текст ответа'), max_length=250)
     is_correct = models.BooleanField(_('Правильность ответа'))
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('Вариант ответа')
         verbose_name_plural = _('Варианты ответа')
 
@@ -110,7 +111,7 @@ class UserAnswer(models.Model):
     )
     is_correct = models.NullBooleanField(_('Правльность ответов'), null=True)
 
-    class Meta:
+    class Meta(MetaPermissions):
         verbose_name = _('Ответы пользователя')
         verbose_name_plural = _('Ответы пользователей')
 
