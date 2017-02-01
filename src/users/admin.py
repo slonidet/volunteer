@@ -20,6 +20,7 @@ class UserChangeForm(BaseUserChangeForm):
     class Meta:
         model = User
         fields = '__all__'
+        readonly_fields = ('role',)
 
 
 class UserAdmin(BaseUserAdmin):
@@ -28,6 +29,7 @@ class UserAdmin(BaseUserAdmin):
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (_('Остальное'), {'fields': ('role',)}),
     )
     add_fieldsets = (
         (None, {

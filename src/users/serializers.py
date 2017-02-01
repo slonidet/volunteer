@@ -1,16 +1,16 @@
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
-
-from core.translation_serializers import AdminTranslationMixin, \
-    UserTranslationMixin
 from django.contrib.auth.password_validation import (
     validate_password as validate
 )
-from django.contrib.auth.hashers import make_password
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
-from users.models import User, Story, ProfileComment
-from users.models import Profile, ProfileAttachment
+from core.translation_serializers import AdminTranslationMixin, \
+    UserTranslationMixin
+from users.models import Profile, ProfileAttachment, Story
+from users.models import User, ProfileComment
 from users.translation import StoryTranslationOptions
 
 
@@ -51,7 +51,22 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class UserSerializer(serializers.ModelSerializer):
+class BaseUserSerializer(serializers.ModelSerializer):
+    username = serializers.EmailField(label='Адрес электронной почты')
+
+    @cached_property
+    def _writable_fields(self):
+        """ Exclude role from writable fields """
+        writable_fields = super()._writable_fields
+        try:
+            writable_fields.remove('role')
+        except ValueError:
+            pass
+
+        return writable_fields
+
+
+class UserSerializer(BaseUserSerializer):
     groups = GroupSerializer(many=True, read_only=True)
     profile = SimpleProfileSerializer(read_only=True)
 
@@ -60,11 +75,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'username', 'is_active', 'is_superuser', 'is_staff',
             'password', 'date_joined', 'last_login', 'profile',
-            'profile_attachment', 'groups'
+            'profile_attachment', 'groups', 'role',
         )
         read_only_fields = (
             'is_superuser', 'is_staff', 'last_login', 'date_joined', 'profile',
-            'profile_attachment', 'groups'
+            'profile_attachment', 'groups', 'role',
         )
         extra_kwargs = {
             'password': {'write_only': True, 'required': False}
@@ -112,8 +127,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
-    username = serializers.EmailField(label='Адрес электронной почты')
-
     class Meta:
         model = User
         fields = ('id', 'username', 'full_name')

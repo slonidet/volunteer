@@ -4,7 +4,7 @@ from rest_framework import serializers
 from users.current.mixins import CurrentUserSerializerMixin
 from users.models import Profile, ProfileAttachment
 from users.serializers import User, UserSerializer, ProfileSerializer, \
-    ProfileAttachmentSerializer, StorySerializer
+    ProfileAttachmentSerializer, StorySerializer, BaseUserSerializer
 
 
 class AuthProfileSerializer(serializers.ModelSerializer):
@@ -21,14 +21,15 @@ class AuthProfileAttachmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class AuthUserSerializer(serializers.ModelSerializer):
+class AuthUserSerializer(BaseUserSerializer):
     profile = AuthProfileSerializer(read_only=True)
     profile_attachment = AuthProfileAttachmentSerializer(read_only=True)
 
     class Meta:
         model = User
         fields = (
-            'id', 'username', 'is_superuser', 'profile', 'profile_attachment'
+            'id', 'username', 'is_superuser', 'profile', 'profile_attachment',
+            'role',
         )
 
 
@@ -37,11 +38,11 @@ class CurrentUserSerializer(UserSerializer):
         fields = (
             'id', 'username', 'is_superuser', 'is_staff',
             'password', 'date_joined', 'last_login', 'profile',
-            'profile_attachment', 'groups'
+            'profile_attachment', 'groups', 'role'
         )
         read_only_fields = (
             'is_superuser', 'is_staff', 'last_login', 'date_joined', 'profile',
-            'profile_attachment', 'groups'
+            'profile_attachment', 'groups', 'role'
         )
 
     def update(self, instance, validated_data):
