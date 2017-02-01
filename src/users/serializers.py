@@ -82,9 +82,9 @@ class UserSerializer(serializers.ModelSerializer):
             )
 
         validated_data['password'] = make_password(validated_data['password'])
-        instance = self._user_update_or_create(validated_data)
+        user = self._user_update_or_create(validated_data)
 
-        return instance
+        return user
 
     def update(self, instance, validated_data):
         if 'password' in validated_data:
@@ -159,7 +159,7 @@ class StorySerializer(UserTranslationMixin, BaseStorySerializer):
         fields = ['id', 'text', 'about_yourself', 'profile', 'profile_photo']
 
 
-class UserGroupSerializer(UserTranslationMixin, BaseStorySerializer):
+class UserGroupSerializer(BaseStorySerializer):
     users = SimpleUserSerializer(source='user_set', many=True, required=False)
 
     class Meta:

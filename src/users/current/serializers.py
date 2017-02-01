@@ -37,11 +37,11 @@ class CurrentUserSerializer(UserSerializer):
         fields = (
             'id', 'username', 'is_superuser', 'is_staff',
             'password', 'date_joined', 'last_login', 'profile',
-            'profile_attachment'
+            'profile_attachment', 'groups'
         )
         read_only_fields = (
             'is_superuser', 'is_staff', 'last_login', 'date_joined', 'profile',
-            'profile_attachment'
+            'profile_attachment', 'groups'
         )
 
     def update(self, instance, validated_data):
