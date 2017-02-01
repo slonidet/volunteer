@@ -10,6 +10,11 @@ def attachment_delete(sender, instance, **kwargs):
     instance.photo.delete(False)
 
 
+@receiver(post_save, sender=User)
+def set_default_user_group(sender, instance, **kwargs):
+    instance.set_default_group()
+
+
 @receiver(post_save, sender=Profile)
 def set_candidate_role_profile(sender, instance, created, **kwargs):
     """ Set user role as candidate if fill profile """

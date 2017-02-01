@@ -1,7 +1,7 @@
 from datetime import date
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import PermissionsMixin, Group
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
@@ -10,6 +10,7 @@ from multiselectfield import MultiSelectField
 from dateutil.relativedelta import relativedelta
 
 from core.fields import PhoneField
+from permissions import DEFAULT_GROUP
 from permissions.models import MetaPermissions
 
 
@@ -103,6 +104,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             return full_name.strip()
 
         return ''
+
+    def set_default_group(self):
+        """ Set volunteer group for user by default """
+        volunteer_group = Group.objects.get(name=DEFAULT_GROUP)
+        self.groups.set([volunteer_group])
 
     @property
     def full_name(self):
