@@ -62,6 +62,7 @@ class AdminTranslationMixin(BaseTranslationMixin):
 
         for field_name in required_fields:
             kwargs = extra_kwargs.get(field_name, {})
+            kwargs['allow_null'] = False
             kwargs['required'] = True
             extra_kwargs[field_name] = kwargs
 
