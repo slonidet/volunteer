@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'static.apps.StaticConfig',
     'permissions.apps.PermissionsConfig',
     'events.apps.EventsConfig',
+    'user_tests.apps.UserTestsConfig'
 ]
 
 MIDDLEWARE = [
