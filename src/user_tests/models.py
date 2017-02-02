@@ -1,14 +1,18 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from permissions.models import MetaPermissions
 from users.models import User
 
 
 class Test(models.Model):
-    name = models.CharField(max_length=150, verbose_name=_('Название теста'))
-    time_available = models.IntegerField(verbose_name=_('Доступное время'))
+    """
+    Test model
+    """
+    name = models.CharField(_('Название теста'), max_length=150)
+    time_available = models.IntegerField(_('Доступное время'))
 
-    class Meta():
+    class Meta(MetaPermissions):
         verbose_name = _('Тест')
         verbose_name_plural = _('Тесты')
 
@@ -17,12 +21,17 @@ class Test(models.Model):
 
 
 class Task(models.Model):
-    test = models.ForeignKey(Test, on_delete=models.CASCADE, verbose_name=_('Тест'))
-    name = models.CharField(max_length=150, verbose_name=_('Название задания'))
-    questions_number = models.IntegerField(verbose_name=_('Количество вопросов'))
-    expert_appraisal = models.BooleanField(verbose_name=_('Проверяется администратором'))
+    """
+    Test's task
+    """
+    test = models.ForeignKey(
+        Test, on_delete=models.CASCADE, verbose_name=_('Тест')
+    )
+    name = models.CharField(_('Название задания'), max_length=150)
+    questions_number = models.IntegerField(_('Количество вопросов'))
+    expert_appraisal = models.BooleanField(_('Проверяется администратором'))
 
-    class Meta():
+    class Meta(MetaPermissions):
         verbose_name = _('Задание')
         verbose_name_plural = _('Задания')
 
@@ -31,10 +40,15 @@ class Task(models.Model):
 
 
 class Question(models.Model):
-    name = models.CharField(max_length=150, verbose_name=_('Текст вопроса'))
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, verbose_name=_('Задание'))
+    """
+    Question model
+    """
+    name = models.CharField(_('Текст вопроса'), max_length=150)
+    task = models.ForeignKey(
+        Task, on_delete=models.CASCADE, verbose_name=_('Задание')
+    )
 
-    class Meta():
+    class Meta(MetaPermissions):
         verbose_name = _('Вопрос')
         verbose_name_plural = _('Вопросы')
 
@@ -43,12 +57,22 @@ class Question(models.Model):
 
 
 class UserTest(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Пользователь'))
-    test = models.ForeignKey(Test, on_delete=models.CASCADE, verbose_name=_('Тест'))
-    started_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Время начала тестирования'))
-    finished_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Время окончания тестирования'))
+    """
+    Test of given user
+    """
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name=_('Пользователь'))
+    test = models.ForeignKey(
+        Test, on_delete=models.CASCADE, verbose_name=_('Тест')
+    )
+    started_at = models.DateTimeField(
+        _('Время начала тестирования'), auto_now_add=True
+    )
+    finished_at = models.DateTimeField(
+        _('Время окончания тестирования'), auto_now_add=True
+    )
 
-    class Meta():
+    class Meta(MetaPermissions):
         verbose_name = _('Тест пользователя')
         verbose_name_plural = _('Тесты пользователя')
 
@@ -57,11 +81,16 @@ class UserTest(models.Model):
 
 
 class AnswerOptions(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name=_('Вопрос'))
-    name = models.CharField(max_length=250, verbose_name=_('Текст ответа'))
-    is_correct = models.BooleanField(verbose_name=_('Правильность ответа'))
+    """
+    Options of given answer
+    """
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, verbose_name=_('Вопрос')
+    )
+    name = models.CharField(_('Текст ответа'), max_length=250)
+    is_correct = models.BooleanField(_('Правильность ответа'))
 
-    class Meta():
+    class Meta(MetaPermissions):
         verbose_name = _('Вариант ответа')
         verbose_name_plural = _('Варианты ответа')
 
@@ -70,12 +99,19 @@ class AnswerOptions(models.Model):
 
 
 class UserAnswer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Пользователь'))
+    """
+    Answers of given user
+    """
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name=_('Пользователь')
+    )
     answers = models.ManyToManyField(AnswerOptions, verbose_name=_('Ответы'))
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name=_('Вопрос'))
-    is_correct = models.NullBooleanField(null=True, verbose_name=_('Правльность ответов'))
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, verbose_name=_('Вопрос')
+    )
+    is_correct = models.NullBooleanField(_('Правльность ответов'), null=True)
 
-    class Meta():
+    class Meta(MetaPermissions):
         verbose_name = _('Ответы пользователя')
         verbose_name_plural = _('Ответы пользователей')
 
