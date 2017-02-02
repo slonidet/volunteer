@@ -17,3 +17,5 @@ DATABASES = {
         },
     }
 }
+
+EMAIL_HOST_PASSWORD = ''
