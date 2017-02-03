@@ -1,5 +1,5 @@
 from django.shortcuts import redirect
-from django.utils.translation import ugettext_lazy as _, ugettext
+from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions
 from rest_framework import views, status, permissions
 from rest_framework.authtoken.models import Token
@@ -8,9 +8,8 @@ from rest_framework.generics import (
     get_object_or_404, CreateAPIView, RetrieveUpdateAPIView,
     ListAPIView)
 from rest_framework.mixins import CreateModelMixin
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
 
+from rest_framework.response import Response
 from users.current.mixins import CurrentUserViewMixin, \
     NotAllowEditApprovedProfileMixin
 from users.current.serializers import AuthUserSerializer, \
@@ -37,18 +36,7 @@ class UserRegistrationView(ExcludeAnonymousViewMixin, CreateAPIView):
         user.is_active = False
         user.save()
 
-        # send activation email
-        token = RegisterTokenGenerator().make_token(user)
-        activation_link = reverse(
-            'user:activation', kwargs={'user_id': user.id, 'token': token},
-            request=request
-        )
-        message = '{0}. {1}'.format(
-            _('Для подтверждения регистрации пройдите по ссылке'),
-            activation_link
-        )
-        user.email_user(subject=ugettext('Активация пользователя'),
-                        message=message)
+        user.send_activation_email(request)
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED,

@@ -26,9 +26,11 @@ SECRET_KEY = 'ty(tul70er_)lmfwf3u!(nw1j7crzq6ke+7ppyz^^*l6sqj+os'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+DEFAULT_HOST = 'volonter61.ru'
+
 ALLOWED_HOSTS = [
+    DEFAULT_HOST,
     'volunteer.1m8.ru',
-    'volonter61.ru',
 ]
 
 
