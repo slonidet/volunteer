@@ -43,9 +43,8 @@ class CurrentUserSerializerMixin(object):
 class NotAllowEditApprovedProfileMixin(object):
     """ User can't edit profile if admin approve it """
     def perform_update(self, serializer):
-        if serializer.instance.status == Profile.STATUS_APPROVED:
+        if serializer.instance.user.profile.status == Profile.STATUS_APPROVED:
             raise exceptions.NotAcceptable(
                 _('Нельзя редактировать утверждённую анкету')
             )
-
         super().perform_update(serializer)
