@@ -1,6 +1,8 @@
-from django.utils.translation import ugettext as _
+from django.db import IntegrityError
+from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import exceptions
+from rest_framework.serializers import ValidationError
 from rest_framework.generics import get_object_or_404
 
 from users.models import Profile
@@ -29,16 +31,20 @@ class CurrentUserSerializerMixin(object):
     def create(self, validated_data):
         user = self.context['request'].user
         validated_data['user'] = user
-
-        return super().create(validated_data)
+        try:
+            return super().create(validated_data)
+        except IntegrityError:
+            model_name = self.Meta.model._meta.verbose_name.capitalize()
+            raise ValidationError(
+                _('{0} уже существует').format(model_name)
+            )
 
 
 class NotAllowEditApprovedProfileMixin(object):
     """ User can't edit profile if admin approve it """
     def perform_update(self, serializer):
-        if serializer.instance.status == Profile.STATUS_APPROVED:
+        if serializer.instance.user.profile.status == Profile.STATUS_APPROVED:
             raise exceptions.NotAcceptable(
                 _('Нельзя редактировать утверждённую анкету')
             )
-
         super().perform_update(serializer)

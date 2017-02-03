@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import (
     validate_password as validate
 )
+from django.db import IntegrityError
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
@@ -116,7 +117,13 @@ class UserSerializer(BaseUserSerializer):
         if instance:
             instance = super().update(instance, validated_data)
         else:
-            instance = super().create(validated_data)
+            try:
+                instance = super().create(validated_data)
+            except IntegrityError:
+                raise serializers.ValidationError(
+                    _('Пользователь с таким email уже существует, '
+                      'проверьте почту для активации')
+                )
 
         system_groups_is_passed = (system_groups is not None)
 
