@@ -26,9 +26,11 @@ class UserChangeForm(BaseUserChangeForm):
 class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
-                                       'groups', 'user_permissions')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (_('Права доступа'), {'fields': (
+            'is_active', 'is_staff', 'is_superuser', 'groups',
+            'user_permissions'
+        )}),
+        (_('События'), {'fields': ('last_login', 'date_joined')}),
         (_('Остальное'), {'fields': ('role',)}),
     )
     add_fieldsets = (
