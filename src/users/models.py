@@ -5,13 +5,16 @@ from django.contrib.auth.models import PermissionsMixin, Group
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, ugettext
 from multiselectfield import MultiSelectField
 from dateutil.relativedelta import relativedelta
+from rest_framework.reverse import reverse
 
 from core.fields import PhoneField
+from core.helpers import get_absolute_url
 from permissions import DEFAULT_GROUP
 from permissions.models import MetaPermissions
+from users.current.tokens import RegisterTokenGenerator
 
 
 class UserManager(BaseUserManager):
@@ -132,6 +135,24 @@ class User(AbstractBaseUser, PermissionsMixin):
         Sends an email to this User.
         """
         send_mail(subject, message, from_email, [self.username], **kwargs)
+
+    def send_activation_email(self, request=None):
+        """
+        Send activation code by user email
+        """
+        token = RegisterTokenGenerator().make_token(self)
+        activation_link = reverse(
+            'user:activation', kwargs={'user_id': self.id, 'token': token},
+            request=request
+        )
+        if not request:
+            activation_link = get_absolute_url(activation_link)
+
+        message = '{0}. {1}'.format(
+            _('Для подтверждения регистрации пройдите по ссылке'),
+            activation_link
+        )
+        self.email_user(ugettext('Активация пользователя'), message)
 
     def __str__(self):
         return self.username
