@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-03 14:38+0300\n"
-"PO-Revision-Date: 2017-02-03 14:43+0300\n"
+"POT-Creation-Date: 2017-02-03 21:07+0300\n"
+"PO-Revision-Date: 2017-02-03 21:10+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -754,13 +754,18 @@ msgstr "volunteer story"
 msgid "волонтёрские истории"
 msgstr "volunteer stories"
 
-#: users/serializers.py:30
+#: users/serializers.py:31
 msgid "нельзя выбрать более 4-х значени"
 msgstr "Can’t choose more than 4 choices"
 
-#: users/serializers.py:96
+#: users/serializers.py:97
 msgid "Необходимо заполнить пароль"
 msgstr "Fill the password field"
+
+#: users/serializers.py:124
+msgid ""
+"Пользователь с таким email уже существует, проверьте почту для активации"
+msgstr "User email already exists, check email for activation"
 
 #: users/views.py:30
 msgid "Нельзя удалить пользователя с правами супер-администратора"
