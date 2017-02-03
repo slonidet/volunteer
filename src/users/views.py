@@ -21,7 +21,7 @@ class AdminUserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
     queryset = User.objects.select_related(
         'profile', 'profile_attachment').prefetch_related('groups')
     serializer_class = UserSerializer
-    filter_fields = ('groups', 'role')
+    filter_fields = ('groups__name', 'role')
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
