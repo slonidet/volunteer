@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-03 21:07+0300\n"
-"PO-Revision-Date: 2017-02-03 21:10+0300\n"
+"POT-Creation-Date: 2017-02-03 21:49+0300\n"
+"PO-Revision-Date: 2017-02-03 21:51+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -118,7 +118,12 @@ msgstr "Other"
 msgid "Пользователи"
 msgstr "Users"
 
-#: users/current/mixins.py:41
+#: users/current/mixins.py:39
+#, python-brace-format
+msgid "{0} уже существует"
+msgstr "{0} already exists"
+
+#: users/current/mixins.py:48
 msgid "Нельзя редактировать утверждённую анкету"
 msgstr "You can’t edit an approved profile"
 
