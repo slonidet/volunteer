@@ -2,7 +2,11 @@
 Django developers settings for conf project.
 """
 
-DEBUG = True
+DEBUG = False
+
+ADMINS = [
+    ('John', 'john@example.com'),
+]
 
 DATABASES = {
     'default': {
