@@ -10,6 +10,7 @@ class News(models.Model):
     News
     """
     title = models.CharField(_('заголовок'), max_length=1024)
+    intro = models.CharField(_('вступление'), max_length=300)
     body = models.TextField(_('текст'))
     date = models.DateField(_('дата публикации'), default=timezone.now)
     is_public = models.BooleanField(_('опубликовано'), default=False)
