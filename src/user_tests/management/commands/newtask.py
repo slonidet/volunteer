@@ -88,40 +88,14 @@ class Command(BaseCommand):
             question = Question.objects.create(name=title, task=task_object)
 
             if choice_type == 'unique':
+                true_answers = [i[0] for i in item['choices'] if i[0]]
+                if len(true_answers) > 1:
+                    raise CommandError(
+                        "This question should contain only one correct "
+                        "choice"
+                    )
 
-                correctness = [i[0] for i in item['choices']]
-
-                for choice in item["choices"]:
-
-                    if correctness.count(True) != 1:
-                        raise CommandError(
-                            "This question should contain only one correct "
-                            "choice"
-                        )
-
-                    if not choice[0]:
-                        AnswerOptions.objects.create(question=question,
-                                                     name=choice[1],
-                                                     is_correct=False)
-                    if choice[0]:
-                        AnswerOptions.objects.create(question=question,
-                                                     name=choice[1],
-                                                     is_correct=True)
-
-            if choice_type == 'multiple':
-                for choice in item["choices"]:
-                    if not choice[0]:
-                        AnswerOptions.objects.create(question=question,
-                                                     name=choice[1],
-                                                     is_correct=False)
-                    if choice[0]:
-                        AnswerOptions.objects.create(question=question,
-                                                     name=choice[1],
-                                                     is_correct=True)
-
-            if choice_type == 'by_admin':
-                for choice in item["choices"]:
-                    if not choice[0]:
-                        AnswerOptions.objects.create(question=question,
-                                                     name=choice[1],
-                                                     is_correct=False)
+            for is_correct, text in item["choices"]:
+                AnswerOptions.objects.create(
+                    question=question, text=text, is_correct=is_correct
+                )
