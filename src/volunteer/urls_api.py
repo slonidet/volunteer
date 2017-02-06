@@ -6,7 +6,11 @@ from volunteer.urls_view import api_root
 
 urlpatterns = [
     url(r'^$', api_root, name='api-root'),
+
+    # admin api
     url(r'admin/', include('volunteer.urls_admin_api', namespace='adm')),
+
+    # public api
     url(r'mail/(?P<email>[0-9a-z@.]+)/$', SendMail.as_view(), name='mail'),
     url(r'user/', include('users.current.urls', namespace='user')),
     url(r'users/', include('users.urls', namespace='users')),

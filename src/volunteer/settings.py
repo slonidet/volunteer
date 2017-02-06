@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'permissions.apps.PermissionsConfig',
     'events.apps.EventsConfig',
     'user_tests.apps.UserTestsConfig'
+    'statistic.apps.StatisticConfig',
 ]
 
 MIDDLEWARE = [
