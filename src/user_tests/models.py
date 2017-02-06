@@ -9,7 +9,7 @@ class Test(models.Model):
     """
     Test model
     """
-    name = models.CharField(_('Название теста'), max_length=150)
+    name = models.CharField(_('Название теста'), max_length=150, unique=True)
     time_available = models.IntegerField(_('Доступное время'))
 
     class Meta(MetaPermissions):
@@ -28,7 +28,6 @@ class Task(models.Model):
         Test, on_delete=models.CASCADE, verbose_name=_('Тест')
     )
     name = models.CharField(_('Название задания'), max_length=150)
-    questions_number = models.IntegerField(_('Количество вопросов'))
     expert_appraisal = models.BooleanField(_('Проверяется администратором'))
 
     class Meta(MetaPermissions):
@@ -88,7 +87,7 @@ class AnswerOptions(models.Model):
         Question, on_delete=models.CASCADE, verbose_name=_('Вопрос')
     )
     name = models.CharField(_('Текст ответа'), max_length=250)
-    is_correct = models.BooleanField(_('Правильность ответа'))
+    is_correct = models.NullBooleanField(_('Правильность ответа'), null=True)
 
     class Meta(MetaPermissions):
         verbose_name = _('Вариант ответа')
