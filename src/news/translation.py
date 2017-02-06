@@ -3,7 +3,7 @@ from news.models import News
 
 
 class NewsTranslationOptions(TranslationOptions):
-    fields = ('title', 'body',)
+    fields = ('title', 'intro', 'body',)
     required_languages = ('ru', 'en',)
 
 
