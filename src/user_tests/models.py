@@ -9,7 +9,7 @@ class Test(models.Model):
     """
     Test model
     """
-    name = models.CharField(_('Название теста'), max_length=150)
+    name = models.CharField(_('Название теста'), max_length=150, unique=True)
     time_available = models.IntegerField(_('Доступное время'))
 
     class Meta(MetaPermissions):
@@ -28,7 +28,6 @@ class Task(models.Model):
         Test, on_delete=models.CASCADE, verbose_name=_('Тест')
     )
     name = models.CharField(_('Название задания'), max_length=150)
-    questions_number = models.IntegerField(_('Количество вопросов'))
     expert_appraisal = models.BooleanField(_('Проверяется администратором'))
 
     class Meta(MetaPermissions):
@@ -43,7 +42,7 @@ class Question(models.Model):
     """
     Question model
     """
-    name = models.CharField(_('Текст вопроса'), max_length=150)
+    text = models.CharField(_('Текст вопроса'), max_length=150)
     task = models.ForeignKey(
         Task, on_delete=models.CASCADE, verbose_name=_('Задание')
     )
@@ -53,7 +52,25 @@ class Question(models.Model):
         verbose_name_plural = _('Вопросы')
 
     def __str__(self):
-        return self.name
+        return self.text
+
+
+class AnswerOptions(models.Model):
+    """
+    Options of given answer
+    """
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, verbose_name=_('Вопрос')
+    )
+    text = models.CharField(_('Текст ответа'), max_length=250)
+    is_correct = models.NullBooleanField(_('Правильность ответа'), null=True)
+
+    class Meta(MetaPermissions):
+        verbose_name = _('Вариант ответа')
+        verbose_name_plural = _('Варианты ответа')
+
+    def __str__(self):
+        return self.text
 
 
 class UserTest(models.Model):
@@ -78,24 +95,6 @@ class UserTest(models.Model):
 
     def __str__(self):
         return self.id
-
-
-class AnswerOptions(models.Model):
-    """
-    Options of given answer
-    """
-    question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, verbose_name=_('Вопрос')
-    )
-    name = models.CharField(_('Текст ответа'), max_length=250)
-    is_correct = models.BooleanField(_('Правильность ответа'))
-
-    class Meta(MetaPermissions):
-        verbose_name = _('Вариант ответа')
-        verbose_name_plural = _('Варианты ответа')
-
-    def __str__(self):
-        return self.name
 
 
 class UserAnswer(models.Model):
