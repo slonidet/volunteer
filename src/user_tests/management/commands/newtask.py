@@ -45,7 +45,7 @@ class Command(BaseCommand):
             action='store',
             dest='time_available',
             help='Stores available time (number of seconds) to pass test',
-            type=int
+            type=int,
         )
 
         parser.add_argument(
