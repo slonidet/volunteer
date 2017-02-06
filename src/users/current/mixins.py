@@ -25,8 +25,7 @@ class CurrentUserViewMixin(object):
 class CurrentUserSerializerMixin(object):
     """ Create object only for current (request) user """
     class Meta:
-        fields = None
-        exclude = ('id', 'user', )
+        fields = '__all__'
 
     def create(self, validated_data):
         user = self.context['request'].user
@@ -43,7 +42,8 @@ class CurrentUserSerializerMixin(object):
 class NotAllowEditApprovedProfileMixin(object):
     """ User can't edit profile if admin approve it """
     def perform_update(self, serializer):
-        if serializer.instance.user.profile.status == Profile.STATUS_APPROVED:
+        profile = getattr(serializer.instance.user, 'profile', None)
+        if profile and profile.status == Profile.STATUS_APPROVED:
             raise exceptions.NotAcceptable(
                 _('Нельзя редактировать утверждённую анкету')
             )
