@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'news.apps.NewsConfig',
     'static.apps.StaticConfig',
     'permissions.apps.PermissionsConfig',
+    'events.apps.EventsConfig',
 ]
 
 MIDDLEWARE = [

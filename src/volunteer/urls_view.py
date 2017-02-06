@@ -55,6 +55,10 @@ def api_root(request, format=None):
         # Static pages
         'admin:static-pages': reverse('adm:static:page-list', **params),
         'static-pages': reverse('static:page-list', **params),
+
+        # Events
+        'admin:events': reverse('adm:events:event-list', **params),
+        'events': reverse('events:event-list', **params),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
 
