@@ -95,7 +95,8 @@ class Command(BaseCommand):
 
                     if correctness.count(True) != 1:
                         raise CommandError(
-                            "This question should contain only one correct choice"
+                            "This question should contain only one correct "
+                            "choice"
                         )
 
                     if not choice[0]:
