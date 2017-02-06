@@ -23,21 +23,21 @@ class Command(BaseCommand):
             '--choice_type',
             action='store',
             dest='choice_type',
-            help='Stores if task contains only one choice questions',
+            help='Stores if task contains only one choice questions'
         )
 
         parser.add_argument(
             '--file',
             action='store',
             dest='file',
-            help='Stores JSON file of given task',
+            help='Stores JSON file of given task'
         )
 
         parser.add_argument(
             '--test',
             action='store',
             dest='test',
-            help='Stores test name',
+            help='Stores test name'
         )
 
         parser.add_argument(
@@ -45,14 +45,14 @@ class Command(BaseCommand):
             action='store',
             dest='time_available',
             help='Stores available time (number of seconds) to pass test',
-            type=int,
+            type=int
         )
 
         parser.add_argument(
             '--task',
             action='store',
             dest='task',
-            help='Stores task name',
+            help='Stores task name'
         )
 
         parser.add_argument(
@@ -60,7 +60,7 @@ class Command(BaseCommand):
             action='store',
             dest='expert_appraisal',
             help='Stores if task should be appraise',
-            type=bool,
+            type=bool
         )
 
     def handle(self, *args, **options):
