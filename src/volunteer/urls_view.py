@@ -52,6 +52,9 @@ def api_root(request, format=None):
         'admin:news': reverse('adm:news:news-list', **params),
         'news': reverse('news:news-list', **params),
 
+        # User Tests
+        # 'admin:tests' reverse('')
+
         # Static pages
         'admin:static-pages': reverse('adm:static:page-list', **params),
         'static-pages': reverse('static:page-list', **params),
