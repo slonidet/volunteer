@@ -1,9 +1,7 @@
 from django.contrib.auth.models import Group
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import exceptions
-from rest_framework import filters
 from rest_framework import status, viewsets, mixins
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
@@ -23,7 +21,6 @@ class AdminUserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
     queryset = User.objects.select_related(
         'profile', 'profile_attachment').prefetch_related('groups')
     serializer_class = UserSerializer
-    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
     filter_fields = ('groups__name', 'role')
     search_fields = ('username', 'profile__first_name', 'profile__last_name',
                      'profile__middle_name', 'profile__phone')
