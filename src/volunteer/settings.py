@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'news.apps.NewsConfig',
     'static.apps.StaticConfig',
     'permissions.apps.PermissionsConfig',
-    'user_tests.apps.UserTestsConfig'
+    'user_tests.apps.UserTestsConfig',
 ]
 
 MIDDLEWARE = [

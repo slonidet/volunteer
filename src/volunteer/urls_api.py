@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'users/', include('users.urls', namespace='users')),
     url(r'gallery/', include('gallery.urls', namespace='gallery')),
     url(r'news/', include('news.urls', namespace='news')),
-    url(r'static/', include('static.urls', namespace='static'))
+    url(r'static/', include('static.urls', namespace='static')),
+    url(r'tests/', include('user_tests.urls', namespace='tests')),
 ]
