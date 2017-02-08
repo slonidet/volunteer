@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from user_tests.models import Test, Task, Question, AnswerOptions
+from user_tests.models import Test, Task, Question, AnswerOptions, UserTest
 
 
 class TestSerializer(serializers.ModelSerializer):
@@ -24,4 +24,10 @@ class QuestionSerializer(serializers.ModelSerializer):
 class AnswerOptionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = AnswerOptions
+        exclude = ('is_correct',)
+
+
+class UserTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserTest
         fields = '__all__'

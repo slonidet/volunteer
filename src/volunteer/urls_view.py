@@ -38,16 +38,16 @@ def api_root(request, format=None):
         'admin:users-stories': reverse('adm:users:story-list', **params),
         'admin:users-groups': reverse('adm:users:group-list', **params),
         'users-stories': reverse('users:story-list', **params),
-        'users-tests': reverse('user: test-list', **params),
+        # 'users-tests': reverse('user:test-list', **params),
 
         # Gallery
         'admin:gallery-photo-albums': reverse(
             'adm:gallery:photo-album-list', **params),
         'admin:gallery-photos': reverse('adm:gallery:photo-list', **params),
         'admin:gallery-videos': reverse('adm:gallery:video-list', **params),
-        'gallery-photo-albums': reverse('gallery:photo-album-list', **params),
-        'gallery-photos': reverse('gallery:photo-list', **params),
-        'gallery-videos': reverse('gallery:video-list', **params),
+        'gallery:photo-albums': reverse('gallery:photo-album-list', **params),
+        'gallery:photos': reverse('gallery:photo-list', **params),
+        'gallery:videos': reverse('gallery:video-list', **params),
 
         # News
         'admin:news': reverse('adm:news:news-list', **params),
@@ -55,9 +55,9 @@ def api_root(request, format=None):
 
         # User Tests
         'tests': reverse('tests:test-list', **params),
-        'tasks': reverse('tests:task-list', **params),
-        'questions': reverse('tests:question-list', **params),
-        'options': reverse('tests:option-list', **params),
+        'tests:tasks': reverse('tests:task-list', **params),
+        'tests:tasks:questions': reverse('tests:question-list', **params),
+        'tests:tasks:questions:options': reverse('tests:option-list', **params),
 
         # Static pages
         'admin:static-pages': reverse('adm:static:page-list', **params),

@@ -6,9 +6,9 @@ from user_tests.views import TestViewSet, TaskViewSet, QuestionViewSet, \
 
 router = routers.DefaultRouter()
 
+router.register('tasks/questions/options', AnswerOptionsViewSet, base_name='option')
+router.register('tasks/questions', QuestionViewSet, base_name='question')
 router.register('tasks', TaskViewSet, base_name='task')
-router.register('questions', QuestionViewSet, base_name='question')
-router.register('options', AnswerOptionsViewSet, base_name='option')
 router.register('', TestViewSet, base_name='test')
 
 urlpatterns = [] + router.urls
