@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
@@ -21,15 +22,22 @@ class AuthProfileAttachmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class AuthGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('id', 'name')
+
+
 class AuthUserSerializer(BaseUserSerializer):
     profile = AuthProfileSerializer(read_only=True)
     profile_attachment = AuthProfileAttachmentSerializer(read_only=True)
+    groups = AuthGroupSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
         fields = (
             'id', 'username', 'is_superuser', 'profile', 'profile_attachment',
-            'role',
+            'role', 'groups',
         )
 
 
