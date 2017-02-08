@@ -85,7 +85,7 @@ class Command(BaseCommand):
         for item in json_data:
 
             title = item["title"]
-            question = Question.objects.create(name=title, task=task_object)
+            question = Question.objects.create(text=title, task=task_object)
 
             if choice_type == 'unique':
                 true_answers = [i[0] for i in item['choices'] if i[0]]

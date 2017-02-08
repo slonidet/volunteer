@@ -106,7 +106,6 @@ class UserAnswer(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name=_('Пользователь')
     )
-    answers = models.ManyToManyField(AnswerOptions, verbose_name=_('Ответы'))
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, verbose_name=_('Вопрос')
     )
@@ -115,6 +114,19 @@ class UserAnswer(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Ответы пользователя')
         verbose_name_plural = _('Ответы пользователей')
+
+    def __str__(self):
+        return self.id
+
+
+class UserAnswerValue(models.Model):
+    user_answer = models.ForeignKey(UserAnswer, on_delete=models.CASCADE,
+                                    verbose_name=_('Ответы пользователя'))
+    answers_values = models.TextField(_('Значение ответа пользователя'))
+
+    class Meta(MetaPermissions):
+        verbose_name = _('Значение ответа')
+        verbose_name_plural =_('Значения ответов пользователя')
 
     def __str__(self):
         return self.id
