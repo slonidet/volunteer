@@ -118,7 +118,6 @@ class StoryViewSet(StoryRelatedViewMixin, viewsets.ReadOnlyModelViewSet):
     permission_classes = ()
 
 
-class AdminUserGroupViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
-                            mixins.ListModelMixin, GenericViewSet):
+class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all().order_by('id')
     serializer_class = UserGroupSerializer
