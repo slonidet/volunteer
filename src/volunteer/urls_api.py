@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'news/', include('news.urls', namespace='news')),
     url(r'static/', include('static.urls', namespace='static')),
     url(r'events/', include('events.urls', namespace='events')),
+    url(r'tests/', include('user_tests.urls', namespace='tests')),
 ]
