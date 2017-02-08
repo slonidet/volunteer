@@ -29,6 +29,8 @@ class Task(models.Model):
     )
     name = models.CharField(_('Название задания'), max_length=150)
     expert_appraisal = models.BooleanField(_('Проверяется администратором'))
+    audio = models.FileField(_('Аудиофайл'), null=True)
+    text = models.TextField(_('Текст'), null=True)
 
     class Meta(MetaPermissions):
         verbose_name = _('Задание')
