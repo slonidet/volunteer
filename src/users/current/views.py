@@ -1,4 +1,5 @@
 from django.shortcuts import redirect
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions
 from rest_framework import views, status, permissions
@@ -19,10 +20,10 @@ from users.current.tokens import RegisterTokenGenerator
 from users.models import Profile, ProfileAttachment, Story, ProfileComment
 from users.serializers import ProfileCommentSerializer
 from users.views import User
-from users.mixins import ExcludeAnonymousViewMixin, StoryRelatedViewMixin
+from users.mixins import StoryRelatedViewMixin
 
 
-class UserRegistrationView(ExcludeAnonymousViewMixin, CreateAPIView):
+class UserRegistrationView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = CurrentUserSerializer
     permission_classes = ()
@@ -47,7 +48,7 @@ class UserActivationView(views.APIView):
     permission_classes = ()
 
     def get(self, request, user_id, token):
-        user = get_object_or_404(User, id=user_id)
+        user = get_object_or_404(User, id=user_id, last_login=None)
         if RegisterTokenGenerator().check_token(user, token):
             user.is_active = True
             user.save()
@@ -60,6 +61,8 @@ class AuthTokenView(ObtainAuthToken):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
+        user.last_login = timezone.now()
+        user.save()
         user_serializer = AuthUserSerializer(user)
         token, created = Token.objects.get_or_create(user=user)
 
