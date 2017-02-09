@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'static.apps.StaticConfig',
     'permissions.apps.PermissionsConfig',
     'events.apps.EventsConfig',
+    'statistic.apps.StatisticConfig',
 ]
 
 MIDDLEWARE = [

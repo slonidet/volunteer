@@ -59,6 +59,9 @@ def api_root(request, format=None):
         # Events
         'admin:events': reverse('adm:events:event-list', **params),
         'events': reverse('events:event-list', **params),
+
+        # Statistic
+        'admin:statistic:main': reverse('adm:statistic:main', **params),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
 
