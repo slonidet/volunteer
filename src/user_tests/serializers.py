@@ -30,4 +30,14 @@ class AnswerOptionsSerializer(serializers.ModelSerializer):
 class UserTestSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserTest
-        fields = '__all__'
+        exclude = ('user',)
+        read_only_fields = ('started_at', 'finished_at')
+
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+
+        return super().create(validated_data)
+
+    #
+    # def update(self, instance, validated_data):
+    #     pass

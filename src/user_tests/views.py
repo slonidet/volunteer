@@ -1,4 +1,6 @@
-from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
+from rest_framework import mixins
+from rest_framework import permissions
+from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 
 from user_tests.models import Test, Task, Question, AnswerOptions, UserTest
 from user_tests.serializers import TestSerializer, TaskSerializer, \
@@ -31,12 +33,14 @@ class AnswerOptionsViewSet(ReadOnlyModelViewSet):
     serializer_class = AnswerOptionsSerializer
     filter_fields = ('question__task', 'question',)
 
-#
-# class UserTestViewSet(ModelViewSet):
-#     queryset = UserTest.objects.prefetch_related('user__id').filter(user__id=1)
-#     permission_classes = ()
-#     serializer_class = UserTestSerializer
-#
-#     def get_queryset(self):
-#         user_id = request.session
 
+class UserTestViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
+                      GenericViewSet):
+    queryset = UserTest.objects.select_related('user')
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = UserTestSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        return queryset.filter(user=self.request.user)

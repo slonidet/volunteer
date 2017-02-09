@@ -87,9 +87,8 @@ class UserTest(models.Model):
     started_at = models.DateTimeField(
         _('Время начала тестирования'), auto_now_add=True
     )
-    finished_at = models.DateTimeField(
-        _('Время окончания тестирования'), auto_now_add=True
-    )
+    finished_at = models.DateTimeField(_('Время окончания тестирования'),
+                                       null=True, blank=True)
 
     class Meta(MetaPermissions):
         verbose_name = _('Тест пользователя')

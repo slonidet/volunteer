@@ -1,10 +1,10 @@
 from rest_framework import routers
 
 from user_tests.views import TestViewSet, TaskViewSet, QuestionViewSet, \
-    AnswerOptionsViewSet
-
+    AnswerOptionsViewSet, UserTestViewSet
 
 router = routers.DefaultRouter()
+router.register('user-tests', UserTestViewSet, base_name='user-test')
 
 router.register('tasks/questions/options', AnswerOptionsViewSet, base_name='option')
 router.register('tasks/questions', QuestionViewSet, base_name='question')
