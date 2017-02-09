@@ -10,17 +10,15 @@ from rest_framework.viewsets import GenericViewSet
 from users.mixins import ExcludeAnonymousViewMixin, StoryRelatedViewMixin
 from users.models import Profile, ProfileAttachment, Story, ProfileComment
 from users.models import User
-from users.serializers import (
-    UserSerializer, ProfileSerializer, ProfileAttachmentSerializer,
-    AdminStorySerializer, StorySerializer,
-    UserGroupSerializer,
-    ProfileCommentSerializer, ApproveProfileSerializer)
+from users.serializers import ProfileSerializer, ProfileAttachmentSerializer, \
+    AdminStorySerializer, StorySerializer, UserGroupSerializer, \
+    ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer
 
 
 class AdminUserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
     queryset = User.objects.select_related(
         'profile', 'profile_attachment').prefetch_related('groups')
-    serializer_class = UserSerializer
+    serializer_class = AdminUserSerializer
     filter_fields = ('groups__name', 'role')
     search_fields = ('username', 'profile__first_name', 'profile__last_name',
                      'profile__middle_name', 'profile__phone')
@@ -118,7 +116,6 @@ class StoryViewSet(StoryRelatedViewMixin, viewsets.ReadOnlyModelViewSet):
     permission_classes = ()
 
 
-class AdminUserGroupViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
-                            mixins.ListModelMixin, GenericViewSet):
+class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all().order_by('id')
     serializer_class = UserGroupSerializer

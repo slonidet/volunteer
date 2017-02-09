@@ -50,6 +50,7 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'name')
+        extra_kwargs = {'name': {'validators': []}}
 
 
 class BaseUserSerializer(serializers.ModelSerializer):
@@ -67,6 +68,12 @@ class BaseUserSerializer(serializers.ModelSerializer):
         return writable_fields
 
 
+class SimpleUserSerializer(BaseUserSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'full_name')
+
+
 class UserSerializer(BaseUserSerializer):
     groups = GroupSerializer(many=True, read_only=True)
     profile = SimpleProfileSerializer(read_only=True)
@@ -74,9 +81,8 @@ class UserSerializer(BaseUserSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'username', 'is_active', 'is_superuser', 'is_staff',
-            'password', 'date_joined', 'last_login', 'profile',
-            'profile_attachment', 'groups', 'role',
+            'id', 'username', 'is_active', 'password', 'date_joined',
+            'last_login', 'profile', 'profile_attachment', 'groups', 'role',
         )
         read_only_fields = (
             'is_superuser', 'is_staff', 'last_login', 'date_joined', 'profile',
@@ -133,10 +139,28 @@ class UserSerializer(BaseUserSerializer):
         return instance
 
 
-class SimpleUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'full_name')
+class AdminUserSerializer(UserSerializer):
+    groups = GroupSerializer(many=True, required=False)
+
+    class Meta(UserSerializer.Meta):
+        read_only_fields = (
+            'is_superuser', 'is_staff', 'last_login', 'date_joined', 'profile',
+            'profile_attachment', 'role',
+        )
+
+    def update(self, user, validated_data):
+        groups = validated_data.pop('groups', None)
+        user = super().update(user, validated_data)
+
+        if groups:
+            if len(groups) > 1:
+                raise serializers.ValidationError(
+                    _('Пользователь может состоять только в одной группе')
+                )
+            group = Group.objects.get_by_natural_key(groups[0]['name'])
+            user.groups.set([group])
+
+        return user
 
 
 class ProfileAttachmentSerializer(serializers.ModelSerializer):
@@ -179,33 +203,10 @@ class StorySerializer(UserTranslationMixin, BaseStorySerializer):
         fields = ['id', 'text', 'about_yourself', 'profile', 'profile_photo']
 
 
-class UserGroupSerializer(BaseStorySerializer):
-    users = SimpleUserSerializer(source='user_set', many=True, required=False)
+class UserGroupSerializer(serializers.ModelSerializer):
+    users = SimpleUserSerializer(source='user_set', many=True, read_only=True)
 
     class Meta:
         model = Group
         fields = ('id', 'name', 'users')
         read_only_fields = ('name', )
-
-    def create(self, validated_data):
-        users = validated_data.pop('user_set', None)
-        instance = super().create(validated_data)
-
-        if users is not None:
-            self.add_user_to_group(instance)
-
-        return instance
-
-    def update(self, instance, validated_data):
-        users = validated_data.pop('user_set', None)
-        instance = super().update(instance, validated_data)
-
-        if users is not None:
-            self.add_user_to_group(instance)
-
-        return instance
-
-    def add_user_to_group(self, group):
-        user_ids = [u['id'] for u in self.initial_data['users']]
-        users = User.objects.filter(pk__in=user_ids)
-        group.user_set.set(users)
