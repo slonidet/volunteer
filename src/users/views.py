@@ -40,6 +40,7 @@ class AdminProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = ProfileSerializer
     filter_fields = ('user', 'status')
+    search_fields = ('first_name', 'last_name', 'middle_name')
 
     @detail_route(methods=['get', 'post'],
                   serializer_class=ProfileCommentSerializer)
