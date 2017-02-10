@@ -30,14 +30,17 @@ class AnswerOptionsSerializer(serializers.ModelSerializer):
 class UserTestSerializer(serializers.ModelSerializer):
     test = TestSerializer()
     remaining = serializers.SerializerMethodField()
-    finished = serializers.BooleanField()
+    finished = serializers.SerializerMethodField()
 
     class Meta:
         model = UserTest
-        fields = ('id', 'test', 'remaining')
+        fields = ('id', 'test', 'remaining', 'finished',)
 
     def get_remaining(self, obj):
         return obj.remaining
+
+    def get_finished(self, obj):
+        return obj.finished
 
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user

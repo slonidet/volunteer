@@ -102,6 +102,10 @@ class UserTest(models.Model):
 
         return remaining
 
+    @property
+    def finished(self):
+        return True if self.remaining >= 0 else False
+
     class Meta(MetaPermissions):
         verbose_name = _('Тест пользователя')
         verbose_name_plural = _('Тесты пользователя')
