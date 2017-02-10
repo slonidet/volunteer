@@ -102,16 +102,13 @@ class UserTest(models.Model):
 
         return remaining
 
-    @property
-    def finished(self):
-        return True if self.remaining >= 0 else False
-
     class Meta(MetaPermissions):
         verbose_name = _('Тест пользователя')
         verbose_name_plural = _('Тесты пользователя')
+        unique_together = ('user', 'test')
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 class UserAnswer(models.Model):
@@ -131,7 +128,7 @@ class UserAnswer(models.Model):
         verbose_name_plural = _('Ответы пользователей')
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 class UserAnswerValue(models.Model):
@@ -144,4 +141,4 @@ class UserAnswerValue(models.Model):
         verbose_name_plural =_('Значения ответов пользователя')
 
     def __str__(self):
-        return self.id
+        return str(self.id)
