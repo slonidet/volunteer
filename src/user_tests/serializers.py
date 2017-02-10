@@ -28,10 +28,16 @@ class AnswerOptionsSerializer(serializers.ModelSerializer):
 
 
 class UserTestSerializer(serializers.ModelSerializer):
+    test = TestSerializer()
+    remaining = serializers.SerializerMethodField()
+    finished = serializers.BooleanField()
+
     class Meta:
         model = UserTest
-        exclude = ('user',)
-        read_only_fields = ('started_at', 'finished_at')
+        fields = ('id', 'test', 'remaining')
+
+    def get_remaining(self, obj):
+        return obj.remaining
 
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user

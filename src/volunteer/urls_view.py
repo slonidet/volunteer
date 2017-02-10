@@ -38,7 +38,6 @@ def api_root(request, format=None):
         'admin:users:stories': reverse('adm:users:story-list', **params),
         'admin:users:groups': reverse('adm:users:group-list', **params),
         'users:stories': reverse('users:story-list', **params),
-        'users:tests': reverse('tests:user-test-list', **params),
 
         # Gallery
         'admin:gallery:photo-albums': reverse(
@@ -58,6 +57,7 @@ def api_root(request, format=None):
         'tests:tasks': reverse('tests:task-list', **params),
         'tests:tasks:questions': reverse('tests:question-list', **params),
         'tests:tasks:questions:options': reverse('tests:option-list', **params),
+        'tests:user:tests': reverse('tests:user-test-list', **params),
 
         # Static pages
         'admin:static-pages': reverse('adm:static:page-list', **params),

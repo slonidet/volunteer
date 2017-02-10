@@ -35,6 +35,7 @@ class AnswerOptionsViewSet(ReadOnlyModelViewSet):
 
 
 class UserTestViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
+                      mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                       GenericViewSet):
     queryset = UserTest.objects.select_related('user')
     permission_classes = (permissions.IsAuthenticated,)

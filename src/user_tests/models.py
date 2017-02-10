@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from permissions.models import MetaPermissions
@@ -10,7 +11,7 @@ class Test(models.Model):
     Test model
     """
     name = models.CharField(_('Название теста'), max_length=150, unique=True)
-    time_available = models.IntegerField(_('Доступное время'))
+    time_available = models.IntegerField(_('Доступное время в секундах'))
 
     class Meta(MetaPermissions):
         verbose_name = _('Тест')
@@ -89,6 +90,17 @@ class UserTest(models.Model):
     )
     finished_at = models.DateTimeField(_('Время окончания тестирования'),
                                        null=True, blank=True)
+
+    @property
+    def remaining(self):
+        dead_line = self.started_at + timezone.timedelta(
+            seconds=self.test.time_available
+        )
+        remaining = dead_line - timezone.now()
+        remaining = int(remaining.total_seconds())
+        remaining = remaining if remaining > 0 else 0
+
+        return remaining
 
     class Meta(MetaPermissions):
         verbose_name = _('Тест пользователя')
