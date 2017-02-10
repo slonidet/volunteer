@@ -126,6 +126,7 @@ class UserAnswer(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Ответы пользователя')
         verbose_name_plural = _('Ответы пользователей')
+        unique_together = ('user', 'question')
 
     def __str__(self):
         return str(self.id)
@@ -133,8 +134,9 @@ class UserAnswer(models.Model):
 
 class UserAnswerValue(models.Model):
     user_answer = models.ForeignKey(UserAnswer, on_delete=models.CASCADE,
+                                    related_name='answer_values',
                                     verbose_name=_('Ответы пользователя'))
-    answers_values = models.TextField(_('Значение ответа пользователя'))
+    answer_value = models.TextField(_('Значение ответа пользователя'))
 
     class Meta(MetaPermissions):
         verbose_name = _('Значение ответа')
