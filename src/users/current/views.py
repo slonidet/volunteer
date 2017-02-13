@@ -125,8 +125,8 @@ class CurrentUserStoryView(StoryRelatedViewMixin, BaseCurrentUserView):
     serializer_class = CurrentUserStorySerializer
 
     def create(self, request, *args, **kwargs):
-        profile = Profile.objects.get(user=self.request.user)
-        if profile.status != Profile.STATUS_APPROVED:
+        profile = Profile.objects.filter(user=self.request.user).first()
+        if not profile or profile.status != Profile.STATUS_APPROVED:
             raise exceptions.NotAcceptable(
                 _('Нельзя создать волонтёрскую итосрию пока анкета '
                   'не утверждена администратором')
