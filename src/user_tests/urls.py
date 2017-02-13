@@ -5,7 +5,7 @@ from user_tests.views import TestViewSet, TaskViewSet, QuestionViewSet, \
 
 router = routers.DefaultRouter()
 router.register('user-tests', UserTestViewSet, base_name='user-test')
-router.register('user-answers', UserAnswerViewSet, base_name='user-answer')
+# router.register('user-answers', UserAnswerViewSet, base_name='user-answer')
 
 router.register('tasks/questions/options', AnswerOptionsViewSet, base_name='option')
 router.register('tasks/questions', QuestionViewSet, base_name='question')
