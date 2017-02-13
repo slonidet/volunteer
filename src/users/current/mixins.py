@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import exceptions
@@ -20,6 +21,15 @@ class CurrentUserViewMixin(object):
         self.check_object_permissions(self.request, obj)
 
         return obj
+
+    def create(self, request, *args, **kwargs):
+        try:
+            self.get_object()
+            raise exceptions.NotAcceptable(_('Объект уже существует'))
+        except Http404:
+            pass
+
+        return super().create(request, args, **kwargs)
 
 
 class CurrentUserSerializerMixin(object):

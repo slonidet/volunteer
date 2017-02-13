@@ -85,6 +85,11 @@ class AdminProfileViewSet(viewsets.ModelViewSet):
         serializer = ApproveProfileSerializer(profile, data=request.data)
         serializer.is_valid(raise_exception=True)
 
+        try:
+            profile.user.profile_attachment
+        except ProfileAttachment.DoesNotExist:
+            raise exceptions.NotFound(_('Пользователь не загрузил фотографию'))
+
         with transaction.atomic():
             profile = Profile.objects.select_for_update().get(pk=profile.pk)
             if serializer.validated_data['updated_at'] != profile.updated_at:
