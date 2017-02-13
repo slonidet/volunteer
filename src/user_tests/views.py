@@ -1,8 +1,12 @@
-from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
+from rest_framework import permissions
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from user_tests.models import Test, Task, Question, AnswerOptions, UserTest
+from core.views import UndeletableModelViewSet
+from user_tests.models import Test, Task, Question, AnswerOptions, UserTest, \
+    UserAnswer
 from user_tests.serializers import TestSerializer, TaskSerializer, \
-    QuestionSerializer, AnswerOptionsSerializer, UserTestSerializer
+    QuestionSerializer, AnswerOptionsSerializer, UserTestSerializer, \
+    UserAnswerSerializer
 
 
 class TestViewSet(ReadOnlyModelViewSet):
@@ -31,12 +35,21 @@ class AnswerOptionsViewSet(ReadOnlyModelViewSet):
     serializer_class = AnswerOptionsSerializer
     filter_fields = ('question__task', 'question',)
 
-#
-# class UserTestViewSet(ModelViewSet):
-#     queryset = UserTest.objects.prefetch_related('user__id').filter(user__id=1)
-#     permission_classes = ()
-#     serializer_class = UserTestSerializer
-#
-#     def get_queryset(self):
-#         user_id = request.session
 
+class BaseUserViewSet(UndeletableModelViewSet):
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        return queryset.filter(user=self.request.user)
+
+
+class UserTestViewSet(BaseUserViewSet):
+    queryset = UserTest.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = UserTestSerializer
+
+
+class UserAnswerViewSet(BaseUserViewSet):
+    queryset = UserAnswer.objects.prefetch_related('answer_values')
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = UserAnswerSerializer

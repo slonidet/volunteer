@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from permissions.models import MetaPermissions
@@ -10,7 +11,7 @@ class Test(models.Model):
     Test model
     """
     name = models.CharField(_('Название теста'), max_length=150, unique=True)
-    time_available = models.IntegerField(_('Доступное время'))
+    time_available = models.IntegerField(_('Доступное время в секундах'))
 
     class Meta(MetaPermissions):
         verbose_name = _('Тест')
@@ -87,16 +88,27 @@ class UserTest(models.Model):
     started_at = models.DateTimeField(
         _('Время начала тестирования'), auto_now_add=True
     )
-    finished_at = models.DateTimeField(
-        _('Время окончания тестирования'), auto_now_add=True
-    )
+    finished_at = models.DateTimeField(_('Время окончания тестирования'),
+                                       null=True, blank=True)
+
+    @property
+    def remaining(self):
+        dead_line = self.started_at + timezone.timedelta(
+            seconds=self.test.time_available
+        )
+        remaining = dead_line - timezone.now()
+        remaining = int(remaining.total_seconds())
+        remaining = remaining if remaining > 0 else 0
+
+        return remaining
 
     class Meta(MetaPermissions):
         verbose_name = _('Тест пользователя')
         verbose_name_plural = _('Тесты пользователя')
+        unique_together = ('user', 'test')
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 class UserAnswer(models.Model):
@@ -114,19 +126,21 @@ class UserAnswer(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Ответы пользователя')
         verbose_name_plural = _('Ответы пользователей')
+        unique_together = ('user', 'question')
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 class UserAnswerValue(models.Model):
     user_answer = models.ForeignKey(UserAnswer, on_delete=models.CASCADE,
+                                    related_name='answer_values',
                                     verbose_name=_('Ответы пользователя'))
-    answers_values = models.TextField(_('Значение ответа пользователя'))
+    answer_value = models.TextField(_('Значение ответа пользователя'))
 
     class Meta(MetaPermissions):
         verbose_name = _('Значение ответа')
         verbose_name_plural =_('Значения ответов пользователя')
 
     def __str__(self):
-        return self.id
+        return str(self.id)

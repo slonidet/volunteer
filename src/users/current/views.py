@@ -72,7 +72,7 @@ class AuthTokenView(ObtainAuthToken):
         })
 
 
-class CurrentUserViewView(CurrentUserViewMixin, RetrieveUpdateAPIView):
+class CurrentUserView(CurrentUserViewMixin, RetrieveUpdateAPIView):
     queryset = User.objects.select_related(
         'profile', 'profile_attachment').prefetch_related('groups')
     serializer_class = CurrentUserSerializer
