@@ -32,3 +32,13 @@ class UndeletableModelViewSet(mixins.CreateModelMixin,
     """
     pass
 
+
+class ListArrayViewSet(mixins.RetrieveModelMixin,
+                       mixins.ListModelMixin,
+                       GenericViewSet):
+    """
+    A viewset that provides list API in array form, not in object form
+    """
+    def list(self, request, *args, **kwargs):
+        serializer = self.get_serializer(self.queryset, many=True)
+        return Response(serializer.data)

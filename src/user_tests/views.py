@@ -1,7 +1,6 @@
 from rest_framework import permissions
-from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from core.views import UndeletableModelViewSet
+from core.views import UndeletableModelViewSet, ListArrayViewSet
 from user_tests.models import Test, Task, Question, AnswerOptions, UserTest, \
     UserAnswer
 from user_tests.serializers import TestSerializer, TaskSerializer, \
@@ -9,27 +8,27 @@ from user_tests.serializers import TestSerializer, TaskSerializer, \
     UserAnswerSerializer
 
 
-class TestViewSet(ReadOnlyModelViewSet):
+class TestViewSet(ListArrayViewSet):
     queryset = Test.objects.all()
     permission_classes = ()
     serializer_class = TestSerializer
 
 
-class TaskViewSet(ReadOnlyModelViewSet):
+class TaskViewSet(ListArrayViewSet):
     queryset = Task.objects.prefetch_related('test').all()
     permission_classes = ()
     serializer_class = TaskSerializer
     filter_fields = ('test',)
 
 
-class QuestionViewSet(ReadOnlyModelViewSet):
+class QuestionViewSet(ListArrayViewSet):
     queryset = Question.objects.prefetch_related('task').all()
     permission_classes = ()
     serializer_class = QuestionSerializer
     filter_fields = ('task__test', 'task',)
 
 
-class AnswerOptionsViewSet(ReadOnlyModelViewSet):
+class AnswerOptionsViewSet(ListArrayViewSet):
     queryset = AnswerOptions.objects.all()
     permission_classes = ()
     serializer_class = AnswerOptionsSerializer
