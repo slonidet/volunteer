@@ -2,6 +2,7 @@ from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
+from core.serializers import HyperlinkedSorlImageField
 from users.current.mixins import CurrentUserSerializerMixin
 from users.models import Profile, ProfileAttachment
 from users.serializers import User, UserSerializer, ProfileSerializer, \
@@ -77,9 +78,18 @@ class CurrentUserProfileAttachmentSerializer(CurrentUserSerializerMixin,
 
 
 class CurrentUserStorySerializer(StorySerializer):
+    image = HyperlinkedSorlImageField(
+        '600x400', options={'upscale': False}, required=False
+    )
+    thumbnail = HyperlinkedSorlImageField(
+        '320x240', options={"crop": "center"},
+        source='image', read_only=True
+    )
+
     class Meta(StorySerializer.Meta):
         fields = [
-            'id', 'text', 'about_yourself', 'admin_comment', 'is_public'
+            'id', 'text', 'about_yourself', 'admin_comment', 'is_public',
+            'image', 'thumbnail',
         ]
         read_only_fields = ('is_public', 'admin_comment')
 
