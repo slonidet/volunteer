@@ -35,3 +35,22 @@ def _set_candidate_role(instance, checked_model_field):
     if hasattr(user, checked_model_field):
         user.role = User.ROLE_CANDIDATE
         user.save()
+
+
+@receiver(post_save, sender=Profile)
+def set_approved_role(sender, instance, **kwargs):
+    status = instance.status
+    user = instance.user
+
+    need_set_approved_role = (
+        status == Profile.STATUS_APPROVED
+        and user.role in (User.ROLE_CANDIDATE, User.ROLE_REGISTERED)
+    )
+    if need_set_approved_role:
+        user.role = User.ROLE_APPROVED
+        user.save()
+
+    elif status != Profile.STATUS_APPROVED and user.role == User.ROLE_APPROVED:
+        # rollback user approved role if admin change profile status
+        user.role = User.ROLE_CANDIDATE
+        user.save()

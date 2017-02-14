@@ -65,16 +65,16 @@ class CurrentUserSerializer(UserSerializer):
 class CurrentUserProfileSerializer(CurrentUserSerializerMixin,
                                    ProfileSerializer):
 
-    class Meta(CurrentUserSerializerMixin.Meta):
-        model = Profile
-        read_only_fields = ('status', )
+    class Meta(ProfileSerializer.Meta):
+        pass
 
 
 class CurrentUserProfileAttachmentSerializer(CurrentUserSerializerMixin,
                                              ProfileAttachmentSerializer):
 
-    class Meta(CurrentUserSerializerMixin.Meta):
+    class Meta:
         model = ProfileAttachment
+        fields = '__all__'
 
 
 class CurrentUserStorySerializer(StorySerializer):

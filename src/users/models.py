@@ -55,6 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     ROLE_REGISTERED = 'registered'  # registered user
     ROLE_CANDIDATE = 'candidate'    # create user profile
+    ROLE_APPROVED = 'approved'      # admin approved user profile
     ROLE_TESTED = 'tested'          # user passed all tests
     ROLE_INTERVIEWED = 'interviewed'  # user passed interview
     ROLE_PREPARED = 'prepared'      # user passed training
