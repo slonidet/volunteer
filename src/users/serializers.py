@@ -217,9 +217,7 @@ class StorySerializer(UserTranslationMixin, BaseStorySerializer):
 
 
 class UserGroupSerializer(serializers.ModelSerializer):
-    users = SimpleUserSerializer(source='user_set', many=True, read_only=True)
-
     class Meta:
         model = Group
-        fields = ('id', 'name', 'users')
-        read_only_fields = ('name', )
+        fields = ('id', 'name',)
+        read_only_fields = ('name',)
