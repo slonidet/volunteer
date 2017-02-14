@@ -115,3 +115,4 @@ class StoryViewSet(StoryRelatedViewMixin, viewsets.ReadOnlyModelViewSet):
 class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all().order_by('id')
     serializer_class = UserGroupSerializer
+    pagination_class = None
