@@ -9,47 +9,50 @@ from user_tests.serializers import TestSerializer, TaskSerializer, \
     UserAnswerSerializer
 
 
-class TestViewSet(ReadOnlyModelViewSet):
-    queryset = Test.objects.all()
+class BaseTestReadOnlyModelViewSet(ReadOnlyModelViewSet):
     permission_classes = ()
+    pagination_class = None
+
+
+class TestViewSet(BaseTestReadOnlyModelViewSet):
+    queryset = Test.objects.all()
     serializer_class = TestSerializer
 
 
-class TaskViewSet(ReadOnlyModelViewSet):
+class TaskViewSet(BaseTestReadOnlyModelViewSet):
     queryset = Task.objects.prefetch_related('test').all()
-    permission_classes = ()
     serializer_class = TaskSerializer
-    filter_fields = ('test',)
+    filter_fields = ('test', 'test__name')
 
 
-class QuestionViewSet(ReadOnlyModelViewSet):
+class QuestionViewSet(BaseTestReadOnlyModelViewSet):
     queryset = Question.objects.prefetch_related('task').all()
-    permission_classes = ()
     serializer_class = QuestionSerializer
-    filter_fields = ('task__test', 'task',)
+    filter_fields = ('task', 'task__test', 'task__test__name')
 
 
-class AnswerOptionsViewSet(ReadOnlyModelViewSet):
+class AnswerOptionsViewSet(BaseTestReadOnlyModelViewSet):
     queryset = AnswerOptions.objects.all()
-    permission_classes = ()
     serializer_class = AnswerOptionsSerializer
-    filter_fields = ('question__task', 'question',)
+    filter_fields = ('question', 'question__task__test__name')
 
 
-class BaseUserViewSet(UndeletableModelViewSet):
+class BaseUserTestViewSet(UndeletableModelViewSet):
+    pagination_class = None
+
     def get_queryset(self):
         queryset = super().get_queryset()
 
         return queryset.filter(user=self.request.user)
 
 
-class UserTestViewSet(BaseUserViewSet):
+class UserTestViewSet(BaseUserTestViewSet):
     queryset = UserTest.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = UserTestSerializer
 
 
-class UserAnswerViewSet(BaseUserViewSet):
+class UserAnswerViewSet(BaseUserTestViewSet):
     queryset = UserAnswer.objects.prefetch_related('answer_values')
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = UserAnswerSerializer

@@ -61,7 +61,7 @@ class UserTestSerializer(ForeignKeySerializerMixin,
 class AnswerValueSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAnswerValue
-        fields = ('answer_value',)
+        fields = ('value',)
 
 
 class UserAnswerSerializer(NestedSerializerMixin, BaseUserTestSerializer):
