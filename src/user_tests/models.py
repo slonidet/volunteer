@@ -16,7 +16,6 @@ class Test(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Тест')
         verbose_name_plural = _('Тесты')
-        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -37,7 +36,6 @@ class Task(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Задание')
         verbose_name_plural = _('Задания')
-        ordering = ['test__name']
 
     def __str__(self):
         return self.name
@@ -55,7 +53,6 @@ class Question(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Вопрос')
         verbose_name_plural = _('Вопросы')
-        ordering = ['task__test__name']
 
     def __str__(self):
         return self.text
@@ -74,7 +71,6 @@ class AnswerOptions(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Вариант ответа')
         verbose_name_plural = _('Варианты ответа')
-        ordering = ['question__task__test__name']
 
     def __str__(self):
         return self.text
@@ -140,11 +136,11 @@ class UserAnswerValue(models.Model):
     user_answer = models.ForeignKey(UserAnswer, on_delete=models.CASCADE,
                                     related_name='answer_values',
                                     verbose_name=_('Ответы пользователя'))
-    value = models.TextField(_('Значение ответа пользователя'))
+    answer_value = models.TextField(_('Значение ответа пользователя'))
 
     class Meta(MetaPermissions):
         verbose_name = _('Значение ответа')
-        verbose_name_plural = _('Значения ответов пользователя')
+        verbose_name_plural =_('Значения ответов пользователя')
 
     def __str__(self):
         return str(self.id)
