@@ -24,6 +24,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+        read_only_fields = ('status',)
 
     def validate_benefits(self, value):
         if len(value) > 4:
@@ -42,7 +43,6 @@ class SimpleProfileSerializer(ProfileSerializer):
 class ApproveProfileSerializer(ProfileSerializer):
     class Meta(ProfileSerializer.Meta):
         fields = ('id', 'updated_at', 'status')
-        read_only_fields = ('status', )
         extra_kwargs = {'updated_at': {'read_only': False}}
 
 
