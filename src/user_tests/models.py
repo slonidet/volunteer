@@ -45,7 +45,7 @@ class Question(models.Model):
     """
     Question model
     """
-    text = models.CharField(_('Текст вопроса'), max_length=250)
+    text = models.CharField(_('Текст вопроса'), max_length=150)
     task = models.ForeignKey(
         Task, on_delete=models.CASCADE, verbose_name=_('Задание')
     )
