@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail
 
+from core.serializers import HyperlinkedSorlImageField
 from core.translation_serializers import AdminTranslationMixin, \
     UserTranslationMixin
 from users.models import Profile, ProfileAttachment, Story
@@ -183,13 +184,36 @@ class StoryProfileSerializer(serializers.ModelSerializer):
 
 
 class BaseStorySerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-    thumbnail = serializers.SerializerMethodField()
+    image = HyperlinkedSorlImageField(
+        '600x400', options={'upscale': False}, required=False
+    )
+    thumbnail = HyperlinkedSorlImageField(
+        '320x240', options={"crop": "center"},
+        source='image', read_only=True
+    )
     profile = StoryProfileSerializer(read_only=True)
+    profile_photo = serializers.ImageField(
+        label='Фото', source='profile.user.profile_attachment.photo',
+        read_only=True
+    )
 
     class Meta:
         model = Story
         model_translation = StoryTranslationOptions
+
+
+class AdminStorySerializer(AdminTranslationMixin, BaseStorySerializer):
+    class Meta(BaseStorySerializer.Meta):
+        fields = '__all__'
+
+
+class StorySerializer(UserTranslationMixin, BaseStorySerializer):
+    image = serializers.SerializerMethodField()
+    thumbnail = serializers.SerializerMethodField()
+
+    class Meta(BaseStorySerializer.Meta):
+        fields = ['id', 'text', 'about_yourself', 'profile', 'image',
+                  'thumbnail']
 
     def get_image(self, obj):
         return self._get_story_or_profile_image(obj, '600x400', upscale=False)
@@ -211,17 +235,6 @@ class BaseStorySerializer(serializers.ModelSerializer):
         request = self.context.get('request')
 
         return request.build_absolute_uri(image.url)
-
-
-class AdminStorySerializer(AdminTranslationMixin, BaseStorySerializer):
-    class Meta(BaseStorySerializer.Meta):
-        fields = '__all__'
-
-
-class StorySerializer(UserTranslationMixin, BaseStorySerializer):
-    class Meta(BaseStorySerializer.Meta):
-        fields = ['id', 'text', 'about_yourself', 'profile', 'image',
-                  'thumbnail']
 
 
 class UserGroupSerializer(serializers.ModelSerializer):
