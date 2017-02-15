@@ -1,0 +1,65 @@
+[
+  {
+    "title": "A quel ge Christophe a-t-il commencé à gagner la vie ?",
+    "choices": [
+      [false, "à 13 ans"],
+      [true, "à 14 ans"],
+      [false, "à 15 ans"],
+      [false, "à 16 ans"]
+    ]
+  },
+  {
+    "title": "Pourquoi n'a -t — il pas recouru à la charité des autres ?",
+    "choices": [
+      [false, "Ses frères lui défendaient de le faire."],
+      [false, "Jean Christophe avait peur de déranger tout le monde."],
+      [false, "Personne ne voulait l'aider."],
+      [true, "Christophe était orgueilleux."]
+    ]
+  },
+  {
+    "title": "Comment Christophe gagnait-il sa vie? Il donnait des leçons de musique ...",
+    "choices": [
+      [true, "aux fillettes des familles riches."],
+      [false, "à la princesse"],
+      [false, "au prince"],
+      [false, "au jeunes musiciens du thé tre."]
+    ]
+  },
+  {
+    "title": "La journée du travail de Christophe commençait par ...",
+    "choices": [
+      [false, "la répétition de l'orchestre."],
+      [true, "ses leçons de musique."],
+      [false, "le spectacle au thé tre."],
+      [false, "le concert au ch teau."]
+    ]
+  },
+  {
+    "title": "Quelle phrase correspond au contenu du texte ?",
+    "choices": [
+      [false, "Christophe avait une nombreuse clientèle gr ce à la protection du directeur du thé tre."],
+      [false, "Après ses leçons Christophe rentrait à la maison pour déjeuner."],
+      [true, "Parfois Christophe dirigeait les répétitions de l'orchestre."],
+      [false, "Après le spectacle il allait au ch teau où il devait écouter la princesse jouer du piano."]
+    ]
+  },
+  {
+    "title": "Après sa journée de travail Christophe éprouvait...",
+    "choices": [
+      [true, "de la solitude"],
+      [false, "du go tde la vie"],
+      [false, "de l'espoir"],
+      [false, "de la fierté de lui-m me"]
+    ]
+  },
+  {
+    "title": "Il suit du texte que Christophe était un jeune homme ...",
+    "choices": [
+      [false, "curieux"],
+      [false, "laborieux"],
+      [true, "envieux"],
+      [false, "joyeux"]
+    ]
+  }
+]
