@@ -10,6 +10,7 @@ from rest_framework import serializers
 
 from core.translation_serializers import AdminTranslationMixin, \
     UserTranslationMixin
+from permissions import GROUPS
 from users.models import Profile, ProfileAttachment, Story
 from users.models import User, ProfileComment
 from users.translation import StoryTranslationOptions
@@ -196,7 +197,12 @@ class StorySerializer(UserTranslationMixin, BaseStorySerializer):
 
 
 class UserGroupSerializer(serializers.ModelSerializer):
+    display_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Group
-        fields = ('id', 'name',)
+        fields = ('id', 'name', 'display_name')
         read_only_fields = ('name',)
+
+    def get_display_name(self, obj):
+        return GROUPS.get(obj.name, '')
