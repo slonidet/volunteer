@@ -1,4 +1,5 @@
 import phonenumbers
+from rest_framework.fields import SlugField as BaseSlugField
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -38,3 +39,9 @@ class PhoneField(models.CharField):
             )
 
         return value
+
+
+class SlugField(BaseSlugField):
+    default_error_messages = {
+        'invalid': _('Enter a valid "slug" consisting of latin letters, numbers, underscores or hyphens.')
+    }
