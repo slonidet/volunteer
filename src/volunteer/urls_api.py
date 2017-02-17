@@ -7,6 +7,8 @@ from volunteer.urls_view import api_root
 urlpatterns = [
     url(r'^$', api_root, name='api-root'),
 
+    url(r'^social-auth/', include('social_django.urls', namespace='social')),
+
     # admin api
     url(r'^admin/', include('volunteer.urls_admin_api', namespace='adm')),
 
