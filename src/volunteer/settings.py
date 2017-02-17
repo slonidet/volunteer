@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'multiselectfield',
     'sorl.thumbnail',
+    'social_django',
 
     'users.apps.UsersConfig',
     'gallery.apps.GalleryConfig',
@@ -77,6 +78,29 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'volunteer.urls'
 
 AUTH_USER_MODEL = 'users.User'
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.twitter.TwitterOAuth',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# Social auth
+SOCIAL_AUTH_RAISE_EXCEPTIONS = True
+RAISE_EXCEPTIONS = True
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
+
+SOCIAL_AUTH_TWITTER_KEY = 'NmY2ZxMPUHO3Rtsy3eXTrNd36'
+SOCIAL_AUTH_TWITTER_SECRET = 'Yre3xd50mkDJBb6BZcLqXgER0yqblJ3ObLIScfTVbpSUGvMlrg'
+
 
 TEMPLATES = [
     {

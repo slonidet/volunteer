@@ -1,11 +1,17 @@
 from django.conf.urls import url, include
 
+from core.social_auth.views import SocialAuthLinksView
 from core.views import SendMail
 from volunteer.urls_view import api_root
 
 
 urlpatterns = [
     url(r'^$', api_root, name='api-root'),
+
+    # django social auth
+    url(r'^social-auth/', include('social_django.urls', namespace='social')),
+    url(r'^social-auth/links', SocialAuthLinksView.as_view(),
+        name='social-auth-links'),
 
     # admin api
     url(r'^admin/', include('volunteer.urls_admin_api', namespace='adm')),
