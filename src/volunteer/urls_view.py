@@ -64,7 +64,6 @@ def api_root(request, format=None):
         'admin:statistic:main': reverse('adm:statistic:main', **params),
 
         # Social auth
-        'social-auth:links': reverse('social-auth-links', **params),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
 
