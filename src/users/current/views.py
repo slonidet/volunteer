@@ -1,9 +1,7 @@
 from django.shortcuts import redirect
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions
 from rest_framework import views, status, permissions
-from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.generics import (
     get_object_or_404, CreateAPIView, RetrieveUpdateAPIView,
@@ -61,10 +59,8 @@ class AuthTokenView(ObtainAuthToken):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        user.last_login = timezone.now()
-        user.save()
         user_serializer = AuthUserSerializer(user)
-        token, created = Token.objects.get_or_create(user=user)
+        token = user.get_auth_token()
 
         return Response({
             'user': user_serializer.data,

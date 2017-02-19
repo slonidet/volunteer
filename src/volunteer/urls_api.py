@@ -8,7 +8,7 @@ urlpatterns = [
     url(r'^$', api_root, name='api-root'),
 
     # django social auth
-    url(r'^social-auth/', include('social_django.urls', namespace='social')),
+    url(r'^social-auth/', include('social_auth.urls', namespace='social')),
 
     # admin api
     url(r'^admin/', include('volunteer.urls_admin_api', namespace='adm')),

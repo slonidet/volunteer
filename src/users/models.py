@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from multiselectfield import MultiSelectField
 from dateutil.relativedelta import relativedelta
 from rest_framework.reverse import reverse
+from rest_framework.authtoken.models import Token
 
 from core.fields import PhoneField
 from core.helpers import get_absolute_url
@@ -156,6 +157,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             activation_link
         )
         self.email_user(ugettext('Активация пользователя'), message)
+
+    def get_auth_token(self):
+        token, created = Token.objects.get_or_create(user=self)
+        self.last_login = timezone.now()
+        self.save()
+
+        return token
 
     def __str__(self):
         return self.username
