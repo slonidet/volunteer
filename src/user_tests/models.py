@@ -106,6 +106,7 @@ class UserTest(models.Model):
         verbose_name = _('Тест пользователя')
         verbose_name_plural = _('Тесты пользователя')
         unique_together = ('user', 'test')
+        index_together = ['user', 'test']
 
     def __str__(self):
         return str(self.id)
@@ -127,6 +128,7 @@ class UserAnswer(models.Model):
         verbose_name = _('Ответы пользователя')
         verbose_name_plural = _('Ответы пользователей')
         unique_together = ('user', 'question')
+        index_together = ['user', 'question']
 
     def __str__(self):
         return str(self.id)
