@@ -7,6 +7,7 @@ from permissions.models import MetaPermissions
 class Page(models.Model):
     title = models.CharField(_('заголовок'), max_length=512)
     body = models.TextField(_('тело страницы'))
+    slug = models.SlugField(_('заголовок в URL'), unique=True)
 
     class Meta(MetaPermissions):
         verbose_name = _('статическая страница')
