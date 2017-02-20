@@ -11,8 +11,9 @@ def attachment_delete(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=User)
-def set_default_user_group(sender, instance, **kwargs):
-    instance.set_default_group()
+def set_default_user_group(sender, instance, created, **kwargs):
+    if created:
+        instance.set_default_group()
 
 
 @receiver(post_save, sender=Profile)

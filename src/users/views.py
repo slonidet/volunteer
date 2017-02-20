@@ -15,7 +15,9 @@ from users.serializers import ProfileSerializer, ProfileAttachmentSerializer, \
     ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer
 
 
-class AdminUserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
+class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
+                       mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                       mixins.ListModelMixin, GenericViewSet):
     queryset = User.objects.select_related(
         'profile', 'profile_attachment').prefetch_related('groups')
     serializer_class = AdminUserSerializer
@@ -23,23 +25,12 @@ class AdminUserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
     search_fields = ('username', 'profile__first_name', 'profile__last_name',
                      'profile__middle_name', 'profile__phone')
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if instance.is_superuser:
-            message = _(
-                'Нельзя удалить пользователя с правами супер-администратора'
-            )
-            return Response(message, status=status.HTTP_403_FORBIDDEN)
-
-        self.perform_destroy(instance)
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class AdminProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = ProfileSerializer
     filter_fields = ('user', 'status')
+    search_fields = ('first_name', 'last_name', 'middle_name')
 
     @detail_route(methods=['get', 'post'],
                   serializer_class=ProfileCommentSerializer)
@@ -84,6 +75,11 @@ class AdminProfileViewSet(viewsets.ModelViewSet):
         serializer = ApproveProfileSerializer(profile, data=request.data)
         serializer.is_valid(raise_exception=True)
 
+        try:
+            profile.user.profile_attachment
+        except ProfileAttachment.DoesNotExist:
+            raise exceptions.NotFound(_('Пользователь не загрузил фотографию'))
+
         with transaction.atomic():
             profile = Profile.objects.select_for_update().get(pk=profile.pk)
             if serializer.validated_data['updated_at'] != profile.updated_at:
@@ -119,3 +115,4 @@ class StoryViewSet(StoryRelatedViewMixin, viewsets.ReadOnlyModelViewSet):
 class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all().order_by('id')
     serializer_class = UserGroupSerializer
+    pagination_class = None

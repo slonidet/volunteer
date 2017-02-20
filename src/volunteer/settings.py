@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'multiselectfield',
     'sorl.thumbnail',
+    'social_django',
 
     'users.apps.UsersConfig',
     'gallery.apps.GalleryConfig',
@@ -76,7 +77,54 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'volunteer.urls'
 
+
 AUTH_USER_MODEL = 'users.User'
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.vk.VKOAuth2',
+    'social_core.backends.odnoklassniki.OdnoklassnikiOAuth2',
+    'social_core.backends.mailru.MailruOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# Social auth
+SOCIAL_AUTH_RAISE_EXCEPTIONS = True
+RAISE_EXCEPTIONS = True
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_auth.pipeline.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
+
+SOCIAL_AUTH_TWITTER_KEY = 'NmY2ZxMPUHO3Rtsy3eXTrNd36'
+SOCIAL_AUTH_TWITTER_SECRET = 'Yre3xd50mkDJBb6BZcLqXgER0yqblJ3ObLIScfTVbpSUGvMlrg'
+
+SOCIAL_AUTH_FACEBOOK_KEY = '253981101710112'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'fef3df4b9cdf0ed88772008f2ae1c70a'
+SOCIAL_AUTH_FACEBOOK_API_VERSION = '2.8'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+  'locale': 'ru_RU',
+  'fields': 'id, name, email'
+}
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = '5880593'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'wnoXHuOYDpEXDBJYB7ke'
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email', ]
+
+SOCIAL_AUTH_ODNOKLASSNIKI_OAUTH2_KEY = ''
+SOCIAL_AUTH_ODNOKLASSNIKI_OAUTH2_SECRET = ''
+SOCIAL_AUTH_ODNOKLASSNIKI_OAUTH2_PUBLIC_NAME = ''
+
+SOCIAL_AUTH_MAILRU_OAUTH2_KEY = '752175'
+SOCIAL_AUTH_MAILRU_OAUTH2_SECRET = '71c73c66ab0395936e5694b67c6d1eef'
+
 
 TEMPLATES = [
     {

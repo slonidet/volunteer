@@ -16,7 +16,7 @@ def replace_groups(apps, schema_editor):
     old_groups = Group.objects.filter(name__in=old_group_names)
     old_groups.delete()
 
-    for group_name in GROUPS:
+    for group_name, display_name in GROUPS.items():
         Group.objects.create(name=group_name)
 
 

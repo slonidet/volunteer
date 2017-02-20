@@ -2,7 +2,6 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions
 from rest_framework import views, status, permissions
-from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.generics import (
     get_object_or_404, CreateAPIView, RetrieveUpdateAPIView,
@@ -19,10 +18,10 @@ from users.current.tokens import RegisterTokenGenerator
 from users.models import Profile, ProfileAttachment, Story, ProfileComment
 from users.serializers import ProfileCommentSerializer
 from users.views import User
-from users.mixins import ExcludeAnonymousViewMixin, StoryRelatedViewMixin
+from users.mixins import StoryRelatedViewMixin
 
 
-class UserRegistrationView(ExcludeAnonymousViewMixin, CreateAPIView):
+class UserRegistrationView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = CurrentUserSerializer
     permission_classes = ()
@@ -47,7 +46,7 @@ class UserActivationView(views.APIView):
     permission_classes = ()
 
     def get(self, request, user_id, token):
-        user = get_object_or_404(User, id=user_id)
+        user = get_object_or_404(User, id=user_id, last_login=None)
         if RegisterTokenGenerator().check_token(user, token):
             user.is_active = True
             user.save()
@@ -61,7 +60,7 @@ class AuthTokenView(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         user_serializer = AuthUserSerializer(user)
-        token, created = Token.objects.get_or_create(user=user)
+        token = user.get_auth_token()
 
         return Response({
             'user': user_serializer.data,
@@ -122,8 +121,8 @@ class CurrentUserStoryView(StoryRelatedViewMixin, BaseCurrentUserView):
     serializer_class = CurrentUserStorySerializer
 
     def create(self, request, *args, **kwargs):
-        profile = Profile.objects.get(user=self.request.user)
-        if profile.status != Profile.STATUS_APPROVED:
+        profile = Profile.objects.filter(user=self.request.user).first()
+        if not profile or profile.status != Profile.STATUS_APPROVED:
             raise exceptions.NotAcceptable(
                 _('Нельзя создать волонтёрскую итосрию пока анкета '
                   'не утверждена администратором')

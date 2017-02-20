@@ -10,6 +10,7 @@ from rest_framework import serializers
 
 from core.translation_serializers import AdminTranslationMixin, \
     UserTranslationMixin
+from permissions import GROUPS
 from users.models import Profile, ProfileAttachment, Story
 from users.models import User, ProfileComment
 from users.translation import StoryTranslationOptions
@@ -58,14 +59,12 @@ class BaseUserSerializer(serializers.ModelSerializer):
 
     @cached_property
     def _writable_fields(self):
-        """ Exclude role from writable fields """
+        """ Exclude from writable fields """
         writable_fields = super()._writable_fields
-        try:
-            writable_fields.remove('role')
-        except ValueError:
-            pass
+        exclude_fields = ('role', 'is_superuser', 'is_staff', 'last_login',
+                          'date_joined')
 
-        return writable_fields
+        return [i for i in writable_fields if i.source not in exclude_fields]
 
 
 class SimpleUserSerializer(BaseUserSerializer):
@@ -84,10 +83,7 @@ class UserSerializer(BaseUserSerializer):
             'id', 'username', 'is_active', 'password', 'date_joined',
             'last_login', 'profile', 'profile_attachment', 'groups', 'role',
         )
-        read_only_fields = (
-            'is_superuser', 'is_staff', 'last_login', 'date_joined', 'profile',
-            'profile_attachment', 'groups', 'role',
-        )
+        read_only_fields = ('profile', 'profile_attachment', 'groups')
         extra_kwargs = {
             'password': {'write_only': True, 'required': False}
         }
@@ -143,10 +139,7 @@ class AdminUserSerializer(UserSerializer):
     groups = GroupSerializer(many=True, required=False)
 
     class Meta(UserSerializer.Meta):
-        read_only_fields = (
-            'is_superuser', 'is_staff', 'last_login', 'date_joined', 'profile',
-            'profile_attachment', 'role',
-        )
+        read_only_fields = ('profile', 'profile_attachment')
 
     def update(self, user, validated_data):
         groups = validated_data.pop('groups', None)
@@ -204,9 +197,12 @@ class StorySerializer(UserTranslationMixin, BaseStorySerializer):
 
 
 class UserGroupSerializer(serializers.ModelSerializer):
-    users = SimpleUserSerializer(source='user_set', many=True, read_only=True)
+    display_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Group
-        fields = ('id', 'name', 'users')
-        read_only_fields = ('name', )
+        fields = ('id', 'name', 'display_name')
+        read_only_fields = ('name',)
+
+    def get_display_name(self, obj):
+        return GROUPS.get(obj.name, '')
