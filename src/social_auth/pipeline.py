@@ -12,7 +12,11 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
     if not fields:
         return
 
+    user = User.objects.filter(username=fields['email']).first()
+    if not user:
+        user = User.objects.create_user(username=fields['email'])
+
     return {
         'is_new': True,
-        'user': User.objects.create_user(username=fields['email'])
+        'user': user
     }
