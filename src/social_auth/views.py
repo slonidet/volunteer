@@ -1,12 +1,13 @@
 from django.conf import settings
 from django.shortcuts import redirect
-from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
 
-from social_core.utils import setting_name
-from social_core.actions import do_complete
+from social_core.utils import setting_name, user_is_authenticated, \
+    partial_pipeline_data, user_is_active
 from social_django.utils import psa
+from social_django.views import _do_login
+
 
 NAMESPACE = getattr(settings, setting_name('URL_NAMESPACE'), None) or 'social'
 
@@ -16,12 +17,37 @@ NAMESPACE = getattr(settings, setting_name('URL_NAMESPACE'), None) or 'social'
 @psa('{0}:complete'.format(NAMESPACE))
 def complete(request, backend, *args, **kwargs):
     """Authentication complete view"""
-    do_complete(request.backend, _do_fake_login, request.user,
-                redirect_name=REDIRECT_FIELD_NAME, *args, **kwargs)
-    token = request.user.get_auth_token()
+    user = do_complete(
+        request.backend, _do_login, request.user, *args, **kwargs
+    )
+    token = user.get_auth_token()
 
     return redirect('/?auth_token={0}'.format(token.key))
 
 
-def _do_fake_login(backend, user, social_user):
-    pass
+def do_complete(backend, login, user=None, *args, **kwargs):
+    is_authenticated = user_is_authenticated(user)
+    user = is_authenticated and user or None
+
+    partial = partial_pipeline_data(backend, user, *args, **kwargs)
+    if partial:
+        user = backend.continue_pipeline(partial)
+    else:
+        user = backend.complete(user=user, *args, **kwargs)
+
+    # check if the output value is something else than a user and just
+    # return it to the client
+    user_model = backend.strategy.storage.user.user_model()
+    if user and not isinstance(user, user_model):
+        return user
+
+    elif user:
+        if user_is_active(user):
+            # catch is_new/social_user in case login() resets the instance
+            social_user = user.social_user
+            login(backend, user, social_user)
+            # store last login backend name in session
+            backend.strategy.session_set('social_auth_last_login_backend',
+                                         social_user.provider)
+
+    return user
