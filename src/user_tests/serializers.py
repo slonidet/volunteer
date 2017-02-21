@@ -38,8 +38,6 @@ class SimpleAnswerOptionsSerializer(AnswerOptionsSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    answer_options = SimpleAnswerOptionsSerializer(read_only=True, many=True)
-
     class Meta:
         model = Question
         fields = '__all__'
