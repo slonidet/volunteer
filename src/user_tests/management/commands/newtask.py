@@ -57,11 +57,14 @@ class Command(BaseCommand):
 
         parser.add_argument(
             '--expert_appraisal',
+            required=False,
             action='store',
             dest='expert_appraisal',
             help='Stores if task should be appraise',
             type=bool
         )
+
+        parser.set_defaults(expert_appraisal=False)
 
     def handle(self, *args, **options):
 
@@ -71,6 +74,7 @@ class Command(BaseCommand):
         time_available = options['time_available']
         task = options['task']
         expert_appraisal = options['expert_appraisal']
+        print(expert_appraisal)
 
         json_data = open(file).read()
         json_data = json.loads(json_data)
