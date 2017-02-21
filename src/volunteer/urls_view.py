@@ -58,7 +58,7 @@ def api_root(request, format=None):
         'tests:tasks:questions': reverse('tests:question-list', **params),
         'tests:tasks:questions:options': reverse('tests:option-list', **params),
         'tests:user:tests': reverse('tests:user-test-list', **params),
-        # 'tests:user:answers': reverse('tests:user-answer-list', **params),
+        'tests:user:answers': reverse('tests:user-answer-list', **params),
 
         # Static pages
         'admin:static-pages': reverse('adm:static:page-list', **params),
