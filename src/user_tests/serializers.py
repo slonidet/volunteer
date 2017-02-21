@@ -96,23 +96,17 @@ class UserAnswerSerializer(BaseUserTestSerializer):
 
     class Meta:
         model = UserAnswer
-        fields = ['question', 'answers']
+        fields = ['id', 'question', 'answers']
 
     def validate(self, data):
         user = self.context['request'].user
         question = data['question']
-
-        answer_already_exist = UserAnswer.objects.filter(
-            user=user, question=question).exists()
-        if answer_already_exist:
-            message = _('Пользователь уже отвечал на этот вопрос')
-            raise ValidationError(message, code='unique')
-
         self._check_available_test(question, user)
 
         return data
 
-    def _check_available_test(self, question, user):
+    @staticmethod
+    def _check_available_test(question, user):
         """ User's Test is available for passing """
         user_test = UserTest.objects.filter(
             user=user, test=question.task.test).first()
@@ -131,14 +125,32 @@ class UserAnswerSerializer(BaseUserTestSerializer):
             raise ValidationError(time_expired_message)
 
     def create(self, validated_data):
-        expert_appraisal = validated_data['question'].task.expert_appraisal
-        user_answers = set(validated_data['answers'])
-        correct_answers = set(AnswerOptions.objects.filter(
-            question=validated_data['question'],
-            is_correct=True
-        ).values_list('text', flat=True))
+        user = self.context['request'].user
+        question = validated_data['question']
 
-        if not expert_appraisal:
-            validated_data['is_correct'] = (user_answers == correct_answers)
+        answer_already_exist = UserAnswer.objects.filter(
+            user=user, question=question).exists()
+        if answer_already_exist:
+            message = _('Пользователь уже отвечал на этот вопрос')
+            raise ValidationError(message, code='unique')
+
+        validated_data = self._check_correct_answers(validated_data)
 
         return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data = self._check_correct_answers(validated_data)
+        return super().update(instance, validated_data)
+
+    def _check_correct_answers(self, validated_data):
+        expert_appraisal = validated_data['question'].task.expert_appraisal
+        if not expert_appraisal:
+            user_answers = set(validated_data['answers'])
+            correct_answers = set(AnswerOptions.objects.filter(
+                question=validated_data['question'],
+                is_correct=True
+            ).values_list('text', flat=True))
+
+            validated_data['is_correct'] = (user_answers == correct_answers)
+
+        return validated_data

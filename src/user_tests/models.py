@@ -108,7 +108,8 @@ class UserTest(models.Model):
         )
         remaining = dead_line - timezone.now()
         remaining = int(remaining.total_seconds())
-        remaining = remaining if remaining > 0 else 0
+        is_not_finished = remaining > 0 and not self.finished_at
+        remaining = remaining if is_not_finished else 0
 
         return remaining
 
