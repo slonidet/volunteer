@@ -15,6 +15,11 @@ class TestSerializer(serializers.ModelSerializer):
         extra_kwargs = {'name': {'validators': []}}
 
 
+class SimpleTestSerializer(TestSerializer):
+    class Meta(TestSerializer.Meta):
+        fields = ('name',)
+
+
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
@@ -49,7 +54,7 @@ class BaseUserTestSerializer(serializers.ModelSerializer):
 
 class UserTestSerializer(ForeignKeySerializerMixin,
                          BaseUserTestSerializer):
-    test = TestSerializer()
+    test = SimpleTestSerializer()
     remaining = serializers.SerializerMethodField()
 
     class Meta:
@@ -60,11 +65,21 @@ class UserTestSerializer(ForeignKeySerializerMixin,
     def get_remaining(self, obj):
         return obj.remaining
 
+    def is_valid(self, raise_exception=False):
+        test_name = self.initial_data['test']['name']
+        try:
+            test = Test.objects.get(name=test_name)
+            self.initial_data['test']['id'] = test.id
+        except Test.DoesNotExist:
+            message = _('Тест {name} не существует')
+            raise ValidationError(message.format(name=test_name))
+
+        return super().is_valid(raise_exception)
+
     def validate(self, data):
         user = self.context['request'].user
         test_already_exist = UserTest.objects.filter(
-            user=user, test__name=data['test']['name']
-        ).exists()
+            user=user, test__name=data['test']['name']).exists()
 
         if test_already_exist:
             message = _('Пользователь уже проходил этот тест')
