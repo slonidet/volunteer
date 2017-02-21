@@ -16,28 +16,27 @@ class AnswerOptionsInline(admin.TabularInline):
 
 
 class TestAdmin(admin.ModelAdmin):
-    inlines = [
-        TaskInline,
-    ]
-
-
-class UserTestAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'name', 'time_available')
+    inlines = [TaskInline]
 
 
 class TaskAdmin(admin.ModelAdmin):
-    inlines = [
-        QuestionInline,
-    ]
+    list_display = ('id', 'name', 'test', 'expert_appraisal')
+    inlines = [QuestionInline]
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    inlines = [
-        AnswerOptionsInline,
-    ]
+    list_display = ('id', 'text', 'task')
+    list_filter = ('task__test',)
+    inlines = [AnswerOptionsInline]
 
 
 class AnswerOptionsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'text', 'is_correct', 'question')
+    list_filter = ('question__task__test',)
+
+
+class UserTestAdmin(admin.ModelAdmin):
     pass
 
 

@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from multiselectfield import MultiSelectField
 
 from permissions.models import MetaPermissions
 from users.models import User
@@ -30,8 +31,8 @@ class Task(models.Model):
     )
     name = models.CharField(_('Название задания'), max_length=150)
     expert_appraisal = models.BooleanField(_('Проверяется администратором'))
-    audio = models.FileField(_('Аудиофайл'), null=True)
-    text = models.TextField(_('Текст'), null=True)
+    audio = models.FileField(_('Аудиофайл'), null=True, blank=True)
+    text = models.TextField(_('Текст'), null=True, blank=True)
 
     class Meta(MetaPermissions):
         verbose_name = _('Задание')
@@ -63,7 +64,8 @@ class AnswerOptions(models.Model):
     Options of given answer
     """
     question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, verbose_name=_('Вопрос')
+        Question, on_delete=models.CASCADE, verbose_name=_('Вопрос'),
+        related_name='answer_options'
     )
     text = models.CharField(_('Текст ответа'), max_length=250)
     is_correct = models.NullBooleanField(_('Правильность ответа'), null=True)
@@ -91,6 +93,14 @@ class UserTest(models.Model):
     finished_at = models.DateTimeField(_('Время окончания тестирования'),
                                        null=True, blank=True)
 
+    class Meta(MetaPermissions):
+        verbose_name = _('Тест пользователя')
+        verbose_name_plural = _('Тесты пользователя')
+        unique_together = ('user', 'test')
+
+    def __str__(self):
+        return str(self.id)
+
     @property
     def remaining(self):
         dead_line = self.started_at + timezone.timedelta(
@@ -101,14 +111,6 @@ class UserTest(models.Model):
         remaining = remaining if remaining > 0 else 0
 
         return remaining
-
-    class Meta(MetaPermissions):
-        verbose_name = _('Тест пользователя')
-        verbose_name_plural = _('Тесты пользователя')
-        unique_together = ('user', 'test')
-
-    def __str__(self):
-        return str(self.id)
 
 
 class UserAnswer(models.Model):
@@ -121,26 +123,13 @@ class UserAnswer(models.Model):
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, verbose_name=_('Вопрос')
     )
+    answers = MultiSelectField(_('Ответы пользователя'), max_length=8192)
     is_correct = models.NullBooleanField(_('Правльность ответов'), null=True)
 
     class Meta(MetaPermissions):
         verbose_name = _('Ответы пользователя')
         verbose_name_plural = _('Ответы пользователей')
         unique_together = ('user', 'question')
-
-    def __str__(self):
-        return str(self.id)
-
-
-class UserAnswerValue(models.Model):
-    user_answer = models.ForeignKey(UserAnswer, on_delete=models.CASCADE,
-                                    related_name='answer_values',
-                                    verbose_name=_('Ответы пользователя'))
-    value = models.TextField(_('Значение ответа пользователя'))
-
-    class Meta(MetaPermissions):
-        verbose_name = _('Значение ответа')
-        verbose_name_plural = _('Значения ответов пользователя')
 
     def __str__(self):
         return str(self.id)

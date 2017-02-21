@@ -10,7 +10,7 @@ from user_tests.serializers import TestSerializer, TaskSerializer, \
 
 
 class BaseTestReadOnlyModelViewSet(ReadOnlyModelViewSet):
-    permission_classes = ()
+    permission_classes = (permissions.IsAuthenticated,)
     pagination_class = None
 
 
@@ -26,7 +26,8 @@ class TaskViewSet(BaseTestReadOnlyModelViewSet):
 
 
 class QuestionViewSet(BaseTestReadOnlyModelViewSet):
-    queryset = Question.objects.prefetch_related('task').all()
+    queryset = Question.objects.select_related('task')\
+        .prefetch_related('answer_options')
     serializer_class = QuestionSerializer
     filter_fields = ('task', 'task__test', 'task__test__name')
 
@@ -38,6 +39,7 @@ class AnswerOptionsViewSet(BaseTestReadOnlyModelViewSet):
 
 
 class BaseUserTestViewSet(UndeletableModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
     pagination_class = None
 
     def get_queryset(self):
@@ -48,11 +50,9 @@ class BaseUserTestViewSet(UndeletableModelViewSet):
 
 class UserTestViewSet(BaseUserTestViewSet):
     queryset = UserTest.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = UserTestSerializer
 
 
 class UserAnswerViewSet(BaseUserTestViewSet):
-    queryset = UserAnswer.objects.prefetch_related('answer_values')
-    permission_classes = (permissions.IsAuthenticated,)
+    queryset = UserAnswer.objects.all()
     serializer_class = UserAnswerSerializer
