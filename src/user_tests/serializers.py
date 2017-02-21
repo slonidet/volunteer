@@ -17,7 +17,7 @@ class TestSerializer(serializers.ModelSerializer):
 
 class SimpleTestSerializer(TestSerializer):
     class Meta(TestSerializer.Meta):
-        fields = ('name',)
+        fields = ('id', 'name')
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -65,27 +65,22 @@ class UserTestSerializer(ForeignKeySerializerMixin,
     def get_remaining(self, obj):
         return obj.remaining
 
-    def is_valid(self, raise_exception=False):
-        test_name = self.initial_data['test']['name']
-        try:
-            test = Test.objects.get(name=test_name)
-            self.initial_data['test']['id'] = test.id
-        except Test.DoesNotExist:
-            message = _('Тест {name} не существует')
-            raise ValidationError(message.format(name=test_name))
-
-        return super().is_valid(raise_exception)
-
-    def validate(self, data):
+    def create(self, validated_data):
         user = self.context['request'].user
         test_already_exist = UserTest.objects.filter(
-            user=user, test__name=data['test']['name']).exists()
+            user=user, test__name=validated_data['test']['name']).exists()
 
         if test_already_exist:
             message = _('Пользователь уже проходил этот тест')
             raise ValidationError(message, code='unique')
 
-        return data
+        try:
+            # you cannot finish the test when creating
+            validated_data.pop('finished_at')
+        except KeyError:
+            pass
+
+        return super().create(validated_data)
 
     def update(self, instance, validated_data):
         validated_data['finished_at'] = timezone.now()
