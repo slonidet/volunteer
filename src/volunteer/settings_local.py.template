@@ -22,6 +22,8 @@ DATABASES = {
     }
 }
 
+CELERY_BROKER_URL = "redis://localhost:6379/X"
+
 THUMBNAIL_REDIS_DB =
 
 EMAIL_HOST_PASSWORD = ''

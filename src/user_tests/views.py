@@ -26,8 +26,7 @@ class TaskViewSet(BaseTestReadOnlyModelViewSet):
 
 
 class QuestionViewSet(BaseTestReadOnlyModelViewSet):
-    queryset = Question.objects.select_related('task')\
-        .prefetch_related('answer_options')
+    queryset = Question.objects.select_related('task')
     serializer_class = QuestionSerializer
     filter_fields = ('task', 'task__test', 'task__test__name')
 
