@@ -65,6 +65,10 @@ def api_root(request, format=None):
 
         # Social auth
         'social-auth:login': reverse('social:begin', **params, kwargs={'backend': 'vk-oauth2'}),
+
+        # Interviews
+        'interviews:periods': reverse('interviews:period', **params),
+        'interviews:statuses': reverse('interviews:status', **params),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
 
