@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from core.fk_sirializer import ForeignKeySerializerMixin
+from core.serializers import ForeignKeySerializerMixin
 from user_tests.models import Test, Task, Question, AnswerOptions, UserTest, \
     UserAnswer
 
