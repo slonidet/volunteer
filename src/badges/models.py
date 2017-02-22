@@ -1,4 +1,3 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -12,10 +11,8 @@ class Badge(models.Model):
         User, on_delete=models.CASCADE, related_name='badges',
         verbose_name=_('Пользователь')
     )
-    created_at = models.DateTimeField(_('Дата создания'), auto_now_add=True)
+    type = models.CharField(_('тип'), max_length=150)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta(MetaPermissions):
         verbose_name = _('Баджет')
