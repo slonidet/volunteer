@@ -30,7 +30,7 @@ class Interview(models.Model):
         ('cancel', _('Не состоялось')),
     )
 
-    user = models.ForeignKey(
+    volunteer = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name=_('Пользователь')
     )
     interviewer = models.ForeignKey(

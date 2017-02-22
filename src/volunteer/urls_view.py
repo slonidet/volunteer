@@ -69,8 +69,9 @@ def api_root(request, format=None):
         # Interviews
         'admin:interviews:interviewers': reverse(
             'adm:interviews:interviewer-list', **params),
-        'interviews:periods': reverse('interviews:period', **params),
-        'interviews:statuses': reverse('interviews:status', **params),
+        'admin:interviews': reverse('adm:interviews:interview-list', **params),
+        'admin:interviews:periods': reverse('adm:interviews:period', **params),
+        'admin:interviews:statuses': reverse('adm:interviews:status', **params),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
 
