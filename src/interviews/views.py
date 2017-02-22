@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 from core.views import UndeletableModelViewSet
 from interviews.models import Interview, Interviewer
-from interviews.serializers import InterviewerSerializer
+from interviews.serializers import InterviewerSerializer, InterviewSerializer
 
 
 class InterviewPeriodView(views.APIView):
@@ -24,3 +24,10 @@ class AdminInterviewerViewSet(UndeletableModelViewSet):
     queryset = Interviewer.objects.all()
     serializer_class = InterviewerSerializer
     pagination_class = None
+
+
+class AdminInterviewViewSet(viewsets.ModelViewSet):
+    queryset = Interview.objects.all()
+    serializer_class = InterviewSerializer
+    pagination_class = None
+    filter_fields = ('interviewer', 'date', 'status', 'period')
