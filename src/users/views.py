@@ -21,7 +21,7 @@ class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
     queryset = User.objects.select_related(
         'profile', 'profile_attachment').prefetch_related('groups')
     serializer_class = AdminUserSerializer
-    filter_fields = ('groups__name', 'role')
+    filter_fields = ('groups__name', 'role', 'is_active')
     search_fields = ('username', 'profile__first_name', 'profile__last_name',
                      'profile__middle_name', 'profile__phone')
 
