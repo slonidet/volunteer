@@ -7,12 +7,6 @@ urlpatterns = [
     url(r'^news/', include('news.urls_admin', namespace='news')),
     url(r'^static/', include('static.urls_admin', namespace='static')),
     url(r'^events/', include('events.urls_admin', namespace='events')),
-    url(
-        r'^statistic/',
-        include('statistic.urls_admin', namespace='statistic')
-    ),
-    url(
-        r'^interviews/',
-        include('interviews.urls_admin', namespace='interviews')
-    ),
+    url(r'^statistic/', include('statistic.urls_admin', 'statistic')),
+    url(r'^interviews/', include('interviews.urls_admin', 'interviews')),
 ]

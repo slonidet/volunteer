@@ -1,19 +1,26 @@
-from rest_framework import permissions
+from rest_framework import permissions, views, viewsets
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from interviews.models import Interview
+from core.views import UndeletableModelViewSet
+from interviews.models import Interview, Interviewer
+from interviews.serializers import InterviewerSerializer
 
 
-class InterviewPeriodView(APIView):
+class InterviewPeriodView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         return Response(dict(Interview.PERIOD_CHOICES))
 
 
-class InterviewStatusView(APIView):
+class InterviewStatusView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         return Response(dict(Interview.STATUS_CHOICES))
+
+
+class AdminInterviewerViewSet(UndeletableModelViewSet):
+    queryset = Interviewer.objects.all()
+    serializer_class = InterviewerSerializer
+    pagination_class = None

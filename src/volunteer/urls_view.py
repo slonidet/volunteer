@@ -67,6 +67,8 @@ def api_root(request, format=None):
         'social-auth:login': reverse('social:begin', **params, kwargs={'backend': 'vk-oauth2'}),
 
         # Interviews
+        'admin:interviews:interviewers': reverse(
+            'adm:interviews:interviewer-list', **params),
         'interviews:periods': reverse('interviews:period', **params),
         'interviews:statuses': reverse('interviews:status', **params),
     }

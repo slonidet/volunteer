@@ -1,7 +1,8 @@
 from rest_framework import routers
 
+from interviews.views import AdminInterviewerViewSet
 
 router = routers.DefaultRouter()
-# router.register('photo-album', AdminAlbumViewSet, base_name='photo-album')
+router.register('interviewers', AdminInterviewerViewSet, 'interviewer')
 
 urlpatterns = [] + router.urls
