@@ -1,4 +1,5 @@
 from rest_framework import mixins
+from rest_framework import permissions
 from rest_framework.viewsets import GenericViewSet
 
 from badges.models import Badge
@@ -10,6 +11,7 @@ class BadgeViewSet(mixins.RetrieveModelMixin, mixins.DestroyModelMixin,
     queryset = Badge.objects.all()
     serializer_class = BadgeSerializer
     pagination_class = None
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)

@@ -2,16 +2,17 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from events.models import Event
 from permissions.models import MetaPermissions
-from users.models import User
+from users.models import User, ProfileComment
 
 
 class Badge(models.Model):
     TYPE_CHOICES = (
-        ('event', _('Мероприятие')),
-        ('notice', _('Нотификация')),
-        ('profile_comment', _('Комментарий к профилю')),
-        ('story_comment', _('Комментарий к волонтёрской истории')),
+        # (Event._meta.model_name, Event._meta.verbose_name),
+        # ('notice', _('Нотификация')),
+        (ProfileComment._meta.model_name, ProfileComment._meta.verbose_name),
+        # ('story_comment', _('Комментарий к волонтёрской истории')),
     )
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='badges',
