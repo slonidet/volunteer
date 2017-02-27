@@ -4,6 +4,7 @@ from badges.models import Badge
 
 
 class BadgeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'user', 'type')
+    list_filter = ('type',)
 
 admin.site.register(Badge, BadgeAdmin)
