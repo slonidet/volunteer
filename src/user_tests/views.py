@@ -55,3 +55,4 @@ class UserTestViewSet(BaseUserTestViewSet):
 class UserAnswerViewSet(BaseUserTestViewSet):
     queryset = UserAnswer.objects.all()
     serializer_class = UserAnswerSerializer
+    filter_fields = ('question', 'question__task__test__name')
