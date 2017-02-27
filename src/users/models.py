@@ -500,6 +500,13 @@ class ProfileComment(models.Model):
     text = models.TextField(_('Текст'))
     created_at = models.DateTimeField(_('время создания'), auto_now_add=True)
 
+    class Meta(MetaPermissions):
+        verbose_name = _('Комментарий к анкете')
+        verbose_name_plural = _('Комментарии к анкете')
+
+    def __str__(self):
+        return str(self.id)
+
 
 class Story(models.Model):
     """
