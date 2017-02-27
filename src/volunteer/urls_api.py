@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^static/', include('static.urls', namespace='static')),
     url(r'^events/', include('events.urls', namespace='events')),
     url(r'^budges/', include('badges.urls', namespace='badges')),
+    url(r'^notices/', include('notices.urls', namespace='notices')),
 ]
