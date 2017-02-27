@@ -15,4 +15,7 @@ from users.models import ProfileComment
 
 @receiver(post_save, sender=ProfileComment)
 def create_profile_comment_budget(sender, instance, created, **kwargs):
-    Badge.objects.create(user=instance.profile.user, )
+    if created:
+        Badge.objects.create(
+            user=instance.profile.user, type=Badge._meta.model_name
+        )
