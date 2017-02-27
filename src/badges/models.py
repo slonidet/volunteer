@@ -9,10 +9,9 @@ from users.models import User
 class Badge(models.Model):
     TYPE_CHOICES = (
         ('event', _('Мероприятие')),
-        ('interview', _('Интервью')),
-        ('test', _('Тест')),
+        ('notice', _('Нотификация')),
         ('profile_comment', _('Комментарий к профилю')),
-        ('user_story_comment', _('Комментарий к волонтёрской истории')),
+        ('story_comment', _('Комментарий к волонтёрской истории')),
     )
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='badges',
