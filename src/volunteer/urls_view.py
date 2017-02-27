@@ -64,7 +64,7 @@ def api_root(request, format=None):
         'badges': reverse('badges:badges-list', **params),
 
         # Notices
-        # 'notices': reverse('user:')
+        'notices': reverse('notices:notices-list', **params),
 
         # Statistic
         'admin:statistic:main': reverse('adm:statistic:main', **params),
