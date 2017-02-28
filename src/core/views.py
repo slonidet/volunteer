@@ -31,4 +31,3 @@ class UndeletableModelViewSet(mixins.CreateModelMixin,
     `partial_update()` and `list()` actions.
     """
     pass
-

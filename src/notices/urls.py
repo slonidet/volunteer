@@ -4,7 +4,7 @@ from notices.views import NoticeViewSet
 
 
 router = routers.DefaultRouter()
-router.register('', NoticeViewSet, base_name='notices')
+router.register('', NoticeViewSet, base_name='notice')
 
 
 urlpatterns = [] + router.urls

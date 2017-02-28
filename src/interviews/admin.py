@@ -4,11 +4,12 @@ from interviews.models import Interviewer, Interview
 
 
 class InterviewerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'name')
 
 
 class InterviewAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'interviewer', 'volunteer', 'date', 'period',
+                    'status')
 
 
 admin.site.register(Interviewer, InterviewerAdmin)

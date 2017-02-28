@@ -22,12 +22,17 @@ class Interview(models.Model):
         (5, _('13-14')), (6, _('14-15')), (7, _('15-16')), (8, _('16-17')),
         (9, _('17-18')),
     )
+    STATUS_WAIT = 'wait'
+    STATUS_REJECT = 'reject'
+    STATUS_CONFIRM = 'confirm'
+    STATUS_HAPPEN = 'happen'
+    STATUS_CANCEL = 'cancel'
     STATUS_CHOICES = (
-        ('wait', _('Ожидает подтверждения')),
-        ('reject', _('Волонтер отказался')),
-        ('confirm', _('Волонтер согласился')),
-        ('happen', _('Состоялось')),
-        ('cancel', _('Не состоялось')),
+        (STATUS_WAIT, _('Ожидает подтверждения')),
+        (STATUS_REJECT, _('Волонтер отказался')),
+        (STATUS_CONFIRM, _('Волонтер согласился')),
+        (STATUS_HAPPEN, _('Состоялось')),
+        (STATUS_CANCEL, _('Не состоялось')),
     )
 
     volunteer = models.ForeignKey(
@@ -38,14 +43,19 @@ class Interview(models.Model):
         verbose_name=_('Интервьюер')
     )
     date = models.DateField(_('Дата'))
-    period = models.CharField(_('Время интервью'), choices=PERIOD_CHOICES,
-                              max_length=5)
+    period = models.PositiveSmallIntegerField(
+        _('Время интервью'), choices=PERIOD_CHOICES
+    )
     status = models.CharField(_('Статус'), choices=STATUS_CHOICES,
                               max_length=8, default='wait')
 
     class Meta(MetaPermissions):
         verbose_name = _('Интервью')
         verbose_name_plural = _('Интервью')
+        ordering = ('date',)
 
     def __str__(self):
         return '{0} {1}'.format(self.date, self.get_period_display())
+
+    def get_interview_time(self):
+        return '{hour}:00'.format(hour=self.get_period_display()[:2])
