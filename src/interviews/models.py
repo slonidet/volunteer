@@ -22,12 +22,17 @@ class Interview(models.Model):
         (5, _('13-14')), (6, _('14-15')), (7, _('15-16')), (8, _('16-17')),
         (9, _('17-18')),
     )
+    STATUS_WAIT = 'wait'
+    STATUS_REJECT = 'reject'
+    STATUS_CONFIRM = 'confirm'
+    STATUS_HAPPEN = 'happen'
+    STATUS_CANCEL = 'cancel'
     STATUS_CHOICES = (
-        ('wait', _('Ожидает подтверждения')),
-        ('reject', _('Волонтер отказался')),
-        ('confirm', _('Волонтер согласился')),
-        ('happen', _('Состоялось')),
-        ('cancel', _('Не состоялось')),
+        (STATUS_WAIT, _('Ожидает подтверждения')),
+        (STATUS_REJECT, _('Волонтер отказался')),
+        (STATUS_CONFIRM, _('Волонтер согласился')),
+        (STATUS_HAPPEN, _('Состоялось')),
+        (STATUS_CANCEL, _('Не состоялось')),
     )
 
     volunteer = models.ForeignKey(
@@ -46,6 +51,7 @@ class Interview(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Интервью')
         verbose_name_plural = _('Интервью')
+        ordering = ('date',)
 
     def __str__(self):
         return '{0} {1}'.format(self.date, self.get_period_display())
