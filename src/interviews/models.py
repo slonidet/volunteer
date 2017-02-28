@@ -38,8 +38,9 @@ class Interview(models.Model):
         verbose_name=_('Интервьюер')
     )
     date = models.DateField(_('Дата'))
-    period = models.CharField(_('Время интервью'), choices=PERIOD_CHOICES,
-                              max_length=5)
+    period = models.PositiveSmallIntegerField(
+        _('Время интервью'), choices=PERIOD_CHOICES
+    )
     status = models.CharField(_('Статус'), choices=STATUS_CHOICES,
                               max_length=8, default='wait')
 
