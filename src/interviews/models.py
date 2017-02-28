@@ -41,7 +41,7 @@ class Interview(models.Model):
     period = models.CharField(_('Время интервью'), choices=PERIOD_CHOICES,
                               max_length=5)
     status = models.CharField(_('Статус'), choices=STATUS_CHOICES,
-                              max_length=8)
+                              max_length=8, default='wait')
 
     class Meta(MetaPermissions):
         verbose_name = _('Интервью')
