@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-03 21:49+0300\n"
+"POT-Creation-Date: 2017-02-28 11:22+0300\n"
 "PO-Revision-Date: 2017-02-03 21:51+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,6 +17,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.11\n"
 
+#: badges/apps.py:7 badges/models.py:27
+msgid "Баджеты"
+msgstr ""
+
+#: badges/models.py:21
+#, fuzzy
+#| msgid "пользователь"
+msgid "Пользователь"
+msgstr "user"
+
+#: badges/models.py:23
+msgid "тип"
+msgstr ""
+
+#: badges/models.py:26
+msgid "Баджет"
+msgstr ""
+
 #: core/fields.py:16
 msgid "Телефонный номер должен иметь международный формат"
 msgstr "Phone number should be international format"
@@ -24,6 +42,57 @@ msgstr "Phone number should be international format"
 #: core/fields.py:22
 msgid "Номер телефона"
 msgstr "Phone number"
+
+#: events/apps.py:7 events/models.py:23
+msgid "мероприятия"
+msgstr ""
+
+#: events/filters.py:10
+#, fuzzy
+#| msgid "Остальное"
+msgid "актуально"
+msgstr "Other"
+
+#: events/models.py:13 news/models.py:12 notices/models.py:22
+#: static/models.py:8
+msgid "заголовок"
+msgstr "header"
+
+#: events/models.py:14
+#, fuzzy
+#| msgid "описание хобби"
+msgid "описание"
+msgstr "your hobbies"
+
+#: events/models.py:15
+msgid "адрес"
+msgstr ""
+
+#: events/models.py:16
+msgid "начало мероприятия"
+msgstr ""
+
+#: events/models.py:17
+#, fuzzy
+#| msgid "признание окружающих"
+msgid "окончание мероприятия"
+msgstr "surrounding recognition"
+
+#: events/models.py:18
+msgid "количество участников"
+msgstr ""
+
+#: events/models.py:19 news/models.py:16 users/models.py:513
+msgid "опубликовано"
+msgstr "is publicated"
+
+#: events/models.py:22
+msgid "мероприятие"
+msgstr ""
+
+#: events/serializers.py:17
+msgid "Мероприятие не может закончиться раньше чем начнётся"
+msgstr ""
 
 #: gallery/apps.py:7
 msgid "галерея"
@@ -34,7 +103,7 @@ msgid "альбом"
 msgstr "album"
 
 #: gallery/models.py:23 gallery/models.py:30 gallery/models.py:31
-#: news/models.py:16 users/models.py:479
+#: news/models.py:17 users/models.py:487
 msgid "фото"
 msgstr "photo"
 
@@ -46,7 +115,7 @@ msgstr "sort order"
 msgid "дата"
 msgstr "date"
 
-#: gallery/models.py:42 gallery/models.py:61 users/models.py:333
+#: gallery/models.py:42 gallery/models.py:61 users/models.py:341
 msgid "имя"
 msgstr "name"
 
@@ -62,35 +131,90 @@ msgstr "url"
 msgid "видео"
 msgstr "video"
 
-#: news/apps.py:7 news/models.py:20
+#: news/apps.py:7 news/models.py:21
 msgid "новости"
 msgstr "news"
 
-#: news/models.py:12 static/models.py:8
-msgid "заголовок"
-msgstr "header"
+#: news/models.py:13
+msgid "вступление"
+msgstr ""
 
-#: news/models.py:13 users/models.py:503
+#: news/models.py:14 users/models.py:511
 msgid "текст"
 msgstr "text"
 
-#: news/models.py:14
+#: news/models.py:15
 msgid "дата публикации"
 msgstr "date of publication"
 
-#: news/models.py:15 users/models.py:505
-msgid "опубликовано"
-msgstr "is publicated"
-
-#: news/models.py:19
+#: news/models.py:20
 msgid "новость"
 msgstr "news"
+
+#: notices/apps.py:7 notices/models.py:36
+#, fuzzy
+#| msgid "дата публикации"
+msgid "нотификации"
+msgstr "date of publication"
+
+#: notices/models.py:24 users/models.py:101 users/models.py:334
+#: users/models.py:485 users/models.py:509
+msgid "пользователь"
+msgstr "user"
+
+#: notices/models.py:26
+#, fuzzy
+#| msgid "дата публикации"
+msgid "тип нотификации"
+msgstr "date of publication"
+
+#: notices/models.py:27
+msgid "сообщение"
+msgstr ""
+
+#: notices/models.py:28 users/models.py:501
+msgid "время создания"
+msgstr "creating date"
+
+#: notices/models.py:29
+#, fuzzy
+#| msgid "утверждено"
+msgid "подтверждено"
+msgstr "approved"
+
+#: notices/models.py:35
+#, fuzzy
+#| msgid "дата публикации"
+msgid "нотификация"
+msgstr "date of publication"
+
+#: permissions/__init__.py:9
+#, fuzzy
+#| msgid "коментарий администратора"
+msgid "супер администратор"
+msgstr "admin comments"
+
+#: permissions/__init__.py:10
+#, fuzzy
+#| msgid "коментарий администратора"
+msgid "администратор"
+msgstr "admin comments"
+
+#: permissions/__init__.py:11
+#, fuzzy
+#| msgid "Кандидат в волонтёры"
+msgid "старший волонтёр"
+msgstr "Candidate to volunteers"
+
+#: permissions/__init__.py:12
+msgid "волонтёр"
+msgstr ""
 
 #: permissions/apps.py:7
 msgid "права доступа"
 msgstr "permissions"
 
-#: static/apps.py:7 static/models.py:13
+#: static/apps.py:7 static/models.py:14
 msgid "статические страницы"
 msgstr "static pages"
 
@@ -98,9 +222,19 @@ msgstr "static pages"
 msgid "тело страницы"
 msgstr "page body"
 
-#: static/models.py:12
+#: static/models.py:10
+#, fuzzy
+#| msgid "заголовок"
+msgid "заголовок в URL"
+msgstr "header"
+
+#: static/models.py:13
 msgid "статическая страница"
 msgstr "static page"
+
+#: statistic/apps.py:7
+msgid "Статистика"
+msgstr ""
 
 #: users/admin.py:29
 msgid "Права доступа"
@@ -118,480 +252,481 @@ msgstr "Other"
 msgid "Пользователи"
 msgstr "Users"
 
-#: users/current/mixins.py:39
+#: users/current/mixins.py:28
+#, fuzzy
+#| msgid "{0} уже существует"
+msgid "Объект уже существует"
+msgstr "{0} already exists"
+
+#: users/current/mixins.py:48
 #, python-brace-format
 msgid "{0} уже существует"
 msgstr "{0} already exists"
 
-#: users/current/mixins.py:48
+#: users/current/mixins.py:58
 msgid "Нельзя редактировать утверждённую анкету"
 msgstr "You can’t edit an approved profile"
 
-#: users/current/serializers.py:55
+#: users/current/serializers.py:58
 msgid "Нельзя изменять email пользователя"
 msgstr "You can’t change user’s email"
 
-#: users/current/serializers.py:88
+#: users/current/serializers.py:91
 msgid "Необходимо заполнить анкету"
 msgstr "Profile should be filled"
 
-#: users/current/views.py:128
+#: users/current/views.py:127
 msgid ""
 "Нельзя создать волонтёрскую итосрию пока анкета не утверждена администратором"
 msgstr "Can not create the story until admin has approved your profile"
 
-#: users/current/views.py:138
+#: users/current/views.py:137
 msgid "Нельзя редактировать историю после публикации"
 msgstr "You can’t edit it since story is publicized"
 
-#: users/models.py:64
+#: users/models.py:65
 msgid "Зарегистрированный пользователь"
 msgstr "Activated user"
 
-#: users/models.py:65
+#: users/models.py:66
 msgid "Кандидат в волонтёры"
 msgstr "Candidate to volunteers"
 
-#: users/models.py:66
+#: users/models.py:67
 msgid "Кандидат в волонтеры, прошедший тестирование"
 msgstr "Tested candidate to volunteers"
 
-#: users/models.py:68
+#: users/models.py:69
 msgid "Кандидат в волонтеры, прошедший отборочные процедуры"
 msgstr "Interviewed candidate to volunteers"
 
-#: users/models.py:69
+#: users/models.py:70
 msgid "Подготовленный кандидат в волонтеры"
 msgstr "Prepared candidate to volunteers"
 
-#: users/models.py:70
+#: users/models.py:71
 msgid "Волонтер основного состава"
 msgstr "Main team volunteer"
 
-#: users/models.py:71
+#: users/models.py:72
 msgid "Волонтер резерва"
 msgstr "Reserve volunteer"
 
-#: users/models.py:74
+#: users/models.py:75
 msgid "электронная почта"
 msgstr "email"
 
-#: users/models.py:76
+#: users/models.py:77
 msgid "сотрудник"
 msgstr "is staff"
 
-#: users/models.py:79
+#: users/models.py:80
 msgid "Designates whether the user can log into this admin site."
 msgstr ""
 
-#: users/models.py:83
+#: users/models.py:84
 msgid "активный"
 msgstr "is active"
 
-#: users/models.py:86
+#: users/models.py:87
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
 
-#: users/models.py:90
+#: users/models.py:91
 msgid "дата регистрации"
 msgstr "register date"
 
-#: users/models.py:92
+#: users/models.py:93
 msgid "роль"
 msgstr "role"
 
-#: users/models.py:100 users/models.py:326 users/models.py:477
-#: users/models.py:501
-msgid "пользователь"
-msgstr "user"
-
-#: users/models.py:101
+#: users/models.py:102
 msgid "пользователи"
 msgstr "users"
 
-#: users/models.py:154
+#: users/models.py:155
 msgid "Для подтверждения регистрации пройдите по ссылке"
 msgstr "Follow the link to confirm registration"
 
-#: users/models.py:157
+#: users/models.py:158
 msgid "Активация пользователя"
 msgstr "User activation"
 
-#: users/models.py:170
+#: users/models.py:178
 msgid "мужчина"
 msgstr "male"
 
-#: users/models.py:171
+#: users/models.py:179
 msgid "женщина"
 msgstr "female"
 
-#: users/models.py:178
+#: users/models.py:186
 msgid "начинающий"
 msgstr "beginner"
 
-#: users/models.py:179
+#: users/models.py:187
 msgid "средний"
 msgstr "intermediate"
 
-#: users/models.py:180
+#: users/models.py:188
 msgid "выше среднего"
 msgstr "upper intermediate"
 
-#: users/models.py:181
+#: users/models.py:189
 msgid "свободно"
 msgstr "advanced"
 
-#: users/models.py:190
+#: users/models.py:198
 msgid "получение нового опыта"
 msgstr "getting new experience"
 
-#: users/models.py:191
+#: users/models.py:199
 msgid "встречи с новыми людьми"
 msgstr "meeting new people"
 
-#: users/models.py:192
+#: users/models.py:200
 msgid "возможность помогать другим"
 msgstr "helping others"
 
-#: users/models.py:193
+#: users/models.py:201
 msgid "вклад в общее дело"
 msgstr "contribution to the common cause"
 
-#: users/models.py:194
+#: users/models.py:202
 msgid "новые интересы"
 msgstr "new interests"
 
-#: users/models.py:195
+#: users/models.py:203
 msgid "открытие для себя новых сфер"
 msgstr "discovering new fields"
 
-#: users/models.py:210
+#: users/models.py:218
 msgid "получение нового уникального опыта и навыков работы в команде"
 msgstr "getting a new unique experience and skills in teamwork"
 
-#: users/models.py:211
+#: users/models.py:219
 msgid "расширение круга общения"
 msgstr "expansion of the range of communication"
 
-#: users/models.py:212
+#: users/models.py:220
 msgid "личностный рост и самореализация"
 msgstr "personal growth and self-realization"
 
-#: users/models.py:213
+#: users/models.py:221
 msgid "расширение интересов и знаний"
 msgstr "expansion of interests and knowledge"
 
-#: users/models.py:214
+#: users/models.py:222
 msgid "новые связи и потенциальные возможности"
 msgstr "new connections and potential"
 
-#: users/models.py:216
+#: users/models.py:224
 msgid "практика иностранных языков и широкое межкультурное общение"
 msgstr "practice foreign languages and a wide cross-cultural communication"
 
-#: users/models.py:217
+#: users/models.py:225
 msgid "шанс увидеть мероприятие изнутри"
 msgstr "chance to see the inside of an event"
 
-#: users/models.py:219
+#: users/models.py:227
 msgid "возможность почувствовать себя значимой частью мега-события"
 msgstr "opportunity to feel like an important part of the mega-events"
 
-#: users/models.py:220
+#: users/models.py:228
 msgid "открытие новых перспектив"
 msgstr "new perspectives"
 
-#: users/models.py:221
+#: users/models.py:229
 msgid "признание окружающих"
 msgstr "surrounding recognition"
 
-#: users/models.py:222
+#: users/models.py:230
 msgid "гордость и уважение близких"
 msgstr "pride and respect of relatives"
 
-#: users/models.py:229
+#: users/models.py:237
 msgid "13 – 23 июня 2018 года"
 msgstr "June 12 - 23, 2018"
 
-#: users/models.py:230
+#: users/models.py:238
 msgid "24 июня – 4 июля 2018 года"
 msgstr "June 24 - July 4, 2018"
 
-#: users/models.py:231
+#: users/models.py:239
 msgid "5 – 15 июля 2018 года"
 msgstr "July 5 - 15, 2018"
 
-#: users/models.py:232
+#: users/models.py:240
 msgid "в любой указанный период"
 msgstr "in any given period"
 
-#: users/models.py:237
+#: users/models.py:245
 msgid "10:00 – 16:00"
 msgstr "10:00 AM - 4:00 PM"
 
-#: users/models.py:238
+#: users/models.py:246
 msgid "16:00 – 22:00"
 msgstr "4:00 PM - 10:00 PM"
 
-#: users/models.py:250
+#: users/models.py:258
 msgid "XXS (42)"
 msgstr ""
 
-#: users/models.py:250
+#: users/models.py:258
 msgid "XS (44)"
 msgstr ""
 
-#: users/models.py:251
+#: users/models.py:259
 msgid "S (46)"
 msgstr ""
 
-#: users/models.py:251
+#: users/models.py:259
 msgid "M (48)"
 msgstr ""
 
-#: users/models.py:252
+#: users/models.py:260
 msgid "L (50)"
 msgstr ""
 
-#: users/models.py:252
+#: users/models.py:260
 msgid "XL (52)"
 msgstr ""
 
-#: users/models.py:253
+#: users/models.py:261
 msgid "XXL (54)"
 msgstr ""
 
-#: users/models.py:253
+#: users/models.py:261
 msgid "2XL (56)"
 msgstr ""
 
-#: users/models.py:254
+#: users/models.py:262
 msgid "3XL (58)"
 msgstr ""
 
-#: users/models.py:257
+#: users/models.py:265
 msgid "XS (42)"
 msgstr ""
 
-#: users/models.py:257
+#: users/models.py:265
 msgid "S (44)"
 msgstr ""
 
-#: users/models.py:258
+#: users/models.py:266
 msgid "M (46)"
 msgstr ""
 
-#: users/models.py:258
+#: users/models.py:266
 msgid "L (48)"
 msgstr ""
 
-#: users/models.py:259
+#: users/models.py:267
 msgid "XL (50)"
 msgstr ""
 
-#: users/models.py:259
+#: users/models.py:267
 msgid "XXL (52)"
 msgstr ""
 
-#: users/models.py:276
+#: users/models.py:284
 msgid "34"
 msgstr ""
 
-#: users/models.py:276
+#: users/models.py:284
 msgid "35"
 msgstr ""
 
-#: users/models.py:277
+#: users/models.py:285
 msgid "36"
 msgstr ""
 
-#: users/models.py:277
+#: users/models.py:285
 msgid "37"
 msgstr ""
 
-#: users/models.py:278
+#: users/models.py:286
 msgid "38"
 msgstr ""
 
-#: users/models.py:278
+#: users/models.py:286
 msgid "39"
 msgstr ""
 
-#: users/models.py:279
+#: users/models.py:287
 msgid "40"
 msgstr ""
 
-#: users/models.py:279
+#: users/models.py:287
 msgid "41"
 msgstr ""
 
-#: users/models.py:280
+#: users/models.py:288
 msgid "42"
 msgstr ""
 
-#: users/models.py:280
+#: users/models.py:288
 msgid "43"
 msgstr ""
 
-#: users/models.py:281
+#: users/models.py:289
 msgid "44"
 msgstr ""
 
-#: users/models.py:281
+#: users/models.py:289
 msgid "45"
 msgstr ""
 
-#: users/models.py:282
+#: users/models.py:290
 msgid "46"
 msgstr ""
 
-#: users/models.py:289 users/models.py:305
+#: users/models.py:297 users/models.py:313
 msgid "1"
 msgstr ""
 
-#: users/models.py:290 users/models.py:306
+#: users/models.py:298 users/models.py:314
 msgid "2"
 msgstr ""
 
-#: users/models.py:291 users/models.py:307
+#: users/models.py:299 users/models.py:315
 msgid "3"
 msgstr ""
 
-#: users/models.py:292 users/models.py:308
+#: users/models.py:300 users/models.py:316
 msgid "4"
 msgstr ""
 
-#: users/models.py:309
+#: users/models.py:317
 msgid "5"
 msgstr ""
 
-#: users/models.py:310
+#: users/models.py:318
 msgid "6"
 msgstr ""
 
-#: users/models.py:311
+#: users/models.py:319
 msgid "7"
 msgstr ""
 
-#: users/models.py:312
+#: users/models.py:320
 msgid "8"
 msgstr ""
 
-#: users/models.py:313
+#: users/models.py:321
 msgid "9"
 msgstr ""
 
-#: users/models.py:314
+#: users/models.py:322
 msgid "10"
 msgstr ""
 
-#: users/models.py:320
+#: users/models.py:328
 msgid "на рассмотрении"
 msgstr "under consideration"
 
-#: users/models.py:321
+#: users/models.py:329
 msgid "на доработке"
 msgstr "on completion"
 
-#: users/models.py:322
+#: users/models.py:330
 msgid "утверждено"
 msgstr "approved"
 
-#: users/models.py:329
+#: users/models.py:337
 msgid "статус"
 msgstr "status"
 
-#: users/models.py:332
+#: users/models.py:340
 msgid "время обновления"
 msgstr "update time"
 
-#: users/models.py:334
+#: users/models.py:342
 msgid "фамилия"
 msgstr "Last Name"
 
-#: users/models.py:335
+#: users/models.py:343
 msgid "отчество"
 msgstr "Patronymic"
 
-#: users/models.py:336
+#: users/models.py:344
 msgid "пол"
 msgstr "Sex"
 
-#: users/models.py:337
+#: users/models.py:345
 msgid "дата рождения"
 msgstr "Birth date"
 
-#: users/models.py:338
+#: users/models.py:346
 msgid "место рождения"
 msgstr "Birth place"
 
-#: users/models.py:339
+#: users/models.py:347
 msgid "номер паспорта"
 msgstr "Passport Number"
 
-#: users/models.py:340
+#: users/models.py:348
 msgid "паспорт выдан"
 msgstr "Authority"
 
-#: users/models.py:341
+#: users/models.py:349
 msgid "дата выдачи паспорта"
 msgstr "Date of issue"
 
-#: users/models.py:342
+#: users/models.py:350
 msgid "адрес места жительства"
 msgstr "residence address"
 
-#: users/models.py:343
+#: users/models.py:351
 msgid "фактическое место жительства"
 msgstr "actual place of residence"
 
-#: users/models.py:344
+#: users/models.py:352
 msgid "учусь"
 msgstr "studying"
 
-#: users/models.py:346
+#: users/models.py:354
 msgid "место учёбы"
 msgstr "place of study"
 
-#: users/models.py:349
+#: users/models.py:357
 msgid "специальность/направление подготовки, курс"
 msgstr "program"
 
-#: users/models.py:352
+#: users/models.py:360
 msgid "работаю"
 msgstr "working"
 
-#: users/models.py:354
+#: users/models.py:362
 msgid "место работы"
 msgstr "place of work"
 
-#: users/models.py:357
+#: users/models.py:365
 msgid "должность"
 msgstr "position"
 
-#: users/models.py:360
+#: users/models.py:368
 msgid "контактный телефон работодателя"
 msgstr "employer contact phone"
 
-#: users/models.py:363
+#: users/models.py:371
 msgid "контактный телефон"
 msgstr "phone number"
 
-#: users/models.py:365
+#: users/models.py:373
 msgid "владение английским языком"
 msgstr "English level"
 
-#: users/models.py:368
+#: users/models.py:376
 msgid "владение другими языками"
 msgstr "other languages"
 
-#: users/models.py:370
+#: users/models.py:378
 msgid "опыт волонтёрской деятельности"
 msgstr "volunteering experience"
 
-#: users/models.py:372
+#: users/models.py:380
 msgid ""
 "спортивные мероприятия, в которых принимал участие в качестве волонтера, "
 "описание своих выполняемых функций в каждом из мероприятий"
@@ -599,7 +734,7 @@ msgstr ""
 "Sport events you have participated as a volunteer. Describe your duties in "
 "these events."
 
-#: users/models.py:377
+#: users/models.py:385
 msgid ""
 "иные мероприятия, в которых принимал участие в качестве волонтера, описание "
 "своих выполняемых функций в каждом из мероприятий"
@@ -607,15 +742,15 @@ msgstr ""
 "Other events you have participated as a volunteer. Describe your duties in "
 "these events."
 
-#: users/models.py:382
+#: users/models.py:390
 msgid "что привлекает в волонтерской деятельности?"
 msgstr "What do you like most about volunteering?"
 
-#: users/models.py:386
+#: users/models.py:394
 msgid "каких навыков и знаний в волонтерской деятельности не хватает?"
 msgstr "In what volunteering fields you feel lack of skills and knowledges"
 
-#: users/models.py:389
+#: users/models.py:397
 msgid ""
 "что Вы хотите получить от участия в качестве городского волонтера в "
 "Чемпионате мира по футболу FIFA 2018 в России?"
@@ -623,75 +758,75 @@ msgstr ""
 "What do you want from participating as a volunteer in the urban World Cup "
 "FIFA 2018 in Russia?"
 
-#: users/models.py:394
+#: users/models.py:402
 msgid "информационно-туристическая служба"
 msgstr "tourist information service"
 
-#: users/models.py:397
+#: users/models.py:405
 msgid "транспортная служба"
 msgstr "transportation service"
 
-#: users/models.py:400
+#: users/models.py:408
 msgid "лингвистическая служба"
 msgstr "linguistic service"
 
-#: users/models.py:403
+#: users/models.py:411
 msgid "фестиваль болельщиков FIFA"
 msgstr "FIFA fan fest"
 
-#: users/models.py:405
+#: users/models.py:413
 msgid "описание своих сильных сторон"
 msgstr "describe your strengths"
 
-#: users/models.py:406
+#: users/models.py:414
 msgid "описание своих слабых сторон"
 msgstr "describe your weaknesses"
 
-#: users/models.py:407
+#: users/models.py:415
 msgid "описание хобби"
 msgstr "your hobbies"
 
-#: users/models.py:409
+#: users/models.py:417
 msgid "ответственность"
 msgstr "responsibility"
 
-#: users/models.py:412
+#: users/models.py:420
 msgid "стрессоустойчивость"
 msgstr "stress resistance"
 
-#: users/models.py:415
+#: users/models.py:423
 msgid "коммуникабельность"
 msgstr "communicability"
 
-#: users/models.py:418
+#: users/models.py:426
 msgid "исполнительность"
 msgstr "due diligence"
 
-#: users/models.py:421
+#: users/models.py:429
 msgid "доброжелательность"
 msgstr "good will"
 
-#: users/models.py:424
+#: users/models.py:432
 msgid "умение работать в команде"
 msgstr "teamwork skills"
 
-#: users/models.py:426
+#: users/models.py:434
 msgid "имею автомобиль"
 msgstr "personal car"
 
-#: users/models.py:428
+#: users/models.py:436
 msgid "категория водительского удостоверения и стаж вождения"
 msgstr "driver license category and driving experience"
 
-#: users/models.py:432
+#: users/models.py:440
 msgid "период работы во время чемпионата"
 msgstr "the period of work during the World Cup"
 
-#: users/models.py:436
+#: users/models.py:444
 msgid "смена работы во время чемпионата"
 msgstr "change of work during the World Cup"
 
-#: users/models.py:440
+#: users/models.py:448
 msgid ""
 "готовы ли Вы принимать участие в других мероприятиях, осуществляемых в "
 "рамках подготовки и проведения игр ЧМ-2018?"
@@ -699,91 +834,94 @@ msgstr ""
 "Are you ready to take part in other activities carried out within the "
 "framework of preparation and holding of the 2018 World Cup games?"
 
-#: users/models.py:445
+#: users/models.py:453
 msgid "наличие медицинских противопоказаний к осуществлению работы?"
 msgstr "medical contraindications to work?"
 
-#: users/models.py:448
+#: users/models.py:456
 msgid "мужской размер одежды"
 msgstr "Men’s clothing size"
 
-#: users/models.py:452
+#: users/models.py:460
 msgid "женский размер одежды"
 msgstr "Women's clothing size"
 
-#: users/models.py:456
+#: users/models.py:464
 msgid "размер обуви"
 msgstr "shoe size"
 
-#: users/models.py:460
+#: users/models.py:468
 msgid "анкета пользователя"
 msgstr "user profile"
 
-#: users/models.py:461
+#: users/models.py:469
 msgid "анкеты пользователей"
 msgstr "user profiles"
 
-#: users/models.py:482
+#: users/models.py:490
 msgid "файл анкеты пользователя"
 msgstr "user profile file"
 
-#: users/models.py:483
+#: users/models.py:491
 msgid "файлы анкет пользователей"
 msgstr "user profile files"
 
-#: users/models.py:491
+#: users/models.py:499
 msgid "анкета"
 msgstr "profile"
 
-#: users/models.py:492
+#: users/models.py:500
 msgid "Текст"
 msgstr "Text"
 
-#: users/models.py:493
-msgid "время создания"
-msgstr "creating date"
-
-#: users/models.py:504
+#: users/models.py:512
 msgid "о себе"
 msgstr "about me"
 
-#: users/models.py:507
+#: users/models.py:515
 msgid "коментарий администратора"
 msgstr "admin comments"
 
-#: users/models.py:511
+#: users/models.py:519
 msgid "волонтёрская история"
 msgstr "volunteer story"
 
-#: users/models.py:512
+#: users/models.py:520
 msgid "волонтёрские истории"
 msgstr "volunteer stories"
 
-#: users/serializers.py:31
+#: users/serializers.py:32
 msgid "нельзя выбрать более 4-х значени"
 msgstr "Can’t choose more than 4 choices"
 
-#: users/serializers.py:97
+#: users/serializers.py:99
 msgid "Необходимо заполнить пароль"
 msgstr "Fill the password field"
 
-#: users/serializers.py:124
+#: users/serializers.py:126
 msgid ""
 "Пользователь с таким email уже существует, проверьте почту для активации"
 msgstr "User email already exists, check email for activation"
 
-#: users/views.py:30
-msgid "Нельзя удалить пользователя с правами супер-администратора"
-msgstr "Can not delete user with admin privileges"
+#: users/serializers.py:151
+msgid "Пользователь может состоять только в одной группе"
+msgstr ""
 
-#: users/views.py:91
+#: users/views.py:81
+msgid "Пользователь не загрузил фотографию"
+msgstr ""
+
+#: users/views.py:87
 msgid "Пользовательский профиль изменился, обновите страницу"
 msgstr "User profile had changed, reload the page"
 
-#: volunteer/settings.py:168
+#: volunteer/settings.py:220
 msgid "Русский"
 msgstr "Russian"
 
-#: volunteer/settings.py:169
+#: volunteer/settings.py:221
 msgid "Английский"
 msgstr "English"
+
+#~ msgid "Нельзя удалить пользователя с правами супер-администратора"
+#~ msgstr "Can not delete user with admin privileges"

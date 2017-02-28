@@ -6,4 +6,4 @@ from notices.models import Notice
 class NoticeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notice
-        fields = '__all__'
+        exclude = ('user', 'content_type', 'object_id')
