@@ -88,7 +88,7 @@ class UserTestSerializer(ForeignKeySerializerMixin,
 
 class UserAnswerSerializer(BaseUserTestSerializer):
     answers = serializers.ListField(
-        child=serializers.CharField(),
+        child=serializers.CharField(allow_blank=True),
         label=UserAnswer._meta.get_field('answers').verbose_name,
     )
 
