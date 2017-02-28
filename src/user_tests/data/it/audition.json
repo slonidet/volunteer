@@ -1,0 +1,38 @@
+[
+  {
+    "title": "Secondo Amato, l´Europa è molto importante per",
+    "choices": [
+      [false, "gli italiani"],
+      [false, "i tedeschi"],
+      [true, "i giovani"],
+      [false, "gli anziani"]
+    ]
+  },
+  {
+    "title": "Per un´impresa l´Europa è importante perché ora",
+    "choices": [
+      [false, "diventa tutto automatico"],
+      [true, "si rivolge a molti più consumatori"],
+      [false, "deve avere prezzi più bassi"],
+      [false, "può avere prezzi più alti"]
+    ]
+  },
+  {
+    "title": "Secondo Amato, uno degli aspetti positivi dell´Europa Unita è che",
+    "choices": [
+      [false, "i suoi cittadini sono diventati più ricchi"],
+      [false, "si usa solo una moneta, l`euro"],
+      [false, "sono calati i prezzi dei vari prodotti"],
+      [true, "è molto più facile spostarsi"]
+    ]
+  },
+  {
+    "title": "Suo cognato",
+    "choices": [
+      [false, "aveva avuto qualche problema in Germania"],
+      [false, "era molto ricco"],
+      [true, "aveva comprato una casa in Germania"],
+      [false, "non era italiano"]
+    ]
+  }
+]

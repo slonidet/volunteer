@@ -73,8 +73,7 @@ class Command(BaseCommand):
         test = options['test']
         time_available = options['time_available']
         task = options['task']
-        expert_appraisal = options['expert_appraisal']
-        print(expert_appraisal)
+        expert_appraisal = True
 
         json_data = open(file).read()
         json_data = json.loads(json_data)
