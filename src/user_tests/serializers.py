@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from core.fk_sirializer import ForeignKeySerializerMixin
+from core.serializers import ForeignKeySerializerMixin
 from user_tests.models import Test, Task, Question, AnswerOptions, UserTest, \
     UserAnswer
 
@@ -122,6 +122,19 @@ class UserAnswerSerializer(BaseUserTestSerializer):
         elif user_test.finished_at:
             raise ValidationError(time_expired_message)
 
+    def _check_correct_answers(self, validated_data):
+        expert_appraisal = validated_data['question'].task.expert_appraisal
+        if not expert_appraisal:
+            user_answers = set(validated_data['answers'])
+            correct_answers = set(AnswerOptions.objects.filter(
+                question=validated_data['question'],
+                is_correct=True
+            ).values_list('text', flat=True))
+
+            validated_data['is_correct'] = (user_answers == correct_answers)
+
+        return validated_data
+
     def create(self, validated_data):
         user = self.context['request'].user
         question = validated_data['question']
@@ -139,16 +152,3 @@ class UserAnswerSerializer(BaseUserTestSerializer):
     def update(self, instance, validated_data):
         validated_data = self._check_correct_answers(validated_data)
         return super().update(instance, validated_data)
-
-    def _check_correct_answers(self, validated_data):
-        expert_appraisal = validated_data['question'].task.expert_appraisal
-        if not expert_appraisal:
-            user_answers = set(validated_data['answers'])
-            correct_answers = set(AnswerOptions.objects.filter(
-                question=validated_data['question'],
-                is_correct=True
-            ).values_list('text', flat=True))
-
-            validated_data['is_correct'] = (user_answers == correct_answers)
-
-        return validated_data
