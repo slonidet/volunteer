@@ -56,3 +56,6 @@ class Interview(models.Model):
 
     def __str__(self):
         return '{0} {1}'.format(self.date, self.get_period_display())
+
+    def get_interview_time(self):
+        return '{hour}:00'.format(hour=self.get_period_display()[:2])

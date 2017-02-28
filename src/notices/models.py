@@ -11,9 +11,11 @@ class Notice(models.Model):
     """
     Notifications model
     """
+    TYPE_ALERT = 'alert'
+    TYPE_CONFIRM = 'confirm'
     TYPE_CHOICES = (
-        ('alert', 'alert'),
-        ('confirm', 'confirm'),
+        (TYPE_ALERT, 'alert'),
+        (TYPE_CONFIRM, 'confirm'),
     )
 
     title = models.CharField(_('заголовок'), max_length=250)

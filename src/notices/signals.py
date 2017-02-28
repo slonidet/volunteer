@@ -19,3 +19,21 @@ def change_interview(sender, instance, **kwargs):
         elif notice.is_confirmed is False:
             interview.status = Interview.STATUS_REJECT
             interview.save()
+
+
+@receiver(post_save, sender=Interview)
+def create_interview_notice(sender, instance, created, **kwargs):
+    interview = instance
+    if created:
+        message = '{interviewer} пригласил вас на интервью {date} в {time}'
+        Notice.objects.create(
+            user=interview.volunteer,
+            title='Приглашение на интервью',
+            type=Notice.TYPE_CONFIRM,
+            message=message.format(
+                interviewer=interview.interviewer,
+                date=interview.date.strftime('%d.%m.%Y'),
+                time=interview.get_interview_time()
+            ),
+            content_object=interview
+        )
