@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from notices.models import Notice
+
+
+class NoticeAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(Notice, NoticeAdmin)
