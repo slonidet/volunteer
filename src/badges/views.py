@@ -1,5 +1,5 @@
-from rest_framework import mixins
-from rest_framework import permissions
+from rest_framework import mixins, permissions, views
+from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from badges.models import Badge
@@ -15,3 +15,11 @@ class BadgeViewSet(mixins.RetrieveModelMixin, mixins.DestroyModelMixin,
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
+
+
+class BadgeTypeView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        return Response(dict(Badge.TYPE_CHOICES))
+

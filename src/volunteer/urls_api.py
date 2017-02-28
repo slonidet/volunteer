@@ -21,6 +21,6 @@ urlpatterns = [
     url(r'^news/', include('news.urls', namespace='news')),
     url(r'^static/', include('static.urls', namespace='static')),
     url(r'^events/', include('events.urls', namespace='events')),
-    url(r'^budges/', include('badges.urls', namespace='badges')),
+    url(r'^badges/', include('badges.urls', namespace='badges')),
     url(r'^notices/', include('notices.urls', namespace='notices')),
 ]
