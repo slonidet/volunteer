@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'statistic.apps.StatisticConfig',
     'badges.apps.BadgesConfig',
-    # 'notices.apps.NoticesConfig',
+    'notices.apps.NoticesConfig',
 ]
 
 MIDDLEWARE = [
