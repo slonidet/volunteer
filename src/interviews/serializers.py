@@ -24,7 +24,8 @@ class InterviewSerializer(ForeignKeySerializerMixin, ModelSerializer):
 
     def create(self, validated_data):
         user_not_available_for_interview = Interview.objects.filter(
-            status__in=Interview.NOT_AVAILABLE_STATUSES
+            status__in=Interview.NOT_AVAILABLE_STATUSES,
+            volunteer=self.initial_data['volunteer'].get('id')
         ).exists()
 
         if user_not_available_for_interview:
