@@ -4,7 +4,7 @@ from users.current import views
 
 
 urlpatterns = [
-    url(r'^$', views.CurrentUserViewView.as_view(),
+    url(r'^$', views.CurrentUserView.as_view(),
         name='current-user'),
     url(r'authentication/$', views.AuthTokenView.as_view(),
         name='authentication'),

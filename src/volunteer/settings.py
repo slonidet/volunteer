@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 from django.utils.translation import ugettext_lazy as _
+from celery.schedules import crontab
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     'static.apps.StaticConfig',
     'permissions.apps.PermissionsConfig',
     'events.apps.EventsConfig',
+    'user_tests.apps.UserTestsConfig',
     'statistic.apps.StatisticConfig',
     'badges.apps.BadgesConfig',
     'notices.apps.NoticesConfig',
@@ -162,6 +164,18 @@ DATABASES = {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         },
     }
+}
+
+
+# Celery configuration
+# http://docs.celeryproject.org/
+
+CELERY_BROKER_URL = ""
+CELERY_BEAT_SCHEDULE = {
+    'finish_expired_test': {
+        'task': 'finish_expired_test',
+        'schedule': crontab(minute='*'),
+    },
 }
 
 
