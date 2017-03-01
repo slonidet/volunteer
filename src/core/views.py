@@ -1,6 +1,8 @@
 from django.core.mail import send_mail
+from rest_framework import mixins
 from rest_framework import views, permissions
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
 
 class SendMail(views.APIView):
@@ -17,3 +19,15 @@ class SendMail(views.APIView):
         )
 
         return Response({'result': result})
+
+
+class UndeletableModelViewSet(mixins.CreateModelMixin,
+                              mixins.RetrieveModelMixin,
+                              mixins.UpdateModelMixin,
+                              mixins.ListModelMixin,
+                              GenericViewSet):
+    """
+    A viewset that provides default `create()`, `retrieve()`, `update()`,
+    `partial_update()` and `list()` actions.
+    """
+    pass
