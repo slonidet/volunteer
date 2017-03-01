@@ -168,10 +168,10 @@ DATABASES = {
 # http://docs.celeryproject.org/
 
 CELERY_BROKER_URL = ""
-CELERY_CELERYBEAT_SCHEDULE = {
+CELERY_BEAT_SCHEDULE = {
     'finish_expired_test': {
         'task': 'finish_expired_test',
-        'schedule': crontab(minute='*/5', hour='*'),
+        'schedule': crontab(minute='*'),
     },
 }
 
