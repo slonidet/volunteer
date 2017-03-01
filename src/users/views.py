@@ -7,6 +7,7 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from users.filters import UserFilter
 from users.mixins import ExcludeAnonymousViewMixin, StoryRelatedViewMixin
 from users.models import Profile, ProfileAttachment, Story, ProfileComment
 from users.models import User
@@ -21,7 +22,7 @@ class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
     queryset = User.objects.select_related(
         'profile', 'profile_attachment').prefetch_related('groups')
     serializer_class = AdminUserSerializer
-    filter_fields = ('groups__name', 'role', 'is_active')
+    filter_class = UserFilter
     search_fields = ('username', 'profile__first_name', 'profile__last_name',
                      'profile__middle_name', 'profile__phone')
 

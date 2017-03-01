@@ -34,9 +34,12 @@ class Interview(models.Model):
         (STATUS_HAPPEN, _('Состоялось')),
         (STATUS_CANCEL, _('Не состоялось')),
     )
+    AVAILABLE_STATUSES = (STATUS_REJECT, STATUS_CANCEL)
+    NOT_AVAILABLE_STATUSES = (STATUS_WAIT, STATUS_CONFIRM, STATUS_HAPPEN)
 
     volunteer = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name=_('Пользователь')
+        User, on_delete=models.CASCADE, verbose_name=_('Пользователь'),
+        related_name='interviews'
     )
     interviewer = models.ForeignKey(
         Interviewer, on_delete=models.CASCADE, related_name='interviews',
