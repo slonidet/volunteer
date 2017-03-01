@@ -65,6 +65,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
         (ROLE_REGISTERED, _('Зарегистрированный пользователь')),
         (ROLE_CANDIDATE, _('Кандидат в волонтёры')),
+        (ROLE_APPROVED, _('Утверждённый кандидат в волонтёры')),
         (ROLE_TESTED, _('Кандидат в волонтеры, прошедший тестирование')),
         (ROLE_INTERVIEWED,
          _('Кандидат в волонтеры, прошедший отборочные процедуры')),
