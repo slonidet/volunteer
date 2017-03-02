@@ -1,0 +1,322 @@
+[
+  {
+    "title": "I ragazzi ....... italiani.",
+    "choices": [
+      [0, "siete"],
+      [0, "è"],
+      [1, "sono"]
+    ]
+  },
+  {
+    "title": "............. è Federico.",
+    "choices": [
+      [0, "Queste"],
+      [1, "Questo"],
+      [0, "Questa"]
+    ]
+  },
+  {
+    "title": "Maria è ............",
+    "choices": [
+      [0, "spagnole"],
+      [1, "francese"],
+      [0, "russo"]
+    ]
+  },
+  {
+    "title": "Maria e Federico .......... fame.",
+    "choices": [
+      [0, "siete"],
+      [1, "hanno"],
+      [0, "sono"]
+    ]
+  },
+  {
+    "title": "Maria parla con ........... studente.",
+    "choices": [
+      [0, "un"],
+      [0, "un"],
+      [1, "uno"]
+    ]
+  },
+  {
+    "title": "Federico fa ........ giornalista.",
+    "choices": [
+      [0, "la"],
+      [1, "il"],
+      [0, "lo"]
+    ]
+  },
+  {
+    "title": "Maria .......... in banca.",
+    "choices": [
+      [1, "lavora"],
+      [0, "lavori"],
+      [0, "lavoro"]
+    ]
+  },
+  {
+    "title": "Abito ......... Roma, ....... Italia.",
+    "choices": [
+      [0, "in / in"],
+      [0,  "in / a"],
+      [1, "a / in"]
+    ]
+  },
+  {
+    "title": "Il libro è .......... scuola.",
+    "choices": [
+      [0, "di la"],
+      [1, "della"],
+      [0, "dilla"]
+    ]
+  },
+  {
+    "title": "Federico ........... il tedesco.",
+    "choices": [
+      [1, "capisce"],
+      [0, "cape"],
+      [0, "capisca"]
+    ]
+  },
+  {
+    "title": "Maria ............. alle 8.00.",
+    "choices": [
+      [0, "sveglia"],
+      [1, "si sveglia"],
+      [0, "si è sveglia"]
+    ]
+  },
+  {
+    "title": "Federico .................. la TV.",
+    "choices": [
+      [0, "guardando"],
+      [1, "sta guardando"],
+      [0, "guarde"]
+    ]
+  },
+  {
+    "title": "Ieri Maria ............... Federico.",
+    "choices": [
+      [1, "ha visto"],
+      [0, "è vista"],
+      [0, "ha vista"]
+    ]
+  },
+  {
+    "title": "Ieri Maria e Federico .....................",
+    "choices": [
+      [1, "si sono visti"],
+      [0, "si hanno visti"],
+      [0, "hanno visti"]
+    ]
+  },
+  {
+    "title": "A scuola ........... molti studenti.",
+    "choices": [
+      [0, "c"],
+      [0, "è"],
+      [1, "ci sono"]
+    ]
+  },
+  {
+    "title": "Mentre ............. , ascoltavo la radio.",
+    "choices": [
+      [0, "legge"],
+      [0, "ho letto"],
+      [1, "leggevo"]
+    ]
+  },
+  {
+    "title": "Quando ....... piccolo, abitavo a Milano.",
+    "choices": [
+      [1, "ero"],
+      [0, "sono stato"],
+      [0, "eravamo"]
+    ]
+  },
+  {
+    "title": "È finito il pane. Chi ........ compra?",
+    "choices": [
+      [0, "la"],
+      [0, "gli"],
+      [1, "lo"]
+    ]
+  },
+  {
+    "title": "Non ho il libro. Chi .......... presta?",
+    "choices": [
+      [0, "mi lo"],
+      [0, "lo"],
+      [1,  "me lo"]
+    ]
+  },
+  {
+    "title": "Posso ................ domani?",
+    "choices": [
+      [1, "telefonar Le"],
+      [0, "telefonar La"],
+      [0, "Le telefonare"]
+    ]
+  },
+  {
+    "title": "È finito il pane. .................!",
+    "choices": [
+      [0, "lo compra"],
+      [1, "compralo"],
+      [0, "compri"]
+    ]
+  },
+  {
+    "title": "Oggi fa freddo. ................ più pesante!",
+    "choices": [
+      [0, "vesta"],
+      [1, "vestiti"],
+      [0, "ti vesti"]
+    ]
+  },
+  {
+    "title": "L'anno prossimo .......... in Giappone.",
+    "choices": [
+      [0, "sarò andare"],
+      [1, "andrò"],
+      [0, "anderò"]
+    ]
+  },
+  {
+    "title": "................ chiudere la finestra?",
+    "choices": [
+      [0, "Posseresti"],
+      [1, "Potresti"],
+      [0, "Possa"]
+    ]
+  },
+  {
+    "title": "Ho sete. Vorrei ......... acqua.",
+    "choices": [
+      [0, "di"],
+      [1, "dell"],
+      [0, "alcuna"]
+    ]
+  },
+  {
+    "title": "In Italia non ........... spesso a teatro.",
+    "choices": [
+      [0, "vadano"],
+      [0, "si vanno"],
+      [1, "si va"]
+    ]
+  },
+  {
+    "title": "L'ho chiamata, ma ...........................",
+    "choices": [
+      [0, "usciva"],
+      [0, "è già uscita"],
+      [1, "era già uscita"]
+    ]
+  },
+  {
+    "title": "È meglio che tu ................",
+    "choices": [
+      [1, "esca"],
+      [0, "esci"],
+      [0,  "usci"]
+    ]
+  },
+  {
+    "title": "Credo che Maria ...................... ieri.",
+    "choices": [
+      [1, "sia partita"],
+      [0, "parta"],
+      [0, "è partita"]
+    ]
+  },
+  {
+    "title": "È il libro ................. che abbia mai letto.",
+    "choices": [
+      [0, "bellissimo"],
+      [0, "meglio"],
+      [1, "più bello"]
+    ]
+  },
+  {
+    "title": "Il medico arriva subito. ...................",
+    "choices": [
+      [0, "Accomoda"],
+      [0, "Accomodisi"],
+      [1, "Si accomodi"]
+    ]
+  },
+  {
+    "title": "Volevo che tu ..................",
+    "choices": [
+      [0, "verresti"],
+      [1, "venissi"],
+      [0, "venga"]
+    ]
+  },
+  {
+    "title": "Era possibile che lui .......................",
+    "choices": [
+      [1, "l'avesse già saputo"],
+      [0,  "l'abbia già saputo"],
+      [0, "lo sappia già"]
+    ]
+  },
+  {
+    "title": "Se ......... al tuo posto non glielo ............",
+    "choices": [
+      [0, "sarei / dicessi"],
+      [1, "fossi / direi"],
+      [0, "ero / direi"]
+    ]
+  },
+  {
+    "title": "Sebbene .............. non ho vinto il concorso.",
+    "choices": [
+      [0, "avrei studiato"],
+      [0, "studi"],
+      [1, "avessi studiato"]
+    ]
+  },
+  {
+    "title": "Manzoni .............. i Promessi Sposi.",
+    "choices": [
+      [0, "scrissi"],
+      [1, "scrisse"],
+      [0, "scribbe"]
+    ]
+  },
+  {
+    "title": "Mi ha detto che il giorno dopo ..............",
+    "choices": [
+      [0, "arriva"],
+      [1, "sarebbe arrivato"],
+      [0, "arrivasse"]
+    ]
+  },
+  {
+    "title": "Arrivò dopo che gli altri ...................",
+    "choices": [
+      [0, "ce ne andò"],
+      [0, "ne andarono"],
+      [1, "se ne furono andati"]
+    ]
+  },
+  {
+    "title": "............ a Mosca, parlo molto bene il russo.",
+    "choices": [
+      [0, "Lavorato"],
+      [0, "Aver lavorato"],
+      [1, "Avendo lavorato"]
+    ]
+  },
+  {
+    "title": "................... il film, sono andato a casa.",
+    "choices": [
+      [0, "Vedo"],
+      [0, "Vedevo"],
+      [1, "Dopo aver visto"]
+    ]
+  }
+]

@@ -7,6 +7,7 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from users.filters import UserFilter
 from users.mixins import ExcludeAnonymousViewMixin, StoryRelatedViewMixin
 from users.models import Profile, ProfileAttachment, Story, ProfileComment
 from users.models import User
@@ -15,25 +16,16 @@ from users.serializers import ProfileSerializer, ProfileAttachmentSerializer, \
     ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer
 
 
-class AdminUserViewSet(ExcludeAnonymousViewMixin, viewsets.ModelViewSet):
+class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
+                       mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                       mixins.ListModelMixin, GenericViewSet):
     queryset = User.objects.select_related(
-        'profile', 'profile_attachment').prefetch_related('groups')
+        'profile', 'profile_attachment').prefetch_related('groups').filter(
+        is_superuser=False)
     serializer_class = AdminUserSerializer
-    filter_fields = ('groups__name', 'role')
+    filter_class = UserFilter
     search_fields = ('username', 'profile__first_name', 'profile__last_name',
                      'profile__middle_name', 'profile__phone')
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if instance.is_superuser:
-            message = _(
-                'Нельзя удалить пользователя с правами супер-администратора'
-            )
-            return Response(message, status=status.HTTP_403_FORBIDDEN)
-
-        self.perform_destroy(instance)
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class AdminProfileViewSet(viewsets.ModelViewSet):
@@ -71,8 +63,9 @@ class AdminProfileViewSet(viewsets.ModelViewSet):
         serializer.save()
 
         # set working profile status
-        profile.status = Profile.STATUS_WORKING
-        profile.save()
+        Profile.objects.filter(pk=profile.pk).update(
+            status=Profile.STATUS_WORKING
+        )
 
         headers = self.get_success_headers(serializer.data)
         return Response(
@@ -84,6 +77,11 @@ class AdminProfileViewSet(viewsets.ModelViewSet):
         profile = self.get_object()
         serializer = ApproveProfileSerializer(profile, data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        try:
+            profile.user.profile_attachment
+        except ProfileAttachment.DoesNotExist:
+            raise exceptions.NotFound(_('Пользователь не загрузил фотографию'))
 
         with transaction.atomic():
             profile = Profile.objects.select_for_update().get(pk=profile.pk)
@@ -120,3 +118,4 @@ class StoryViewSet(StoryRelatedViewMixin, viewsets.ReadOnlyModelViewSet):
 class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all().order_by('id')
     serializer_class = UserGroupSerializer
+    pagination_class = None

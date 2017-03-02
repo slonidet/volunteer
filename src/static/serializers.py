@@ -9,6 +9,7 @@ class AdminPageSerializer(AdminTranslationModelSerializer):
         model = Page
         model_translation = PageTranslationOptions
         fields = '__all__'
+        lookup_field = 'slug'
 
 
 class PageSerializer(UserTranslationModelSerializer):

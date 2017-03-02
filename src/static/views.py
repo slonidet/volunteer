@@ -11,9 +11,11 @@ class AdminPageViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
                        GenericViewSet):
     queryset = Page.objects.all()
     serializer_class = AdminPageSerializer
+    lookup_field = 'slug'
 
 
 class PageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
     permission_classes = ()
+    lookup_field = 'slug'

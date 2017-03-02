@@ -1,0 +1,58 @@
+[
+  {
+    "title": "Les amies parlent de leurs études.",
+    "choices": [
+      [false, "верно"],
+      [true, "неверно"],
+      [false, "в тексте не сказано"]
+    ]
+  },
+  {
+    "title": "Le professeur de Chrystel est sévère.",
+    "choices": [
+      [true, "верно"],
+      [false, "неверно"],
+      [false, "в тексте не сказано"]
+    ]
+  },
+  {
+    "title": "Chrystel apprend le breton.",
+    "choices": [
+      [false, "верно"],
+      [false, "неверно"],
+      [true, "в тексте не сказано"]
+    ]
+  },
+  {
+    "title": "Josiane apprend l'allemand et l'anglais.",
+    "choices": [
+      [false, "верно"],
+      [false, "неверно"],
+      [true, "в тексте не сказано"]
+    ]
+  },
+  {
+    "title": "Dans la classe de Josiane il y a plus de filles que de garçons.",
+    "choices": [
+      [true, "верно"],
+      [false, "неверно"],
+      [false, "в тексте не сказано"]
+    ]
+  },
+  {
+    "title": "Josiane a la famille en Bretagne.",
+    "choices": [
+      [false, "верно"],
+      [true, "неверно"],
+      [false, "в тексте не сказано"]
+    ]
+  },
+  {
+    "title": "Chrystel a la famille en Allemagne.",
+    "choices": [
+      [false, "верно"],
+      [false, "неверно"],
+      [true, "в тексте не сказано"]
+    ]
+  }
+]

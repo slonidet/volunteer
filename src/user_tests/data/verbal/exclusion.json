@@ -1,0 +1,70 @@
+[
+    {
+        "title": "1",
+        "choices": [[false, "Василий"], [false, "Федор"], [false, "Семен"], [true, "Иванов"], [false, "Петр"]]
+    },
+    {
+        "title": "2",
+        "choices": [[false, "дряхлый"], [true, "маленький"], [false, "старый"], [false, "изношенный"], [false, "ветхий"]]
+    },
+    {
+        "title": "3",
+        "choices": [[false, "скоро"], [false, "быстро"], [false, "поспешно"], [true, "постепенно"], [false, "торопливо"]]
+    },
+    {
+        "title": "4",
+        "choices": [[false, "лист"], [false, "почва"], [false, "кора"], [true, "чешуя"], [false, "сук"]]
+    },
+    {
+        "title": "5",
+        "choices": [[false, "ненавидеть"], [false, "презирать"], [false, "негодовать"], [false, "возмущаться"], [true, "понимать"]]
+    },
+    {
+        "title": "6",
+        "choices": [[false, "темный"], [false, "светлый"], [true, "голубой"], [false, "яркий"], [false, "тусклый"]]
+    },
+    {
+        "title": "7",
+        "choices": [[false, "гнездо"], [false, "нора"], [false, "курятник"], [true, "сторожка"], [false, "берлога"]]
+    },
+    {
+        "title": "8",
+        "choices": [[false, "неудача"], [true, "волнение"], [false, "поражение"], [false, "провал"], [false, "крах"]]
+    },
+    {
+        "title": "9",
+        "choices": [[false, "успех"], [false, "удача"], [false, "выигрыш"], [true, "спокойствие"], [false, "неудача"]]
+    },
+    {
+        "title": "10",
+        "choices": [[false, "грабеж"], [false, "кража"], [true, "землетрясение"], [false, "поджог"], [false, "нападение"]]
+    },
+    {
+        "title": "11",
+        "choices": [[false, "молоко"], [false, "сыр"], [false, "сметана"], [true, "сало"], [false, "простокваша"]]
+    },
+    {
+        "title": "12",
+        "choices": [[false, "глубокий"], [false, "низкий"], [true, "светлый"], [false, "высокий"], [false, "длинный"]]
+    },
+    {
+        "title": "13",
+        "choices": [[false, "хата"], [false, "шалаш"], [true, "дым"], [false, "хлев"], [false, "будка"]]
+    },
+    {
+        "title": "14",
+        "choices": [[false, "береза"], [false, "сосна"], [false, "дуб"], [false, "ель"], [true, "сирень"]]
+    },
+    {
+        "title": "15",
+        "choices": [[false, "секунда"], [false, "час"], [false, "год"], [true, "вечер"], [false, "неделя"]]
+    },
+    {
+        "title": "16",
+        "choices": [[false, "смелый"], [false, "храбрый"], [false, "решительный"], [true, "злой"], [false, "отважный"]]
+    },
+    {
+        "title": "17",
+        "choices": [[false, "карандаш"], [false, "ручка"], [false, "рейсфедер"], [false, "фломастер"], [true, "чернила"]]
+    }
+]

@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import exceptions
@@ -21,11 +22,18 @@ class CurrentUserViewMixin(object):
 
         return obj
 
+    def create(self, request, *args, **kwargs):
+        try:
+            self.get_object()
+            raise exceptions.NotAcceptable(_('Объект уже существует'))
+        except Http404:
+            pass
+
+        return super().create(request, args, **kwargs)
+
 
 class CurrentUserSerializerMixin(object):
     """ Create object only for current (request) user """
-    class Meta:
-        fields = '__all__'
 
     def create(self, validated_data):
         user = self.context['request'].user

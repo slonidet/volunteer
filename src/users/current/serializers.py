@@ -36,21 +36,16 @@ class AuthUserSerializer(BaseUserSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'username', 'is_superuser', 'profile', 'profile_attachment',
-            'role', 'groups',
+            'id', 'username', 'profile', 'profile_attachment', 'role',
+            'groups',
         )
 
 
 class CurrentUserSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         fields = (
-            'id', 'username', 'is_superuser', 'is_staff',
-            'password', 'date_joined', 'last_login', 'profile',
-            'profile_attachment', 'groups', 'role'
-        )
-        read_only_fields = (
-            'is_superuser', 'is_staff', 'last_login', 'date_joined', 'profile',
-            'profile_attachment', 'groups', 'role'
+            'id', 'username', 'password', 'date_joined', 'last_login',
+            'profile', 'profile_attachment', 'groups', 'role'
         )
 
     def update(self, instance, validated_data):
@@ -69,16 +64,16 @@ class CurrentUserSerializer(UserSerializer):
 class CurrentUserProfileSerializer(CurrentUserSerializerMixin,
                                    ProfileSerializer):
 
-    class Meta(CurrentUserSerializerMixin.Meta):
-        model = Profile
-        read_only_fields = ('status', )
+    class Meta(ProfileSerializer.Meta):
+        pass
 
 
 class CurrentUserProfileAttachmentSerializer(CurrentUserSerializerMixin,
                                              ProfileAttachmentSerializer):
 
-    class Meta(CurrentUserSerializerMixin.Meta):
+    class Meta:
         model = ProfileAttachment
+        fields = '__all__'
 
 
 class CurrentUserStorySerializer(StorySerializer):
