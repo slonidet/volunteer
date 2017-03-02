@@ -63,8 +63,9 @@ class AdminProfileViewSet(viewsets.ModelViewSet):
         serializer.save()
 
         # set working profile status
-        profile.status = Profile.STATUS_WORKING
-        profile.save()
+        Profile.objects.filter(pk=profile.pk).update(
+            status=Profile.STATUS_WORKING
+        )
 
         headers = self.get_success_headers(serializer.data)
         return Response(
