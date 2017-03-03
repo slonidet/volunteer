@@ -11,10 +11,13 @@ def create_badge(user, type):
 
 
 def delete_badge(user, type):
-    try:
-        Badge.objects.get(user=user, type=type).delete()
-    except Badge.DoesNotExist:
-        pass
+    badge = Badge.objects.filter(user=user, type=type).first()
+    if badge:
+        badge.delete()
+
+
+def delete_all_badges(user, type):
+    Badge.objects.filter(user=user, type=type).delete()
 
 
 @receiver(post_save, sender=Notice)
@@ -37,6 +40,6 @@ def create_profile_comment_badge(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Profile)
 def delete_profile_comment_badge(sender, instance, **kwargs):
-    delete_badge(user=instance.user, type=ProfileComment._meta.model_name)
+    delete_all_badges(user=instance.user, type=ProfileComment._meta.model_name)
 
 
