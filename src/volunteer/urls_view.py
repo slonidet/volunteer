@@ -38,6 +38,7 @@ def api_root(request, format=None):
         'admin:users:stories': reverse('adm:users:story-list', **params),
         'admin:users:groups': reverse('adm:users:group-list', **params),
         'users:stories': reverse('users:story-list', **params),
+        'users:reset-password': reverse('users:reset-password', **params),
 
         # Gallery
         'admin:gallery:photo-albums': reverse(
