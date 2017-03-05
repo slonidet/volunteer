@@ -139,7 +139,7 @@ class ResetPasswordView(GenericAPIView):
             message = _('Для смены пароля перейдите по ссылке {}?{}')
             reset_link = get_absolute_url('/')
             result = send_mail(
-                'Subject test',
+                _('Сброс пароля на volonter61.ru'),
                 message.format(reset_link, token),
                 'info@volonter61.ru',
                 [email],
