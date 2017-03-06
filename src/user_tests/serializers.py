@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -138,16 +139,18 @@ class UserAnswerSerializer(BaseUserTestSerializer):
     def create(self, validated_data):
         user = self.context['request'].user
         question = validated_data['question']
+        error_message = _('Пользователь уже отвечал на этот вопрос')
 
-        answer_already_exist = UserAnswer.objects.filter(
-            user=user, question=question).exists()
-        if answer_already_exist:
-            message = _('Пользователь уже отвечал на этот вопрос')
-            raise ValidationError(message, code='unique')
+        user_answer = UserAnswer.objects.filter(user=user, question=question)
+        if user_answer.exists():
+            raise ValidationError(error_message, code='unique')
 
         validated_data = self._check_correct_answers(validated_data)
 
-        return super().create(validated_data)
+        try:
+            return super().create(validated_data)
+        except IntegrityError:
+            raise ValidationError(error_message, code='unique')
 
     def update(self, instance, validated_data):
         validated_data = self._check_correct_answers(validated_data)

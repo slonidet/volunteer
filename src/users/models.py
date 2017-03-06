@@ -523,6 +523,7 @@ class Story(models.Model):
     admin_comment = models.TextField(
         _('коментарий администратора'), blank=True, null=True
     )
+    image = models.ImageField(_('фото'), blank=True, null=True)
 
     class Meta(MetaPermissions):
         verbose_name = _('волонтёрская история')

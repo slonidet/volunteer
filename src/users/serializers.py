@@ -7,7 +7,9 @@ from django.db import IntegrityError
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
+from sorl.thumbnail import get_thumbnail
 
+from core.serializers import HyperlinkedSorlImageField
 from core.translation_serializers import AdminTranslationMixin, \
     UserTranslationMixin
 from permissions import GROUPS
@@ -175,6 +177,13 @@ class StoryProfileSerializer(serializers.ModelSerializer):
 
 
 class BaseStorySerializer(serializers.ModelSerializer):
+    image = HyperlinkedSorlImageField(
+        '600x400', options={'upscale': False}, required=False
+    )
+    thumbnail = HyperlinkedSorlImageField(
+        '320x240', options={"crop": "center"},
+        source='image', read_only=True
+    )
     profile = StoryProfileSerializer(read_only=True)
     profile_photo = serializers.ImageField(
         label='Фото', source='profile.user.profile_attachment.photo',
@@ -192,8 +201,33 @@ class AdminStorySerializer(AdminTranslationMixin, BaseStorySerializer):
 
 
 class StorySerializer(UserTranslationMixin, BaseStorySerializer):
+    image = serializers.SerializerMethodField()
+    thumbnail = serializers.SerializerMethodField()
+
     class Meta(BaseStorySerializer.Meta):
-        fields = ['id', 'text', 'about_yourself', 'profile', 'profile_photo']
+        fields = ['id', 'text', 'about_yourself', 'profile', 'image',
+                  'thumbnail']
+
+    def get_image(self, obj):
+        return self._get_story_or_profile_image(obj, '600x400', upscale=False)
+
+    def get_thumbnail(self, obj):
+        return self._get_story_or_profile_image(obj, '320x240', options={"crop": "center"})
+
+    def _get_story_or_profile_image(self, obj, geometry_string, **kwargs):
+        try:
+            obj = obj.image if obj.image \
+                else obj.profile.user.profile_attachment.photo
+        except ProfileAttachment.DoesNotExist:
+            obj = None
+
+        if not obj:
+            return None
+
+        image = get_thumbnail(obj, geometry_string, **kwargs)
+        request = self.context.get('request')
+
+        return request.build_absolute_uri(image.url)
 
 
 class UserGroupSerializer(serializers.ModelSerializer):

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
+from social_core.exceptions import AuthCanceled
 
 from social_core.utils import setting_name, user_is_authenticated, \
     partial_pipeline_data, user_is_active
@@ -17,10 +18,13 @@ NAMESPACE = getattr(settings, setting_name('URL_NAMESPACE'), None) or 'social'
 @psa('{0}:complete'.format(NAMESPACE))
 def complete(request, backend, *args, **kwargs):
     """Authentication complete view"""
-    user = do_complete(
-        request.backend, _do_login, request.user, *args, **kwargs
-    )
-    token = user.get_auth_token()
+    try:
+        user = do_complete(
+            request.backend, _do_login, request.user, *args, **kwargs
+        )
+        token = user.get_auth_token()
+    except AuthCanceled:
+        return redirect('/')
 
     return redirect('/?auth_token={0}'.format(token.key))
 

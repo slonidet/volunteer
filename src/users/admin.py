@@ -43,15 +43,17 @@ class UserAdmin(BaseUserAdmin):
     )
     form = UserChangeForm
     add_form = UserCreationForm
-    list_display = ('username', 'is_staff')
-    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
+    list_display = ('id', 'username', 'is_staff', 'role')
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'role')
     search_fields = ('username',)
     ordering = ('username',)
     filter_horizontal = ('groups', 'user_permissions',)
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'first_name', 'last_name', 'middle_name', 'gender',
+                    'status')
+    list_filter = ('status', 'gender')
 
 
 class ProfileAttachmentAdmin(admin.ModelAdmin):
@@ -59,7 +61,8 @@ class ProfileAttachmentAdmin(admin.ModelAdmin):
 
 
 class StoryAdmin(TranslationAdmin):
-    pass
+    list_display = ('id', 'is_public')
+    list_filter = ('is_public',)
 
 
 admin.site.register(User, UserAdmin)
