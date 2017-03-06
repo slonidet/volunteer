@@ -2,6 +2,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
+from requests import HTTPError
 from social_core.exceptions import AuthCanceled
 
 from social_core.utils import setting_name, user_is_authenticated, \
@@ -23,7 +24,7 @@ def complete(request, backend, *args, **kwargs):
             request.backend, _do_login, request.user, *args, **kwargs
         )
         token = user.get_auth_token()
-    except AuthCanceled:
+    except (AuthCanceled, ValueError, HTTPError):
         return redirect('/')
 
     return redirect('/?auth_token={0}'.format(token.key))
