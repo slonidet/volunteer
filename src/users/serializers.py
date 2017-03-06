@@ -206,7 +206,3 @@ class UserGroupSerializer(serializers.ModelSerializer):
 
     def get_display_name(self, obj):
         return GROUPS.get(obj.name, '')
-
-
-class ResetPasswordSerializer(serializers.Serializer):
-    email = serializers.EmailField()
