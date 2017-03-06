@@ -183,7 +183,7 @@ CELERY_BEAT_SCHEDULE = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_HOST_USER = 'info@volonter61.ru'
-EMAIL_HOST_PASSWORD = 'hYjc734Hgb'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
