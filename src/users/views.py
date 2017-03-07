@@ -1,23 +1,19 @@
 from django.contrib.auth.models import Group
-from django.core.mail import send_mail
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions
 from rest_framework import status, viewsets, mixins
 from rest_framework.decorators import detail_route
-from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from core.helpers import get_absolute_url
 from users.filters import UserFilter
 from users.mixins import ExcludeAnonymousViewMixin, StoryRelatedViewMixin
 from users.models import Profile, ProfileAttachment, Story, ProfileComment
 from users.models import User
 from users.serializers import ProfileSerializer, ProfileAttachmentSerializer, \
     AdminStorySerializer, StorySerializer, UserGroupSerializer, \
-    ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer, \
-    ResetPasswordSerializer
+    ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer
 
 
 class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
@@ -123,33 +119,3 @@ class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all().order_by('id')
     serializer_class = UserGroupSerializer
     pagination_class = None
-
-
-class ResetPasswordView(GenericAPIView):
-    permission_classes = ()
-    serializer_class = ResetPasswordSerializer
-
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        email = serializer.validated_data['email']
-
-        if User.objects.filter(username=email):
-            token = User.objects.get(username=email).get_auth_token()
-            message = _('Для смены пароля перейдите по ссылке {}?{}')
-            reset_link = get_absolute_url('/')
-            result = send_mail(
-                _('Сброс пароля на volonter61.ru'),
-                message.format(reset_link, token),
-                'info@volonter61.ru',
-                [email],
-                fail_silently=False,
-            )
-
-            return Response({'result': result})
-
-        if not User.objects.filter(username=email):
-            error_message = _('Ползователь с данным e-mail не зарегистрирован')
-            detail = {error_message: email}
-
-            raise exceptions.NotFound(detail=detail)

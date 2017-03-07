@@ -25,6 +25,7 @@ def api_root(request, format=None):
         'user:profile:comments': reverse('user:current-user-profile-comments',
                                          **params),
         'user:story': reverse('user:current-user-story', **params),
+        'user:reset-password': reverse('user:reset-password', **params),
 
         # Users
         'admin:users': reverse('adm:users:user-list', **params),
@@ -38,7 +39,6 @@ def api_root(request, format=None):
         'admin:users:stories': reverse('adm:users:story-list', **params),
         'admin:users:groups': reverse('adm:users:group-list', **params),
         'users:stories': reverse('users:story-list', **params),
-        'users:reset-password': reverse('users:reset-password', **params),
 
         # Gallery
         'admin:gallery:photo-albums': reverse(
