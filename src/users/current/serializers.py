@@ -94,3 +94,7 @@ class CurrentUserStorySerializer(BaseStorySerializer):
         validated_data['profile'] = profile
 
         return super().create(validated_data)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()

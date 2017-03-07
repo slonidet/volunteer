@@ -25,6 +25,7 @@ def api_root(request, format=None):
         'user:profile:comments': reverse('user:current-user-profile-comments',
                                          **params),
         'user:story': reverse('user:current-user-story', **params),
+        'user:reset-password': reverse('user:reset-password', **params),
 
         # Users
         'admin:users': reverse('adm:users:user-list', **params),

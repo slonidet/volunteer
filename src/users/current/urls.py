@@ -2,7 +2,6 @@ from django.conf.urls import url
 
 from users.current import views
 
-
 urlpatterns = [
     url(r'^$', views.CurrentUserView.as_view(),
         name='current-user'),
@@ -21,4 +20,6 @@ urlpatterns = [
         name='current-user-profile-comments'),
     url(r'story/$', views.CurrentUserStoryView.as_view(),
         name='current-user-story'),
+    url(r'^reset-password$', views.ResetPasswordView.as_view(),
+        name='reset-password'),
 ]
