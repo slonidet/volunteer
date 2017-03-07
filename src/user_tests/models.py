@@ -41,8 +41,9 @@ class Task(models.Model):
     name = models.CharField(_('Название задания'), max_length=150)
     evaluation_algorithm = models.CharField(
         _('Алгоритм проверки'),
-        max_length=100,
-        choices=ALGORITHM_CHOICES
+        max_length=50,
+        choices=ALGORITHM_CHOICES,
+        default=AUTO_APPRAISAL
     )
     audio = models.FileField(_('Аудиофайл'), null=True, blank=True)
     text = models.TextField(_('Текст'), null=True, blank=True)

@@ -21,7 +21,7 @@ class TestAdmin(admin.ModelAdmin):
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'test', 'expert_appraisal')
+    list_display = ('id', 'name', 'test', 'evaluation_algorithm')
     inlines = [QuestionInline]
 
 
