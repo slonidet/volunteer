@@ -26,11 +26,24 @@ class Task(models.Model):
     """
     Test's task
     """
+    AUTO_APPRAISAL = 'auto_appraisal'
+    EXPERT_APPRAISAL = 'expert_appraisal'
+    PSYCHOLOGICAL = 'psychological'
+    ALGORITHM_CHOICES = (
+        (AUTO_APPRAISAL, _('Проверяется автоматически')),
+        (EXPERT_APPRAISAL, _('Проверяется экспертом')),
+        (PSYCHOLOGICAL, _('Задание психологического теста'))
+    )
+
     test = models.ForeignKey(
         Test, on_delete=models.CASCADE, verbose_name=_('Тест')
     )
     name = models.CharField(_('Название задания'), max_length=150)
-    expert_appraisal = models.BooleanField(_('Проверяется администратором'))
+    evaluation_algorithm = models.CharField(
+        _('Алгоритм проверки'),
+        max_length=100,
+        choices=ALGORITHM_CHOICES
+    )
     audio = models.FileField(_('Аудиофайл'), null=True, blank=True)
     text = models.TextField(_('Текст'), null=True, blank=True)
 
