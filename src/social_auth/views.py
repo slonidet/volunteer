@@ -24,7 +24,7 @@ def complete(request, backend, *args, **kwargs):
             request.backend, _do_login, request.user, *args, **kwargs
         )
         token = user.get_auth_token()
-    except (AuthCanceled, ValueError, HTTPError):
+    except (AuthCanceled, ValueError, HTTPError) as e:
         return redirect('/')
 
     return redirect('/?auth_token={0}'.format(token.key))
