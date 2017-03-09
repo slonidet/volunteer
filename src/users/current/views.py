@@ -1,4 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
@@ -156,18 +155,18 @@ class ResetPasswordView(GenericAPIView):
 
         try:
             token = User.objects.get(username=email).get_auth_token()
-            message = _('Для смены пароля перейдите по ссылке {0}?{1}')
+            msg = _('Для смены пароля перейдите по ссылке {0}?{1}')
             reset_link = get_absolute_url('/')
             result = send_mail(
                 _('Сброс пароля на сайте городских волонтеров'),
-                message.format(reset_link, token),
+                msg.format(reset_link, token),
                 settings.EMAIL_HOST_USER,
                 [email],
             )
 
             return Response({'result': result})
 
-        except ObjectDoesNotExist:
-            error_message = _('Ползователь с данным e-mail не зарегистрирован')
+        except User.DoesNotExist:
+            error_msg = _('Пользователь с данным e-mail не зарегистрирован')
 
-            raise exceptions.NotFound(error_message)
+            raise exceptions.NotFound(error_msg)
