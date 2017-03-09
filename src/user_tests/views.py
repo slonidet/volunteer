@@ -1,4 +1,6 @@
 from rest_framework import permissions
+from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from core.views import UndeletableModelViewSet
@@ -56,3 +58,14 @@ class UserAnswerViewSet(BaseUserTestViewSet):
     queryset = UserAnswer.objects.all()
     serializer_class = UserAnswerSerializer
     filter_fields = ('question', 'question__task__test__name')
+
+
+class AdminUserTestView(GenericAPIView):
+    permission_classes = (permissions.IsAdminUser,)
+    serializer_class = UserAnswerSerializer
+    def get(self, request, *args, **kwargs):
+        serializer = self.get_serializer()
+        validated_data = serializer.is_valid()
+
+        return Response(validated_data)
+

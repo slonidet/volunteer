@@ -155,3 +155,10 @@ class UserAnswerSerializer(BaseUserTestSerializer):
     def update(self, instance, validated_data):
         validated_data = self._check_correct_answers(validated_data)
         return super().update(instance, validated_data)
+
+
+class AdminUserTaskSerializer(UserAnswerSerializer, UserTestSerializer):
+
+    def create(self, validated_data):
+        return validated_data
+
