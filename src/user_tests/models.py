@@ -139,7 +139,7 @@ class UserAnswer(models.Model):
     )
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, verbose_name=_('Вопрос'),
-        related_name='answers')
+        related_name='user_answers')
     answers = MultiSelectField(_('Ответы пользователя'), max_length=8192)
     is_correct = models.NullBooleanField(_('Правльность ответов'), null=True)
 
