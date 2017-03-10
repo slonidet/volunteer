@@ -8,7 +8,7 @@ from user_tests.models import Test, Task, Question, AnswerOptions, UserTest, \
     UserAnswer
 from user_tests.serializers import TestSerializer, TaskSerializer, \
     QuestionSerializer, AnswerOptionsSerializer, UserTestSerializer, \
-    UserAnswerSerializer
+    UserAnswerSerializer, AdminUserTestSerializer
 
 
 class BaseTestReadOnlyModelViewSet(ReadOnlyModelViewSet):
@@ -60,12 +60,18 @@ class UserAnswerViewSet(BaseUserTestViewSet):
     filter_fields = ('question', 'question__task__test__name')
 
 
-class AdminUserTestView(GenericAPIView):
-    permission_classes = (permissions.IsAdminUser,)
-    serializer_class = UserAnswerSerializer
-    def get(self, request, *args, **kwargs):
-        serializer = self.get_serializer()
-        validated_data = serializer.is_valid()
+class AdminUserTestViewSet(ReadOnlyModelViewSet):
+    queryset = UserTest.objects.all()
+    serializer_class = AdminUserTestSerializer
 
-        return Response(validated_data)
-
+    # def get(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     print(request.data)
+    #     return Response(serializer.validated_data)
+    #
+    # def post(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #
+    #     return Response(serializer.validated_data)

@@ -36,7 +36,8 @@ class Task(models.Model):
     )
 
     test = models.ForeignKey(
-        Test, on_delete=models.CASCADE, verbose_name=_('Тест')
+        Test, on_delete=models.CASCADE, verbose_name=_('Тест'),
+        related_name='tasks'
     )
     name = models.CharField(_('Название задания'), max_length=150)
     evaluation_algorithm = models.CharField(
@@ -62,7 +63,8 @@ class Question(models.Model):
     """
     text = models.CharField(_('Текст вопроса'), max_length=250)
     task = models.ForeignKey(
-        Task, on_delete=models.CASCADE, verbose_name=_('Задание')
+        Task, on_delete=models.CASCADE, verbose_name=_('Задание'),
+        related_name='questions'
     )
 
     class Meta(MetaPermissions):
@@ -136,8 +138,8 @@ class UserAnswer(models.Model):
         User, on_delete=models.CASCADE, verbose_name=_('Пользователь')
     )
     question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, verbose_name=_('Вопрос')
-    )
+        Question, on_delete=models.CASCADE, verbose_name=_('Вопрос'),
+        related_name='answers')
     answers = MultiSelectField(_('Ответы пользователя'), max_length=8192)
     is_correct = models.NullBooleanField(_('Правльность ответов'), null=True)
 

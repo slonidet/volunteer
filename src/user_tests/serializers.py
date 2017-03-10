@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.db.models import Count
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -157,8 +158,45 @@ class UserAnswerSerializer(BaseUserTestSerializer):
         return super().update(instance, validated_data)
 
 
-class AdminUserTaskSerializer(UserAnswerSerializer, UserTestSerializer):
+class AdminAnswerSerializer(UserAnswerSerializer):
 
-    def create(self, validated_data):
-        return validated_data
+    class Meta(UserAnswerSerializer.Meta):
+        fields = ()
 
+
+class AdminQuestionSerializer(QuestionSerializer):
+    answers = AdminAnswerSerializer(many=True, read_only=True)
+
+    class Meta(QuestionSerializer.Meta):
+        fields = ('text', 'answers')
+
+
+class AdminTaskSerializer(TaskSerializer):
+    questions = AdminQuestionSerializer(many=True, read_only=True)
+    questions_count = serializers.SerializerMethodField()
+
+    def get_questions_count(self, obj):
+        return Question.objects.filter(task=obj).count()
+
+    # def correct_answer_count(self, obj):
+    #     return
+
+    class Meta(TaskSerializer.Meta):
+        fields = (
+            'id', 'name', 'evaluation_algorithm', 'questions_count', 'questions',
+            )
+
+
+class AdminTestSerializer(TestSerializer):
+    tasks = AdminTaskSerializer(many=True, read_only=True)
+
+    class Meta(TestSerializer.Meta):
+        fields = ('id', 'name', 'tasks')
+
+
+class AdminUserTestSerializer(UserTestSerializer):
+    test = AdminTestSerializer(read_only=True)
+
+    class Meta(UserTestSerializer.Meta):
+        model = UserTest
+        fields = ['id', 'user', 'test', 'finished_at', 'started_at']

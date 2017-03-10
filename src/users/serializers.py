@@ -238,5 +238,5 @@ class UserGroupSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'display_name')
         read_only_fields = ('name',)
 
-    def get_display_name(self, obj):
+    def get_display_ncame(self, obj):
         return GROUPS.get(obj.name, '')

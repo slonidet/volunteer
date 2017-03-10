@@ -53,7 +53,7 @@ def api_root(request, format=None):
         'news': reverse('news:news-list', **params),
 
         # User Tests
-        'admin:user:tests': reverse('adm:tests:user-answer', **params),
+        'admin:user:tests': reverse('adm:tests:user-answer-list', **params),
         'tests': reverse('tests:test-list', **params),
         'tests:tasks': reverse('tests:task-list', **params),
         'tests:tasks:questions': reverse('tests:question-list', **params),

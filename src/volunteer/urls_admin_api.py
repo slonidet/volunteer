@@ -9,4 +9,6 @@ urlpatterns = [
     url(r'^events/', include('events.urls_admin', namespace='events')),
     url(r'^statistic/', include('statistic.urls_admin', 'statistic')),
     url(r'^interviews/', include('interviews.urls_admin', 'interviews')),
+    url(r'^tests/', include('user_tests.urls_admin', namespace='tests')),
+
 ]
