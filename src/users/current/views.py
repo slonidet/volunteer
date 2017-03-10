@@ -155,7 +155,8 @@ class ResetPasswordView(GenericAPIView):
 
         try:
             token = User.objects.get(username=email).get_auth_token()
-            msg = _('Для смены пароля перейдите по ссылке {0}?{1}')
+            msg = _('Для смены пароля перейдите по ссылке {0}?auth_token={1}&'
+                    'reset_password=1')
             reset_link = get_absolute_url('/')
             result = send_mail(
                 _('Сброс пароля на сайте городских волонтеров'),
