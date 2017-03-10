@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.shortcuts import redirect
+from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
 from requests import HTTPError
@@ -9,7 +10,6 @@ from social_core.utils import setting_name, user_is_authenticated, \
     partial_pipeline_data, user_is_active
 from social_django.utils import psa
 from social_django.views import _do_login
-
 
 NAMESPACE = getattr(settings, setting_name('URL_NAMESPACE'), None) or 'social'
 
@@ -25,7 +25,9 @@ def complete(request, backend, *args, **kwargs):
         )
         token = user.get_auth_token()
     except (AuthCanceled, ValueError, HTTPError) as e:
-        return redirect('/')
+        return redirect('/?error_message={0}'.format(
+            _('Не удалось получить email для авторизации')
+        ))
 
     return redirect('/?auth_token={0}'.format(token.key))
 
