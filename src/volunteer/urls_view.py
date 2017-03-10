@@ -87,6 +87,10 @@ def api_root(request, format=None):
             'social:begin', **params, kwargs={'backend': 'twitter'}),
         'social-auth:mailru': reverse(
             'social:begin', **params, kwargs={'backend': 'mailru-oauth2'}),
+        'social-auth:odnoklassniki': reverse(
+            'social:begin', **params,
+            kwargs={'backend': 'odnoklassniki-oauth2'}
+        ),
 
         # Interviews
         'admin:interviews:interviewers': reverse(
