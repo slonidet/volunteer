@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions
@@ -5,20 +6,24 @@ from rest_framework import views, status, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.generics import (
     get_object_or_404, CreateAPIView, RetrieveUpdateAPIView,
-    ListAPIView)
+    ListAPIView, GenericAPIView)
 from rest_framework.mixins import CreateModelMixin
 
 from rest_framework.response import Response
+
+from core.helpers import get_absolute_url
 from users.current.mixins import CurrentUserViewMixin, \
     NotAllowEditApprovedProfileMixin
 from users.current.serializers import AuthUserSerializer, \
     CurrentUserSerializer, CurrentUserProfileSerializer, \
-    CurrentUserProfileAttachmentSerializer, CurrentUserStorySerializer
+    CurrentUserProfileAttachmentSerializer, CurrentUserStorySerializer, \
+    ResetPasswordSerializer
 from users.current.tokens import RegisterTokenGenerator
 from users.models import Profile, ProfileAttachment, Story, ProfileComment
 from users.serializers import ProfileCommentSerializer
 from users.views import User
 from users.mixins import StoryRelatedViewMixin
+from volunteer import settings
 
 
 class UserRegistrationView(CreateAPIView):
@@ -137,3 +142,32 @@ class CurrentUserStoryView(StoryRelatedViewMixin, BaseCurrentUserView):
                 _('Нельзя редактировать историю после публикации'))
 
         return super().update(request, *args, **kwargs)
+
+
+class ResetPasswordView(GenericAPIView):
+    permission_classes = ()
+    serializer_class = ResetPasswordSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+
+        try:
+            token = User.objects.get(username=email).get_auth_token()
+            msg = _('Для смены пароля перейдите по ссылке {0}?auth_token={1}&'
+                    'reset_password=1')
+            reset_link = get_absolute_url('/')
+            result = send_mail(
+                _('Сброс пароля на сайте городских волонтеров'),
+                msg.format(reset_link, token),
+                settings.EMAIL_HOST_USER,
+                [email],
+            )
+
+            return Response({'result': result})
+
+        except User.DoesNotExist:
+            error_msg = _('Пользователь с данным e-mail не зарегистрирован')
+
+            raise exceptions.NotFound(error_msg)
