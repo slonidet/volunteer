@@ -158,42 +158,76 @@ class UserAnswerSerializer(BaseUserTestSerializer):
         return super().update(instance, validated_data)
 
 
-class AdminTaskSerializer(TaskSerializer):
-    formatted_answers = serializers.SerializerMethodField()
-    questions_count = serializers.SerializerMethodField()
-
-    def get_questions_count(self, obj):
-        return Question.objects.filter(task=obj).count()
-
-    def get_formatted_answers(self, obj):
-        answers = UserAnswer.objects.filter(user=)
-        questions = obj.questions.prefetch_related('answers').filter()
-        answers = [
-            {
-                'question_text': q.text,
-                'user_answers': q.user_answers.answers,
-                'is_correct': q.
-            } for q in questions
-        ]
-        return Question.objects.filter(task=obj).count()
-
-    class Meta(TaskSerializer.Meta):
-        fields = (
-            'id', 'name', 'evaluation_algorithm', 'questions_count',
-            'formatted_answers',
-        )
+# class AdminTaskSerializer(TaskSerializer):
+#     formatted_answers = serializers.SerializerMethodField()
+#     questions_count = serializers.SerializerMethodField()
+#     # correct_answers_count = serializers.SerializerMethodField()
+#
+#     def get_questions_count(self, obj):
+#         # TODO: кешировать
+#         return Question.objects.filter(task=obj).count()
+#
+#     # def get_correct_answers_count(self, obj):
+#     #     # TODO: кешировать
+#     #     return None
+#
+#     def get_formatted_answers(self, obj):
+#         # answers = UserAnswer.objects.filter(user=)
+#         questions = obj.questions.prefetch_related('answers').filter()
+#         # answers = [
+#         #     {
+#         #         'question_text': q.text,
+#         #         'user_answers': q.user_answers.answers,
+#         #         'is_correct': q.
+#         #     } for q in questions
+#         # ]
+#         return Question.objects.filter(task=obj).count()
+#
+#     class Meta(TaskSerializer.Meta):
+#         fields = (
+#             'id', 'name', 'evaluation_algorithm', 'questions_count',
+#             'formatted_answers',
+#         )
 
 
 class AdminTestSerializer(TestSerializer):
-    tasks = AdminTaskSerializer(many=True, read_only=True)
-
     class Meta(TestSerializer.Meta):
         fields = ('id', 'name', 'tasks')
 
 
 class AdminUserTestSerializer(UserTestSerializer):
     test = AdminTestSerializer(read_only=True)
+    tasks = serializers.SerializerMethodField()
 
     class Meta(UserTestSerializer.Meta):
         model = UserTest
         fields = ['id', 'user', 'test', 'finished_at', 'started_at']
+
+    def get_tasks(self, user_test):
+        return [self._task_repr(task, user_test.user)
+                for task in user_test.test.tasks]
+
+    def _task_repr(self, task, user):
+        return {
+            'id': task.id,
+            'name': task.name,
+            'evaluation_algorithm': task.evaluation_algorithm,
+            'questions_count': task.questions.count(),  # TODO: кешировать
+            'correct_answers_count': UserAnswer.objects.filter(
+                user=user, question__in=task.questions,
+                is_correct=True
+            ),
+            'formatted_answers': self._user_answers_repr(task, user),
+        }
+
+    def _user_answers_repr(self, task, user):
+        user_answers = UserAnswer.objects.select_related('question').filter(
+            user=user, question__in=task.questions
+        )
+        return [
+            {
+                'question_text': a.question.text,
+                'user_answers': a.user_answers.answers,
+                'is_correct': a.
+            } for a in user_answers
+        ]
