@@ -26,11 +26,26 @@ class Task(models.Model):
     """
     Test's task
     """
+    AUTO_APPRAISAL = 'auto_appraisal'
+    EXPERT_APPRAISAL = 'expert_appraisal'
+    PSYCHOLOGICAL = 'psychological'
+    ALGORITHM_CHOICES = (
+        (AUTO_APPRAISAL, _('Проверяется автоматически')),
+        (EXPERT_APPRAISAL, _('Проверяется экспертом')),
+        (PSYCHOLOGICAL, _('Задание психологического теста'))
+    )
+
     test = models.ForeignKey(
-        Test, on_delete=models.CASCADE, verbose_name=_('Тест')
+        Test, on_delete=models.CASCADE, verbose_name=_('Тест'),
+        related_name='tasks'
     )
     name = models.CharField(_('Название задания'), max_length=150)
-    expert_appraisal = models.BooleanField(_('Проверяется администратором'))
+    evaluation_algorithm = models.CharField(
+        _('Алгоритм проверки'),
+        max_length=50,
+        choices=ALGORITHM_CHOICES,
+        default=AUTO_APPRAISAL
+    )
     audio = models.FileField(_('Аудиофайл'), null=True, blank=True)
     text = models.TextField(_('Текст'), null=True, blank=True)
 
@@ -48,7 +63,8 @@ class Question(models.Model):
     """
     text = models.CharField(_('Текст вопроса'), max_length=250)
     task = models.ForeignKey(
-        Task, on_delete=models.CASCADE, verbose_name=_('Задание')
+        Task, on_delete=models.CASCADE, verbose_name=_('Задание'),
+        related_name='questions'
     )
 
     class Meta(MetaPermissions):
@@ -122,8 +138,8 @@ class UserAnswer(models.Model):
         User, on_delete=models.CASCADE, verbose_name=_('Пользователь')
     )
     question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, verbose_name=_('Вопрос')
-    )
+        Question, on_delete=models.CASCADE, verbose_name=_('Вопрос'),
+        related_name='user_answers')
     answers = MultiSelectField(_('Ответы пользователя'), max_length=8192)
     is_correct = models.NullBooleanField(_('Правльность ответов'), null=True)
 

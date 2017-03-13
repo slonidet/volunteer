@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext_lazy as _
+from rest_framework import exceptions
 from rest_framework import permissions
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
@@ -6,7 +8,7 @@ from user_tests.models import Test, Task, Question, AnswerOptions, UserTest, \
     UserAnswer
 from user_tests.serializers import TestSerializer, TaskSerializer, \
     QuestionSerializer, AnswerOptionsSerializer, UserTestSerializer, \
-    UserAnswerSerializer
+    UserAnswerSerializer, AdminUserTestSerializer
 
 
 class BaseTestReadOnlyModelViewSet(ReadOnlyModelViewSet):
@@ -56,3 +58,17 @@ class UserAnswerViewSet(BaseUserTestViewSet):
     queryset = UserAnswer.objects.all()
     serializer_class = UserAnswerSerializer
     filter_fields = ('question', 'question__task__test__name')
+
+
+class AdminUserTestViewSet(ReadOnlyModelViewSet):
+    queryset = UserTest.objects.select_related('test', 'user').all()
+    serializer_class = AdminUserTestSerializer
+    filter_fields = ('test', 'user')
+
+    def list(self, request, *args, **kwargs):
+        if 'user' not in request.query_params:
+            raise exceptions.NotAcceptable(
+                _('Данный метод доступен только с фильтрацией по user')
+            )
+
+        return super().list(request, *args, **kwargs)

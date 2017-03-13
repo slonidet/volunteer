@@ -155,3 +155,50 @@ class UserAnswerSerializer(BaseUserTestSerializer):
     def update(self, instance, validated_data):
         validated_data = self._check_correct_answers(validated_data)
         return super().update(instance, validated_data)
+
+
+class AdminTestSerializer(TestSerializer):
+    class Meta(TestSerializer.Meta):
+        fields = ('id', 'name')
+
+
+class AdminUserTestSerializer(UserTestSerializer):
+    test = AdminTestSerializer(read_only=True)
+    tasks = serializers.SerializerMethodField()
+
+    class Meta(UserTestSerializer.Meta):
+        model = UserTest
+        fields = ['id', 'user', 'test', 'tasks', 'finished_at', 'started_at']
+
+    def get_tasks(self, user_test):
+        user = user_test.user
+        user_tasks = user_test.test.tasks.all()
+
+        return [self._task_repr(task, user) for task in user_tasks]
+
+    def _task_repr(self, task, user):
+        return {
+            'id': task.id,
+            'name': task.name,
+            'evaluation_algorithm': task.evaluation_algorithm,
+            'questions_count': task.questions.count(),
+            'correct_answers_count': UserAnswer.objects.filter(
+                user=user, question__in=task.questions.all(),
+                is_correct=True
+            ).count(),
+            'formatted_answers': self._user_answers_repr(
+                task, user
+            ),
+        }
+
+    def _user_answers_repr(self, task, user):
+        user_answers = UserAnswer.objects.select_related('question').filter(
+            user=user, question__in=task.questions.all()
+        )
+        return [
+            {
+                'question_text': a.question.text,
+                'user_answers': a.answers,
+                'is_correct': a.is_correct,
+            } for a in user_answers
+        ]

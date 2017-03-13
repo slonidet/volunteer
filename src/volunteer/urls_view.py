@@ -54,10 +54,12 @@ def api_root(request, format=None):
         'news': reverse('news:news-list', **params),
 
         # User Tests
+        'admin:user:tests': reverse('adm:tests:user-answer-list', **params),
         'tests': reverse('tests:test-list', **params),
         'tests:tasks': reverse('tests:task-list', **params),
         'tests:tasks:questions': reverse('tests:question-list', **params),
-        'tests:tasks:questions:options': reverse('tests:option-list', **params),
+        'tests:tasks:questions:options': reverse('tests:option-list',
+                                                 **params),
         'tests:user:tests': reverse('tests:user-test-list', **params),
         'tests:user:answers': reverse('tests:user-answer-list', **params),
 
@@ -68,13 +70,6 @@ def api_root(request, format=None):
         # Events
         'admin:events': reverse('adm:events:event-list', **params),
         'events': reverse('events:event-list', **params),
-
-        # Badges
-        'badges': reverse('badges:badge-list', **params),
-        'badges:types': reverse('badges:types', **params),
-
-        # Notices
-        'notices': reverse('notices:notice-list', **params),
 
         # Statistic
         'admin:statistic:main': reverse('adm:statistic:main', **params),
@@ -94,11 +89,12 @@ def api_root(request, format=None):
         ),
 
         # Interviews
-        'admin:interviews:interviewers': reverse(
-            'adm:interviews:interviewer-list', **params),
-        'admin:interviews': reverse('adm:interviews:interview-list', **params),
-        'admin:interviews:periods': reverse('adm:interviews:period', **params),
-        'admin:interviews:statuses': reverse('adm:interviews:status', **params),
+        # 'admin:interviews:interviewers': reverse(
+        #     'adm:interviews:interviewer-list', **params),
+        # 'admin:interviews': reverse('adm:interviews:interview-list', **params),
+        # 'admin:interviews:periods': reverse('adm:interviews:period', **params),
+        # 'admin:interviews:statuses': reverse('adm:interviews:status',
+        #                                      **params),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
 
