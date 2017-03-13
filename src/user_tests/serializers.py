@@ -1,5 +1,4 @@
 from django.db import IntegrityError
-from django.db.models import Count
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -158,41 +157,9 @@ class UserAnswerSerializer(BaseUserTestSerializer):
         return super().update(instance, validated_data)
 
 
-# class AdminTaskSerializer(TaskSerializer):
-#     formatted_answers = serializers.SerializerMethodField()
-#     questions_count = serializers.SerializerMethodField()
-#     # correct_answers_count = serializers.SerializerMethodField()
-#
-#     def get_questions_count(self, obj):
-#         # TODO: кешировать
-#         return Question.objects.filter(task=obj).count()
-#
-#     # def get_correct_answers_count(self, obj):
-#     #     # TODO: кешировать
-#     #     return None
-#
-#     def get_formatted_answers(self, obj):
-#         # answers = UserAnswer.objects.filter(user=)
-#         questions = obj.questions.prefetch_related('answers').filter()
-#         # answers = [
-#         #     {
-#         #         'question_text': q.text,
-#         #         'user_answers': q.user_answers.answers,
-#         #         'is_correct': q.
-#         #     } for q in questions
-#         # ]
-#         return Question.objects.filter(task=obj).count()
-#
-#     class Meta(TaskSerializer.Meta):
-#         fields = (
-#             'id', 'name', 'evaluation_algorithm', 'questions_count',
-#             'formatted_answers',
-#         )
-
-
 class AdminTestSerializer(TestSerializer):
     class Meta(TestSerializer.Meta):
-        fields = ('id', 'name', 'tasks')
+        fields = ('id', 'name')
 
 
 class AdminUserTestSerializer(UserTestSerializer):
@@ -201,33 +168,37 @@ class AdminUserTestSerializer(UserTestSerializer):
 
     class Meta(UserTestSerializer.Meta):
         model = UserTest
-        fields = ['id', 'user', 'test', 'finished_at', 'started_at']
+        fields = ['id', 'user', 'test', 'tasks', 'finished_at', 'started_at']
 
     def get_tasks(self, user_test):
-        return [self._task_repr(task, user_test.user)
-                for task in user_test.test.tasks]
+        user = user_test.user
+        user_tasks = user_test.test.tasks.all()
+
+        return [self._task_repr(task, user) for task in user_tasks]
 
     def _task_repr(self, task, user):
         return {
             'id': task.id,
             'name': task.name,
             'evaluation_algorithm': task.evaluation_algorithm,
-            'questions_count': task.questions.count(),  # TODO: кешировать
+            'questions_count': task.questions.count(),
             'correct_answers_count': UserAnswer.objects.filter(
-                user=user, question__in=task.questions,
+                user=user, question__in=task.questions.all(),
                 is_correct=True
+            ).count(),
+            'formatted_answers': self._user_answers_repr(
+                task, user
             ),
-            'formatted_answers': self._user_answers_repr(task, user),
         }
 
     def _user_answers_repr(self, task, user):
         user_answers = UserAnswer.objects.select_related('question').filter(
-            user=user, question__in=task.questions
+            user=user, question__in=task.questions.all()
         )
         return [
             {
                 'question_text': a.question.text,
-                'user_answers': a.user_answers.answers,
-                'is_correct': a.
+                'user_answers': a.answers,
+                'is_correct': a.is_correct,
             } for a in user_answers
         ]

@@ -1,6 +1,6 @@
+from django.utils.translation import ugettext_lazy as _
+from rest_framework import exceptions
 from rest_framework import permissions
-from rest_framework.generics import GenericAPIView
-from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from core.views import UndeletableModelViewSet
@@ -61,5 +61,14 @@ class UserAnswerViewSet(BaseUserTestViewSet):
 
 
 class AdminUserTestViewSet(ReadOnlyModelViewSet):
-    queryset = UserTest.objects.select_related('test').all()
+    queryset = UserTest.objects.select_related('test', 'user').all()
     serializer_class = AdminUserTestSerializer
+    filter_fields = ('test', 'user')
+
+    def list(self, request, *args, **kwargs):
+        if 'user' not in request.query_params:
+            raise exceptions.NotAcceptable(
+                _('Данный метод доступен только с фильтрацией по user')
+            )
+
+        return super().list(request, *args, **kwargs)
