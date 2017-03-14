@@ -37,7 +37,8 @@ class AnswerOptionsAdmin(admin.ModelAdmin):
 
 
 class UserTestAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('user', 'test', 'started_at', 'finished_at')
+    list_filter = ('test',)
 
 
 admin.site.register(Test, TestAdmin)
