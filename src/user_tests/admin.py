@@ -17,7 +17,8 @@ class AnswerOptionsInline(admin.TabularInline):
 
 
 class TestAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'time_available')
+    list_display = ('id', 'name', 'type', 'time_available')
+    list_filter = ('type',)
     inlines = [TaskInline]
 
 
