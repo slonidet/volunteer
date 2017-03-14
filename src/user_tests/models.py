@@ -152,90 +152,76 @@ class UserAnswer(models.Model):
         return str(self.id)
 
 
-class CattellOptions(models.Model):
+class CattellFactorMixin(object):
+    """
+    Cattell factors
+    """
+    FACTOR_A = 'A'
+    FACTOR_B = 'B'
+    FACTOR_C = 'C'
+    FACTOR_E = 'E'
+    FACTOR_F = 'F'
+    FACTOR_G = 'G'
+    FACTOR_H = 'H'
+    FACTOR_I = 'I'
+    FACTOR_L = 'L'
+    FACTOR_M = 'M'
+    FACTOR_N = 'N'
+    FACTOR_O = 'O'
+    FACTOR_Q1 = 'Q1'
+    FACTOR_Q2 = 'Q2'
+    FACTOR_Q3 = 'Q3'
+    FACTOR_Q4 = 'Q4'
+    FACTOR_MD = 'MD'
+    FACTOR_CHOICES = (
+        (FACTOR_A, 'A'), (FACTOR_B, 'B'), (FACTOR_C, 'C'), (FACTOR_E, 'E'),
+        (FACTOR_F, 'F'), (FACTOR_G, 'G'), (FACTOR_H, 'H'), (FACTOR_I, 'I'),
+        (FACTOR_L, 'L'), (FACTOR_M, 'M'), (FACTOR_N, 'N'), (FACTOR_O, 'O'),
+        (FACTOR_Q1, 'Q1'), (FACTOR_Q2, 'Q2'), (FACTOR_Q3, 'Q3'),
+        (FACTOR_Q4, 'Q4'), (FACTOR_MD, 'MD'),
+    )
+
+
+class CattellOptions(CattellFactorMixin, models.Model):
     """
     Options for psychological test
     """
-    A = 'A'
-    B = 'B'
-    C = 'C'
-    E = 'E'
-    F = 'F'
-    G = 'G'
-    H = 'H'
-    I = 'I'
-    L = 'L'
-    M = 'M'
-    N = 'N'
-    O = 'O'
-    Q1 = 'Q1'
-    Q2 = 'Q2'
-    Q3 = 'Q3'
-    Q4 = 'Q4'
-    MD = 'MD'
-    FACTOR_CHOICES = ((A, 'A'), (B, 'B'), (C, 'C'), (E, 'E'), (F, 'F'),
-                      (G, 'G'), (H, 'H'), (I, 'I'), (L, 'L'), (M, 'M'),
-                      (N, 'N'), (O, 'O'), (Q1, 'Q1'), (Q2, 'Q2'), (Q3, 'Q3'),
-                      (Q4, 'Q4'), (MD, 'MD'))
-
-    a = 'a'
-    b = 'b'
-    c = 'c'
-    ANSWER_CHOICES = ((a, 'a'), (b, 'b'), (c, 'c'))
+    ANSWER_A = 'a'
+    ANSWER_B = 'b'
+    ANSWER_C = 'c'
+    ANSWER_CHOICES = ((ANSWER_A, 'a'), (ANSWER_B, 'b'), (ANSWER_C, 'c'))
 
     question_number = models.IntegerField(_('Номер вопроса'))
-    factor = models.CharField(_('Психологический фактор'), max_length=2,
-                              choices=FACTOR_CHOICES)
-    answer_options = MultiSelectField(_('Варианты ответа в ключе'),
-                                             choices=ANSWER_CHOICES,
-                                             max_choices=2,
-                                             max_length=1)
+    factor = models.CharField(
+        _('Психологический фактор'), max_length=2,
+        choices=CattellFactorMixin.FACTOR_CHOICES
+    )
+    answer_options = MultiSelectField(
+        _('Варианты ответа в ключе'), choices=ANSWER_CHOICES,
+        max_choices=2, max_length=1
+    )
 
     def get_score(self, choice):
-        if self.factor == 'B':
-            if choice in self.answer_options:
+        if choice in self.answer_options:
+            if self.factor == 'B':
                 return 1
-            else:
-                return 0
-
-        else:
-            if choice in 'ac' and choice in self.answer_options:
+            if choice in 'ac':
                 return 2
-            if choice in 'b' and choice in self.answer_options:
+            if choice in 'b':
                 return 1
-            else:
-                return 0
+
+        return 0
 
 
-class CattelSten(models.Model):
+class CattellSten(CattellFactorMixin, models.Model):
     """
     Final score (stens)
     """
-    A = 'A'
-    B = 'B'
-    C = 'C'
-    E = 'E'
-    F = 'F'
-    G = 'G'
-    H = 'H'
-    I = 'I'
-    L = 'L'
-    M = 'M'
-    N = 'N'
-    O = 'O'
-    Q1 = 'Q1'
-    Q2 = 'Q2'
-    Q3 = 'Q3'
-    Q4 = 'Q4'
-    MD = 'MD'
-    FACTOR_CHOICES = ((A, 'A'), (B, 'B'), (C, 'C'), (E, 'E'), (F, 'F'),
-                      (G, 'G'), (H, 'H'), (I, 'I'), (L, 'L'), (M, 'M'),
-                      (N, 'N'), (O, 'O'), (Q1, 'Q1'), (Q2, 'Q2'), (Q3, 'Q3'),
-                      (Q4, 'Q4'), (MD, 'MD'))
-
     sten = models.IntegerField(_('Количество стенов'))
-    factor = models.CharField(_('Психологический фактор'), max_length=2,
-                              choices=FACTOR_CHOICES)
+    factor = models.CharField(
+        _('Психологический фактор'), max_length=2,
+        choices=CattellFactorMixin.FACTOR_CHOICES
+    )
     score = models.IntegerField(_('Количество сырых баллов'))
 
     @classmethod
