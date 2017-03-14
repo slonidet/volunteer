@@ -40,6 +40,7 @@ class AnswerOptionsAdmin(admin.ModelAdmin):
 class CattelStenAdmin(admin.ModelAdmin):
     model = CattelSten
 
+
 class UserTestAdmin(admin.ModelAdmin):
     list_display = ('user', 'test', 'started_at', 'finished_at')
     list_filter = ('test',)
