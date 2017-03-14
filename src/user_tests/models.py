@@ -150,3 +150,94 @@ class UserAnswer(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class CattellOptions(models.Model):
+    """
+    Options for psychological test
+    """
+    A = 'A'
+    B = 'B'
+    C = 'C'
+    E = 'E'
+    F = 'F'
+    G = 'G'
+    H = 'H'
+    I = 'I'
+    L = 'L'
+    M = 'M'
+    N = 'N'
+    O = 'O'
+    Q1 = 'Q1'
+    Q2 = 'Q2'
+    Q3 = 'Q3'
+    Q4 = 'Q4'
+    MD = 'MD'
+    FACTOR_CHOICES = ((A, 'A'), (B, 'B'), (C, 'C'), (E, 'E'), (F, 'F'),
+                      (G, 'G'), (H, 'H'), (I, 'I'), (L, 'L'), (M, 'M'),
+                      (N, 'N'), (O, 'O'), (Q1, 'Q1'), (Q2, 'Q2'), (Q3, 'Q3'),
+                      (Q4, 'Q4'), (MD, 'MD'))
+
+    a = 'a'
+    b = 'b'
+    c = 'c'
+    ANSWER_CHOICES = ((a, 'a'), (b, 'b'), (c, 'c'))
+
+    question_number = models.IntegerField(_('Номер вопроса'))
+    factor = models.CharField(_('Психологический фактор'), max_length=2,
+                              choices=FACTOR_CHOICES)
+    answer_options = MultiSelectField(_('Варианты ответа в ключе'),
+                                             choices=ANSWER_CHOICES,
+                                             max_choices=2,
+                                             max_length=1)
+
+    def get_score(self, choice):
+        if self.factor == 'B':
+            if choice in self.answer_options:
+                return 1
+            else:
+                return 0
+
+        else:
+            if choice in 'ac' and choice in self.answer_options:
+                return 2
+            if choice in 'b' and choice in self.answer_options:
+                return 1
+            else:
+                return 0
+
+
+class CattelSten(models.Model):
+    """
+    Final score (stens)
+    """
+    A = 'A'
+    B = 'B'
+    C = 'C'
+    E = 'E'
+    F = 'F'
+    G = 'G'
+    H = 'H'
+    I = 'I'
+    L = 'L'
+    M = 'M'
+    N = 'N'
+    O = 'O'
+    Q1 = 'Q1'
+    Q2 = 'Q2'
+    Q3 = 'Q3'
+    Q4 = 'Q4'
+    MD = 'MD'
+    FACTOR_CHOICES = ((A, 'A'), (B, 'B'), (C, 'C'), (E, 'E'), (F, 'F'),
+                      (G, 'G'), (H, 'H'), (I, 'I'), (L, 'L'), (M, 'M'),
+                      (N, 'N'), (O, 'O'), (Q1, 'Q1'), (Q2, 'Q2'), (Q3, 'Q3'),
+                      (Q4, 'Q4'), (MD, 'MD'))
+
+    sten = models.IntegerField(_('Количество стенов'))
+    factor = models.CharField(_('Психологический фактор'), max_length=2,
+                              choices=FACTOR_CHOICES)
+    score = models.IntegerField(_('Количество сырых баллов'))
+
+    @classmethod
+    def get_sten(cls, factor, score):
+        return cls.objects.get(factor=factor, score=score).sten
