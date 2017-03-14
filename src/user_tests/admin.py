@@ -42,7 +42,7 @@ class CattelStenAdmin(admin.ModelAdmin):
 
 
 class UserTestAdmin(admin.ModelAdmin):
-    list_display = ('user', 'test', 'started_at', 'finished_at')
+    list_display = ('id', 'user', 'test', 'started_at', 'finished_at')
     list_filter = ('test',)
     search_fields = ('user__username', 'user__profile__first_name',
                      'user__profile__last_name', 'user__profile__middle_name')
