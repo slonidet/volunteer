@@ -11,7 +11,18 @@ class Test(models.Model):
     """
     Test model
     """
-    name = models.CharField(_('Название теста'), max_length=150, unique=True)
+    TYPE_VERBAL = 'verbal'
+    TYPE_NUMERICAL = 'numerical'
+    TYPE_PSYCHOLOGICAL = 'psychological'
+    TYPE_FOREIGN_LANGUAGE = 'foreign'
+    TYPE_CHOICES = (
+        (TYPE_VERBAL, _('Вербальный')),
+        (TYPE_NUMERICAL, _('Числовой')),
+        (TYPE_PSYCHOLOGICAL, _('Психологический')),
+        (TYPE_FOREIGN_LANGUAGE, _('Иностранный язык')),
+    )
+    name = models.CharField(_('Название'), max_length=150, unique=True)
+    type = models.CharField(_('Тип'), max_length=16, choices=TYPE_CHOICES)
     time_available = models.IntegerField(_('Доступное время в секундах'))
 
     class Meta(MetaPermissions):
@@ -99,7 +110,9 @@ class UserTest(models.Model):
     Test of given user
     """
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name=_('Пользователь'))
+        User, on_delete=models.CASCADE, verbose_name=_('Пользователь'),
+        related_name='tests'
+    )
     test = models.ForeignKey(
         Test, on_delete=models.CASCADE, verbose_name=_('Тест')
     )
