@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from user_tests.models import Test, UserTest, Task, Question, AnswerOptions, \
-    CattellSten
+    CattellSten, CattellOptions
 
 
 class QuestionInline(admin.TabularInline):
@@ -39,7 +39,11 @@ class AnswerOptionsAdmin(admin.ModelAdmin):
 
 
 class CattellStenAdmin(admin.ModelAdmin):
-    model = CattellSten
+    list_display = ('sten', 'factor', 'score')
+
+
+class CattellOptionsAdmin(admin.ModelAdmin):
+    list_display = ('question_number', 'factor')
 
 
 class UserTestAdmin(admin.ModelAdmin):
@@ -55,3 +59,4 @@ admin.site.register(Task, TaskAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(AnswerOptions, AnswerOptionsAdmin)
 admin.site.register(CattellSten, CattellStenAdmin)
+admin.site.register(CattellOptions, CattellOptionsAdmin)
