@@ -1,5 +1,4 @@
 from django.db import IntegrityError
-from django.db.models import Avg
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -202,19 +201,31 @@ class AdminUserTestSerializer(UserTestSerializer):
 
 class AdminAverageTaskScoreSerializer(TaskSerializer):
     average_score = serializers.SerializerMethodField()
+    questions_count = serializers.SerializerMethodField()
 
     class Meta(TaskSerializer.Meta):
-        fields = ('name', 'evaluation_algorithm', 'average_score')
+        fields = ('name', 'evaluation_algorithm', 'average_score',
+                  'questions_count')
 
     def get_average_score(self, task):
         if task.evaluation_algorithm == Task.ALGORITHM_AUTO_APPRAISAL:
-            UserAnswer.objects.filter(question__task=task, is_correct=True)\
-                .aggregate(Avg())
+            total_correct_answers = UserAnswer.objects.filter(
+                question__task=task, is_correct=True
+            ).count()
+            users_passed_test = UserTest.objects.filter(test=task.test).count()
+
+            if users_passed_test > 0:
+                return round(total_correct_answers / users_passed_test, 2)
 
         return None
 
+    def get_questions_count(self, task):
+        return task.questions.count()
+
 
 class AdminAverageTestScoreSerializer(serializers.ModelSerializer):
+    tasks = AdminAverageTaskScoreSerializer(many=True, read_only=True)
+
     class Meta:
         model = Test
         fields = '__all__'

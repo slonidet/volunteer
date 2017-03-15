@@ -55,6 +55,9 @@ def api_root(request, format=None):
 
         # User Tests
         'admin:users:tests': reverse('adm:tests:user-answer-list', **params),
+        'admin:users:tests:average-score': reverse(
+            'adm:tests:average-score-list', **params
+        ),
         'tests': reverse('tests:test-list', **params),
         'tests:tasks': reverse('tests:task-list', **params),
         'tests:tasks:questions': reverse('tests:question-list', **params),
