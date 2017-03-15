@@ -110,7 +110,9 @@ class UserTest(models.Model):
     Test of given user
     """
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name=_('Пользователь'))
+        User, on_delete=models.CASCADE, verbose_name=_('Пользователь'),
+        related_name='tests'
+    )
     test = models.ForeignKey(
         Test, on_delete=models.CASCADE, verbose_name=_('Тест')
     )

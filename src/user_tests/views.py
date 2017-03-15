@@ -9,6 +9,7 @@ from user_tests.models import Test, Task, Question, AnswerOptions, UserTest, \
 from user_tests.serializers import TestSerializer, TaskSerializer, \
     QuestionSerializer, AnswerOptionsSerializer, UserTestSerializer, \
     UserAnswerSerializer, AdminUserTestSerializer
+from users.models import User
 
 
 class BaseTestReadOnlyModelViewSet(ReadOnlyModelViewSet):
@@ -52,6 +53,15 @@ class BaseUserTestViewSet(UndeletableModelViewSet):
 class UserTestViewSet(BaseUserTestViewSet):
     queryset = UserTest.objects.all()
     serializer_class = UserTestSerializer
+
+    def create(self, request, *args, **kwargs):
+        if request.user.role not in (User.ROLE_APPROVED, User.ROLE_TESTED):
+            raise exceptions.NotAcceptable(
+                _('Проходить тесты можно только после утверждения анкеты '
+                  'администратором')
+            )
+
+        return super().create(request, *args, **kwargs)
 
 
 class UserAnswerViewSet(BaseUserTestViewSet):

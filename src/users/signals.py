@@ -74,5 +74,6 @@ def set_tested_role(sender, instance, **kwargs):
             )
 
             if foreign_language_tests.exists():
-                instance.user.role = User.ROLE_TESTED
-                instance.user.save()
+                if instance.user.role == User.ROLE_APPROVED:
+                    instance.user.role = User.ROLE_TESTED
+                    instance.user.save()
