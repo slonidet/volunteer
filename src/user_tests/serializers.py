@@ -157,13 +157,8 @@ class UserAnswerSerializer(BaseUserTestSerializer):
         return super().update(instance, validated_data)
 
 
-class AdminTestSerializer(TestSerializer):
-    class Meta(TestSerializer.Meta):
-        fields = ('id', 'name')
-
-
 class AdminUserTestSerializer(UserTestSerializer):
-    test = AdminTestSerializer(read_only=True)
+    test = TestSerializer(read_only=True)
     tasks = serializers.SerializerMethodField()
 
     class Meta(UserTestSerializer.Meta):

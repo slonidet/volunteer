@@ -214,6 +214,13 @@ class CattellOptions(CattellFactorMixin, models.Model):
         max_choices=2, max_length=1
     )
 
+    class Meta(MetaPermissions):
+        verbose_name = _('Вариант ответа Каттелла')
+        verbose_name_plural = _('Варианты ответов Каттелла')
+
+    def __str__(self):
+        return str(self.id)
+
     def get_score(self, choice):
         if choice in self.answer_options:
             if self.factor == 'B':
@@ -236,6 +243,13 @@ class CattellSten(CattellFactorMixin, models.Model):
         choices=CattellFactorMixin.FACTOR_CHOICES
     )
     score = models.IntegerField(_('Количество сырых баллов'))
+
+    class Meta(MetaPermissions):
+        verbose_name = _('Стен Каттелла')
+        verbose_name_plural = _('Стены Каттелла')
+
+    def __str__(self):
+        return str(self.id)
 
     @classmethod
     def get_sten(cls, factor, score):
