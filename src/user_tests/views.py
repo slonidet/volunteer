@@ -71,7 +71,8 @@ class UserAnswerViewSet(BaseUserTestViewSet):
 
 
 class AdminUserTestViewSet(ReadOnlyModelViewSet):
-    queryset = UserTest.objects.select_related('test', 'user').all()
+    queryset = UserTest.objects.select_related('test', 'user').filter(
+        finished_at__isnull=False)
     serializer_class = AdminUserTestSerializer
     filter_fields = ('test', 'user')
 

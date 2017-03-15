@@ -124,8 +124,8 @@ class UserAnswerSerializer(BaseUserTestSerializer):
             raise ValidationError(time_expired_message)
 
     def _check_correct_answers(self, validated_data):
-        expert_appraisal = validated_data['question'].task.expert_appraisal
-        if not expert_appraisal:
+        algorithm = validated_data['question'].task.evaluation_algorithm
+        if algorithm == Task.ALGORITHM_AUTO_APPRAISAL:
             user_answers = set(validated_data['answers'])
             correct_answers = set(AnswerOptions.objects.filter(
                 question=validated_data['question'],
