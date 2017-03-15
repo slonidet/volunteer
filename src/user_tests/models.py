@@ -55,7 +55,6 @@ class Task(models.Model):
         _('Алгоритм проверки'), max_length=50,
         choices=ALGORITHM_CHOICES, default=ALGORITHM_AUTO_APPRAISAL
     )
-    audio = models.FileField(_('Аудиофайл'), null=True, blank=True)
     text = models.TextField(_('Текст'), null=True, blank=True)
 
     class Meta(MetaPermissions):

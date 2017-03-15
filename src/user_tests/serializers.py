@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.db.models import Avg
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -197,3 +198,24 @@ class AdminUserTestSerializer(UserTestSerializer):
                 'is_correct': a.is_correct,
             } for a in user_answers
         ]
+
+
+class AdminAverageTaskScoreSerializer(TaskSerializer):
+    average_score = serializers.SerializerMethodField()
+
+    class Meta(TaskSerializer.Meta):
+        fields = ('name', 'evaluation_algorithm', 'average_score')
+
+    def get_average_score(self, task):
+        if task.evaluation_algorithm == Task.ALGORITHM_AUTO_APPRAISAL:
+            UserAnswer.objects.filter(question__task=task, is_correct=True)\
+                .aggregate(Avg())
+
+        return None
+
+
+class AdminAverageTestScoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Test
+        fields = '__all__'
+
