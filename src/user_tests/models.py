@@ -37,13 +37,13 @@ class Task(models.Model):
     """
     Test's task
     """
-    AUTO_APPRAISAL = 'auto_appraisal'
-    EXPERT_APPRAISAL = 'expert_appraisal'
-    PSYCHOLOGICAL = 'psychological'
+    ALGORITHM_AUTO_APPRAISAL = 'auto_appraisal'
+    ALGORITHM_EXPERT_APPRAISAL = 'expert_appraisal'
+    ALGORITHM_PSYCHOLOGICAL = 'psychological'
     ALGORITHM_CHOICES = (
-        (AUTO_APPRAISAL, _('Проверяется автоматически')),
-        (EXPERT_APPRAISAL, _('Проверяется экспертом')),
-        (PSYCHOLOGICAL, _('Задание психологического теста'))
+        (ALGORITHM_AUTO_APPRAISAL, _('Проверяется автоматически')),
+        (ALGORITHM_EXPERT_APPRAISAL, _('Проверяется экспертом')),
+        (ALGORITHM_PSYCHOLOGICAL, _('Задание психологического теста'))
     )
 
     test = models.ForeignKey(
@@ -52,12 +52,9 @@ class Task(models.Model):
     )
     name = models.CharField(_('Название задания'), max_length=150)
     evaluation_algorithm = models.CharField(
-        _('Алгоритм проверки'),
-        max_length=50,
-        choices=ALGORITHM_CHOICES,
-        default=AUTO_APPRAISAL
+        _('Алгоритм проверки'), max_length=50,
+        choices=ALGORITHM_CHOICES, default=ALGORITHM_AUTO_APPRAISAL
     )
-    audio = models.FileField(_('Аудиофайл'), null=True, blank=True)
     text = models.TextField(_('Текст'), null=True, blank=True)
 
     class Meta(MetaPermissions):

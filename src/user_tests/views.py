@@ -8,7 +8,8 @@ from user_tests.models import Test, Task, Question, AnswerOptions, UserTest, \
     UserAnswer
 from user_tests.serializers import TestSerializer, TaskSerializer, \
     QuestionSerializer, AnswerOptionsSerializer, UserTestSerializer, \
-    UserAnswerSerializer, AdminUserTestSerializer
+    UserAnswerSerializer, AdminUserTestSerializer, \
+    AdminAverageTestScoreSerializer
 from users.models import User
 
 
@@ -71,7 +72,8 @@ class UserAnswerViewSet(BaseUserTestViewSet):
 
 
 class AdminUserTestViewSet(ReadOnlyModelViewSet):
-    queryset = UserTest.objects.select_related('test', 'user').all()
+    queryset = UserTest.objects.select_related('test', 'user').filter(
+        finished_at__isnull=False)
     serializer_class = AdminUserTestSerializer
     filter_fields = ('test', 'user')
 
@@ -82,3 +84,9 @@ class AdminUserTestViewSet(ReadOnlyModelViewSet):
             )
 
         return super().list(request, *args, **kwargs)
+
+
+class AdminAverageTestScore(ReadOnlyModelViewSet):
+    queryset = Test.objects.prefetch_related('tasks').all()
+    serializer_class = AdminAverageTestScoreSerializer
+    filter_fields = ('name', 'type')

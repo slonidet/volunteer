@@ -107,8 +107,8 @@ class UserAnswerSerializer(BaseUserTestSerializer):
     @staticmethod
     def _check_available_test(question, user):
         """ User's Test is available for passing """
-        user_test = UserTest.objects.filter(
-            user=user, test=question.task.test).first()
+        test = question.task.test
+        user_test = UserTest.objects.filter(user=user, test=test).first()
         time_expired_message = _('Время отведённое на тест истекло')
 
         if not user_test:
@@ -116,16 +116,18 @@ class UserAnswerSerializer(BaseUserTestSerializer):
             raise ValidationError(message)
 
         elif not user_test.finished_at and user_test.remaining <= 0:
-            user_test.finished_at = timezone.now()
-            user_test.save()
-            raise ValidationError(time_expired_message)
+            if test.type != test.TYPE_PSYCHOLOGICAL:
+                # PSYCHOLOGICAL test is unlimited
+                user_test.finished_at = timezone.now()
+                user_test.save()
+                raise ValidationError(time_expired_message)
 
         elif user_test.finished_at:
             raise ValidationError(time_expired_message)
 
     def _check_correct_answers(self, validated_data):
-        expert_appraisal = validated_data['question'].task.expert_appraisal
-        if not expert_appraisal:
+        algorithm = validated_data['question'].task.evaluation_algorithm
+        if algorithm == Task.ALGORITHM_AUTO_APPRAISAL:
             user_answers = set(validated_data['answers'])
             correct_answers = set(AnswerOptions.objects.filter(
                 question=validated_data['question'],
@@ -237,4 +239,37 @@ class AdminPsychologicalUserTestSerializer(AdminUserTestSerializer):
     def get_choise_score(self, obj):
 
         return obj.get_score(self, obj)
+
+
+
+class AdminAverageTaskScoreSerializer(TaskSerializer):
+    average_score = serializers.SerializerMethodField()
+    questions_count = serializers.SerializerMethodField()
+
+    class Meta(TaskSerializer.Meta):
+        fields = ('name', 'evaluation_algorithm', 'average_score',
+                  'questions_count')
+
+    def get_average_score(self, task):
+        if task.evaluation_algorithm == Task.ALGORITHM_AUTO_APPRAISAL:
+            total_correct_answers = UserAnswer.objects.filter(
+                question__task=task, is_correct=True
+            ).count()
+            users_passed_test = UserTest.objects.filter(test=task.test).count()
+
+            if users_passed_test > 0:
+                return round(total_correct_answers / users_passed_test, 2)
+
+        return None
+
+    def get_questions_count(self, task):
+        return task.questions.count()
+
+
+class AdminAverageTestScoreSerializer(serializers.ModelSerializer):
+    tasks = AdminAverageTaskScoreSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Test
+        fields = '__all__'
 
