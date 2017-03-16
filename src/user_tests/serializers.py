@@ -107,8 +107,8 @@ class UserAnswerSerializer(BaseUserTestSerializer):
     @staticmethod
     def _check_available_test(question, user):
         """ User's Test is available for passing """
-        user_test = UserTest.objects.filter(
-            user=user, test=question.task.test).first()
+        test = question.task.test
+        user_test = UserTest.objects.filter(user=user, test=test).first()
         time_expired_message = _('Время отведённое на тест истекло')
 
         if not user_test:
@@ -116,9 +116,11 @@ class UserAnswerSerializer(BaseUserTestSerializer):
             raise ValidationError(message)
 
         elif not user_test.finished_at and user_test.remaining <= 0:
-            user_test.finished_at = timezone.now()
-            user_test.save()
-            raise ValidationError(time_expired_message)
+            if test.type != test.TYPE_PSYCHOLOGICAL:
+                # PSYCHOLOGICAL test is unlimited
+                user_test.finished_at = timezone.now()
+                user_test.save()
+                raise ValidationError(time_expired_message)
 
         elif user_test.finished_at:
             raise ValidationError(time_expired_message)
