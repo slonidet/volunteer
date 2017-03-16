@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from core.serializers import ForeignKeySerializerMixin
 from user_tests.models import Test, Task, Question, AnswerOptions, UserTest, \
-    UserAnswer
+    UserAnswer, CattellOptions
 
 
 class TestSerializer(serializers.ModelSerializer):
@@ -116,8 +116,7 @@ class UserAnswerSerializer(BaseUserTestSerializer):
             raise ValidationError(message)
 
         elif not user_test.finished_at and user_test.remaining <= 0:
-            if test.type != test.TYPE_PSYCHOLOGICAL:
-                # PSYCHOLOGICAL test is unlimited
+            if test.is_limited:
                 user_test.finished_at = timezone.now()
                 user_test.save()
                 raise ValidationError(time_expired_message)
@@ -174,6 +173,7 @@ class AdminUserTestSerializer(UserTestSerializer):
         return [self._task_repr(task, user) for task in user_tasks]
 
     def _task_repr(self, task, user):
+
         return {
             'id': task.id,
             'name': task.name,
@@ -192,6 +192,7 @@ class AdminUserTestSerializer(UserTestSerializer):
         user_answers = UserAnswer.objects.select_related('question').filter(
             user=user, question__in=task.questions.all()
         )
+
         return [
             {
                 'question_text': a.question.text,
@@ -199,6 +200,45 @@ class AdminUserTestSerializer(UserTestSerializer):
                 'is_correct': a.is_correct,
             } for a in user_answers
         ]
+
+
+class AdminPsychologicalUserTestSerializer(AdminUserTestSerializer):
+    factors = serializers.SerializerMethodField()
+
+    class Meta(AdminUserTestSerializer.Meta):
+        model = UserTest
+        fields = ['id', 'user', 'test', 'factors', 'finished_at', 'started_at']
+
+    def get_factors(self):
+        factor_list = ['A', 'B', 'C', 'E', 'F', 'G', 'H', 'I', 'L', 'M', 'N',
+                       'O', 'Q1', 'Q2', 'Q3', 'Q4', 'MD']
+
+        return [self._factor_repr(factor) for factor in factor_list]
+
+    def _factor_repr(self, obj, factor):
+        # TODO: нереальный бред, понять что нужно и переписать
+        score = factor.get_raw_scores
+
+        return obj.get_sten(factor, score)
+
+    def get_raw_scores(self, factor):
+        raw_scores = 0
+        question_numbers = CattellOptions.objectsfilter(factor=factor).\
+            values_list('number', flat=True)
+        questions = Question.objects.filter(
+            task='psychological', number__in=question_numbers)
+
+        for question in questions:
+            choice = UserAnswer.objects.get(question=question)
+            raw_scores = raw_scores + self.get_choice_score(
+                CattellOptions.objects.get(
+                    question_number=question.question_number
+                ), choice)
+
+        return raw_scores
+
+    def get_choise_score(self, obj):
+        return obj.get_score(self, obj)
 
 
 class AdminAverageTaskScoreSerializer(TaskSerializer):
