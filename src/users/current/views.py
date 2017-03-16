@@ -49,7 +49,6 @@ class UserRegistrationView(CreateAPIView):
 
 class UserActivationView(views.APIView):
     permission_classes = ()
-    domain = get_absolute_url('/')
 
     def get(self, request, user_id, token):
         user = get_object_or_404(User, id=user_id, last_login=None)
@@ -57,8 +56,9 @@ class UserActivationView(views.APIView):
             user.is_active = True
             user.save()
             auth_token = user.get_auth_token()
+            return redirect('/?auth_token={0}'.format(auth_token))
 
-        return redirect('{0}/?auth_token={1}'.format(self.domain, auth_token))
+        return redirect('/login')
 
 
 class AuthTokenView(ObtainAuthToken):
