@@ -241,7 +241,6 @@ class AdminPsychologicalUserTestSerializer(AdminUserTestSerializer):
         return obj.get_score(self, obj)
 
 
-
 class AdminAverageTaskScoreSerializer(TaskSerializer):
     average_score = serializers.SerializerMethodField()
     questions_count = serializers.SerializerMethodField()
