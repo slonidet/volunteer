@@ -230,9 +230,6 @@ class UserTest(models.Model):
 
     @property
     def remaining(self):
-        if not self.test.is_limited:
-            return 0
-
         dead_line = self.started_at + timezone.timedelta(
             seconds=self.test.time_available
         )
