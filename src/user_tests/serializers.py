@@ -116,8 +116,7 @@ class UserAnswerSerializer(BaseUserTestSerializer):
             raise ValidationError(message)
 
         elif not user_test.finished_at and user_test.remaining <= 0:
-            if test.type != test.TYPE_PSYCHOLOGICAL:
-                # PSYCHOLOGICAL test is unlimited
+            if test.is_limited:
                 user_test.finished_at = timezone.now()
                 user_test.save()
                 raise ValidationError(time_expired_message)
@@ -217,6 +216,7 @@ class AdminPsychologicalUserTestSerializer(AdminUserTestSerializer):
         return [self._factor_repr(factor) for factor in factor_list]
 
     def _factor_repr(self, obj, factor):
+        # TODO: нереальный бред, понять что нужно и переписать
         score = factor.get_raw_scores
 
         return obj.get_sten(factor, score)
@@ -224,20 +224,20 @@ class AdminPsychologicalUserTestSerializer(AdminUserTestSerializer):
     def get_raw_scores(self, factor):
         raw_scores = 0
         question_numbers = CattellOptions.objectsfilter(factor=factor).\
-            values_list('question_number', flat=True)
+            values_list('number', flat=True)
         questions = Question.objects.filter(
             task='psychological', number__in=question_numbers)
 
         for question in questions:
             choice = UserAnswer.objects.get(question=question)
             raw_scores = raw_scores + self.get_choice_score(
-                CattellOptions.objects.get(question_number=question.question_number),
-                choice)
+                CattellOptions.objects.get(
+                    question_number=question.question_number
+                ), choice)
 
         return raw_scores
 
     def get_choise_score(self, obj):
-
         return obj.get_score(self, obj)
 
 
