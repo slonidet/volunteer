@@ -31,7 +31,7 @@ class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
 class AdminProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = ProfileSerializer
-    filter_fields = ('user', 'status')
+    filter_fields = ('user', 'status', 'user__role')
     search_fields = ('first_name', 'last_name', 'middle_name')
 
     @detail_route(methods=['get', 'post'],
