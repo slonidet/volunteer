@@ -18,7 +18,7 @@ class TestSerializer(serializers.ModelSerializer):
 
 class SimpleTestSerializer(TestSerializer):
     class Meta(TestSerializer.Meta):
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'is_limited')
 
 
 class TaskSerializer(serializers.ModelSerializer):
