@@ -1,10 +1,12 @@
+from functools import lru_cache
+
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from multiselectfield import MultiSelectField
 
 from permissions.models import MetaPermissions
-from users.models import User
+from users.models import User, Profile
 
 
 class CattellFactorMixin(object):
@@ -35,6 +37,11 @@ class CattellFactorMixin(object):
         (FACTOR_Q1, 'Q1'), (FACTOR_Q2, 'Q2'), (FACTOR_Q3, 'Q3'),
         (FACTOR_Q4, 'Q4'), (FACTOR_MD, 'MD'),
     )
+
+    @classmethod
+    @lru_cache()
+    def get_factor_list(cls):
+        return dict(cls.FACTOR_CHOICES).keys()
 
 
 class CattellOptions(CattellFactorMixin, models.Model):
@@ -96,6 +103,61 @@ class CattellSten(CattellFactorMixin, models.Model):
     @classmethod
     def get_sten(cls, factor, score):
         return cls.objects.get(factor=factor, score=score).sten
+
+    @classmethod
+    def factor_polarization(cls, factor, score, user):
+        sten = cls.get_sten(factor, score)
+        factor_borders = {
+            cls.FACTOR_A: 6,
+            cls.FACTOR_B: 3,
+            cls.FACTOR_C: 6,
+            cls.FACTOR_E: 5,
+            cls.FACTOR_F: 5,
+            cls.FACTOR_G: 6,
+            cls.FACTOR_H: 5,
+            cls.FACTOR_L: 5,
+            cls.FACTOR_M: 5,
+            cls.FACTOR_N: 5,
+            cls.FACTOR_O: 6,
+            cls.FACTOR_Q1: 6,
+            cls.FACTOR_Q2: 5,
+            cls.FACTOR_Q3: 5,
+            cls.FACTOR_Q4: 7,
+        }
+
+        if factor == cls.FACTOR_MD:
+            if sten <= 4:
+                polarization = '{0}-'
+            elif 4 < sten < 10:
+                polarization = '{0}'
+            else:
+                polarization = '{0}+'
+
+        elif factor == cls.FACTOR_I:
+            border = 5 if user.profile.gender == Profile.GENDER_MALE else 6
+            polarization = '{0}-' if sten <= border else '{0}+'
+        else:
+            border = factor_borders.get(factor)
+            polarization = '{0}-' if sten <= border else '{0}+'
+
+        return polarization.format(factor)
+
+
+CattellInterpretation = {
+    'Социально-психологические особенности: экстраверсия - интроверсия': (
+        ({'A-', 'F-', 'H-'}, 'Сдержанность в межличностных контактах, трудности в непосредственном и социальном общении, склонность к индивидуальной работе, замкнутость, направленность на свой внутренний мир. Интроверсия.'),
+        ({'A-', 'F+', 'H-'}, 'Сдержанность в установлении как межличностных, так и социальных контактов. В поведении - экспрессивность, импульсивность, в характере проявляются застенчивость и внешняя активность, склонность к индивидуальной деятельности Склонность к интроверсии.'),
+        ({'A+', 'F-', 'H-'}, 'Открытость в межличностных контактах, способность к непосредственному общению, сдержанность и рассудительность в установлении социальных контактов, осторожность и застенчивость.'),
+        ({'A+', 'F-', 'H+'}, 'Открытость в межличностных контактах, активность, общительность, готовность к вступлению в новые группы, сдержанность и рассудительность в выборе партнеров по общению. Склонность к экстраверсии.'),
+        ({'A-', 'F+', 'H+'}, 'Сдержанность в непосредственных межличностных контактах, активность, экспрессивность в социальном общении, готовность к вступлению в новые группы, склонность к лидерству. Склонность к экстраверсии.'),
+        ({'A-', 'F-', 'H+'}, 'Сдержанность и рассудительность в установлении межличностных контактов, активность в социальной сфере, может проявляться деловое лидерство.'),
+        ({'A+', 'F+', 'H-'}, 'Открытость, экспрессивность, импульсивность в межличностном общении. Трудность в установлении социальных контактов, проявление застенчивости в новых, незнакомых обстоятельствах, затруднения при принятии социальных решений.'),
+        ({'A+', 'F+', 'H+'}, 'Открытость, общительность, активность в установлении как межличностных, так и социальных контактов. В поведении проявляются экспрессивность, импульсивность, социальная смелость, склонность к риску, готовность к вступлению в новые группы, быть лидером. Направленность вовне, на людей. Экстраверсия.'),
+    ),
+    'Социально-психологические особенности: коммуникативные свойства': (
+        ({'Е+', 'Q2+', 'G+', 'N+', 'L+'}, 'Независимость характера, склонность к доминантности, авторитарности, настороженность по отношению к людям, противопоставление себя группе, склонность к лидерству, развитое чувство ответственности и долга, принятие правил и норм, самостоятельность в принятии решений, инициативность, активность в социальных сферах, гибкость и дипломатичность в межличностном общении, умение находить нетривиальные решения в практических, житейских ситуациях.'),
+    )
+}
 
 
 class Test(models.Model):
