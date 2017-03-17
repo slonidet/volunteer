@@ -28,9 +28,11 @@ class TaskAdmin(admin.ModelAdmin):
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'text', 'task')
+    list_display = ('id', 'text', 'task', 'number')
     list_filter = ('task__test',)
     inlines = [AnswerOptionsInline]
+    list_per_page = 10
+    ordering = ('number',)
 
 
 class AnswerOptionsAdmin(admin.ModelAdmin):
@@ -40,10 +42,13 @@ class AnswerOptionsAdmin(admin.ModelAdmin):
 
 class CattellStenAdmin(admin.ModelAdmin):
     list_display = ('sten', 'factor', 'score')
+    list_filter = ('factor',)
+    ordering = ('score',)
 
 
 class CattellOptionsAdmin(admin.ModelAdmin):
     list_display = ('question_number', 'factor')
+    list_filter = ('factor',)
 
 
 class UserTestAdmin(admin.ModelAdmin):

@@ -60,7 +60,7 @@ class CattellOptions(CattellFactorMixin, models.Model):
     )
     answer_options = MultiSelectField(
         _('Варианты ответа в ключе'), choices=ANSWER_CHOICES,
-        max_choices=2, max_length=1
+        max_choices=2, max_length=8
     )
 
     class Meta(MetaPermissions):
