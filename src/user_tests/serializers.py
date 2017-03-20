@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import IntegrityError
 from django.utils import timezone
 from rest_framework import serializers
@@ -84,6 +85,17 @@ class UserTestSerializer(ForeignKeySerializerMixin,
 
     def update(self, instance, validated_data):
         validated_data['finished_at'] = timezone.now()
+        test = instance.test
+
+        if test.type == Test.TYPE_PSYCHOLOGICAL:
+            test_questions = Question.objects.filter(task__test=test)
+            user_answers = UserAnswer.objects.filter(
+                question__in=test_questions
+            )
+            if user_answers.count() < test_questions.count():
+                raise serializers.ErrorDetail(
+                    _('Пользователь ответил не на все вопросы')
+                )
 
         return super().update(instance, validated_data)
 
@@ -195,11 +207,19 @@ class AdminUserTestSerializer(UserTestSerializer):
         if task.evaluation_algorithm != Task.ALGORITHM_PSYCHOLOGICAL:
             return None
 
+        user_cache_key = 'psychological_characteristic_{0}'.format(user.id)
+        result = cache.get(user_cache_key)
+        if result:
+            return result
+
         factors = CattellFactorMixin.get_factor_list()
-        factor_scores = {
-            factor: self.__get_factor_scores(task, factor)
-            for factor in factors
-        }
+        try:
+            factor_scores = {
+                factor: self.__get_factor_scores(task, factor)
+                for factor in factors
+            }
+        except Exception as e:
+            return str(e)
 
         polarized_factors = set()
         for factor, score in factor_scores.items():
@@ -212,6 +232,9 @@ class AdminUserTestSerializer(UserTestSerializer):
                 if factor_set.issubset(polarized_factors):
                     result[parameter] = description
                     break
+
+        # cache user psychological characteristic
+        cache.set(user_cache_key, result, 60*60*24*30)
 
         return result
 
@@ -228,7 +251,11 @@ class AdminUserTestSerializer(UserTestSerializer):
             user_choice = UserAnswer.objects.filter(question=question).first()
             if not user_choice:
                 # if user didn't answer to question pass it instead crash
-                continue
+                raise Exception(
+                    'user did not answer on question {id} "{question}"'.format(
+                        id=question.id, question=question.text
+                    )
+                )
 
             raw_scores += CattellOptions.objects.get(
                 factor=factor, question_number=question.question_number

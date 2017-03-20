@@ -14,6 +14,7 @@ class TaskInline(admin.TabularInline):
 
 class AnswerOptionsInline(admin.TabularInline):
     model = AnswerOptions
+    readonly_fields = ('text',)
 
 
 class TestAdmin(admin.ModelAdmin):
