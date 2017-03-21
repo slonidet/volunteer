@@ -72,7 +72,7 @@ class CattellOptions(CattellFactorMixin, models.Model):
 
     def get_score(self, choice):
         if choice in self.answer_options:
-            if self.factor == 'B':
+            if self.factor == self.FACTOR_B:
                 return 1
             if choice in 'ac':
                 return 2
