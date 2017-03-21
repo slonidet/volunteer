@@ -218,7 +218,7 @@ class AdminUserTestSerializer(UserTestSerializer):
                 factor: self.__get_factor_scores(task, factor)
                 for factor in factors
             }
-        except Exception as e:
+        except ValueError as e:
             return str(e)
 
         polarized_factors = set()
@@ -242,7 +242,7 @@ class AdminUserTestSerializer(UserTestSerializer):
     def __get_factor_scores(task, factor):
         raw_scores = 0
         question_numbers = CattellOptions.objects.filter(factor=factor).\
-            values_list('number', flat=True)
+            values_list('question_number', flat=True)
         questions = Question.objects.filter(
             task=task, number__in=question_numbers
         )
@@ -251,14 +251,14 @@ class AdminUserTestSerializer(UserTestSerializer):
             user_choice = UserAnswer.objects.filter(question=question).first()
             if not user_choice:
                 # if user didn't answer to question pass it instead crash
-                raise Exception(
+                raise ValueError(
                     'user did not answer on question {id} "{question}"'.format(
                         id=question.id, question=question.text
                     )
                 )
 
             raw_scores += CattellOptions.objects.get(
-                factor=factor, question_number=question.question_number
+                factor=factor, question_number=question.number
             ).get_score(choice=user_choice)
 
         return raw_scores
