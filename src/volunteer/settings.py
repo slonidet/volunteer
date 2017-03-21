@@ -167,6 +167,14 @@ DATABASES = {
 }
 
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'localhost:6379',
+    },
+}
+
+
 # Celery configuration
 # http://docs.celeryproject.org/
 

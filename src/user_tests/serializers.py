@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import IntegrityError
 from django.utils import timezone
 from rest_framework import serializers
@@ -6,7 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from core.serializers import ForeignKeySerializerMixin
 from user_tests.models import Test, Task, Question, AnswerOptions, UserTest, \
-    UserAnswer, CattellOptions
+    UserAnswer, CattellOptions, CattellFactorMixin, CattellSten, \
+    CattellInterpretation
 
 
 class TestSerializer(serializers.ModelSerializer):
@@ -83,6 +85,17 @@ class UserTestSerializer(ForeignKeySerializerMixin,
 
     def update(self, instance, validated_data):
         validated_data['finished_at'] = timezone.now()
+        test = instance.test
+
+        if test.type == Test.TYPE_PSYCHOLOGICAL:
+            test_questions = Question.objects.filter(task__test=test)
+            user_answers = UserAnswer.objects.filter(
+                question__in=test_questions
+            )
+            if user_answers.count() < test_questions.count():
+                raise serializers.ErrorDetail(
+                    _('Пользователь ответил не на все вопросы')
+                )
 
         return super().update(instance, validated_data)
 
@@ -173,7 +186,6 @@ class AdminUserTestSerializer(UserTestSerializer):
         return [self._task_repr(task, user) for task in user_tasks]
 
     def _task_repr(self, task, user):
-
         return {
             'id': task.id,
             'name': task.name,
@@ -186,7 +198,70 @@ class AdminUserTestSerializer(UserTestSerializer):
             'formatted_answers': self._user_answers_repr(
                 task, user
             ),
+            'psychological_characteristic': self._psychological_characteristic(
+                task, user
+            )
         }
+
+    def _psychological_characteristic(self, task, user):
+        if task.evaluation_algorithm != Task.ALGORITHM_PSYCHOLOGICAL:
+            return None
+
+        user_cache_key = 'psychological_characteristic_{0}'.format(user.id)
+        result = cache.get(user_cache_key)
+        if result:
+            return result
+
+        factors = CattellFactorMixin.get_factor_list()
+        try:
+            factor_scores = {
+                factor: self.__get_factor_scores(task, factor)
+                for factor in factors
+            }
+        except Exception as e:
+            return str(e)
+
+        polarized_factors = set()
+        for factor, score in factor_scores.items():
+            polarized = CattellSten.factor_polarization(factor, score, user)
+            polarized_factors.add(polarized)
+
+        result = {}
+        for parameter, characteristics in CattellInterpretation.items():
+            for factor_set, description in characteristics:
+                if factor_set.issubset(polarized_factors):
+                    result[parameter] = description
+                    break
+
+        # cache user psychological characteristic
+        cache.set(user_cache_key, result, 60*60*24*30)
+
+        return result
+
+    @staticmethod
+    def __get_factor_scores(task, factor):
+        raw_scores = 0
+        question_numbers = CattellOptions.objects.filter(factor=factor).\
+            values_list('number', flat=True)
+        questions = Question.objects.filter(
+            task=task, number__in=question_numbers
+        )
+
+        for question in questions:
+            user_choice = UserAnswer.objects.filter(question=question).first()
+            if not user_choice:
+                # if user didn't answer to question pass it instead crash
+                raise Exception(
+                    'user did not answer on question {id} "{question}"'.format(
+                        id=question.id, question=question.text
+                    )
+                )
+
+            raw_scores += CattellOptions.objects.get(
+                factor=factor, question_number=question.question_number
+            ).get_score(choice=user_choice)
+
+        return raw_scores
 
     def _user_answers_repr(self, task, user):
         user_answers = UserAnswer.objects.select_related('question').filter(
@@ -200,45 +275,6 @@ class AdminUserTestSerializer(UserTestSerializer):
                 'is_correct': a.is_correct,
             } for a in user_answers
         ]
-
-
-class AdminPsychologicalUserTestSerializer(AdminUserTestSerializer):
-    factors = serializers.SerializerMethodField()
-
-    class Meta(AdminUserTestSerializer.Meta):
-        model = UserTest
-        fields = ['id', 'user', 'test', 'factors', 'finished_at', 'started_at']
-
-    def get_factors(self):
-        factor_list = ['A', 'B', 'C', 'E', 'F', 'G', 'H', 'I', 'L', 'M', 'N',
-                       'O', 'Q1', 'Q2', 'Q3', 'Q4', 'MD']
-
-        return [self._factor_repr(factor) for factor in factor_list]
-
-    def _factor_repr(self, obj, factor):
-        # TODO: нереальный бред, понять что нужно и переписать
-        score = factor.get_raw_scores
-
-        return obj.get_sten(factor, score)
-
-    def get_raw_scores(self, factor):
-        raw_scores = 0
-        question_numbers = CattellOptions.objectsfilter(factor=factor).\
-            values_list('number', flat=True)
-        questions = Question.objects.filter(
-            task='psychological', number__in=question_numbers)
-
-        for question in questions:
-            choice = UserAnswer.objects.get(question=question)
-            raw_scores = raw_scores + self.get_choice_score(
-                CattellOptions.objects.get(
-                    question_number=question.question_number
-                ), choice)
-
-        return raw_scores
-
-    def get_choise_score(self, obj):
-        return obj.get_score(self, obj)
 
 
 class AdminAverageTaskScoreSerializer(TaskSerializer):
