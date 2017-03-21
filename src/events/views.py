@@ -14,7 +14,8 @@ class AdminEventViewSet(viewsets.ModelViewSet):
 
 
 class EventViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Event.objects.filter(is_public=True,
-                                    start__gt=datetime.now(tz=pytz.UTC))
+    queryset = Event.objects.filter(
+        is_public=True, end__gt=datetime.now(tz=pytz.UTC)
+    )
     serializer_class = EventSerializer
     permission_classes = ()

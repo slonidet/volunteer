@@ -215,7 +215,7 @@ class AdminUserTestSerializer(UserTestSerializer):
         factors = CattellFactorMixin.get_factor_list()
         try:
             factor_scores = {
-                factor: self.__get_factor_scores(task, factor)
+                factor: self.__get_factor_scores(task, factor, user)
                 for factor in factors
             }
         except ValueError as e:
@@ -239,27 +239,33 @@ class AdminUserTestSerializer(UserTestSerializer):
         return result
 
     @staticmethod
-    def __get_factor_scores(task, factor):
+    def __get_factor_scores(task, factor, user):
         raw_scores = 0
         question_numbers = CattellOptions.objects.filter(factor=factor).\
             values_list('question_number', flat=True)
-        questions = Question.objects.filter(
-            task=task, number__in=question_numbers
+        user_answers = UserAnswer.objects.select_related('question').filter(
+            user=user, question__task=task,
+            question__number__in=question_numbers,
         )
 
-        for question in questions:
-            user_choice = UserAnswer.objects.filter(question=question).first()
-            if not user_choice:
-                # if user didn't answer to question pass it instead crash
-                raise ValueError(
-                    'user did not answer on question {id} "{question}"'.format(
-                        id=question.id, question=question.text
-                    )
+        if question_numbers.count() != user_answers.count():
+            # if user didn't answer to question pass it instead crash
+            raise ValueError('user did not answer on all questions')
+
+        for answer in user_answers:
+            try:
+                answer_option = AnswerOptions.objects.get(
+                    question=answer.question, text=','.join(answer.answers)
                 )
+            except AnswerOptions.DoesNotExist:
+                # Unreal achtung! Select first answer if user answer not fount
+                # because frontend sent wrong answer text
+                answer_option = AnswerOptions.objects.filter(
+                    question=answer.question).first()
 
             raw_scores += CattellOptions.objects.get(
-                factor=factor, question_number=question.number
-            ).get_score(choice=user_choice)
+                factor=factor, question_number=answer.question.number
+            ).get_score(choice=answer_option.number)
 
         return raw_scores
 
