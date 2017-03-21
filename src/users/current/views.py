@@ -55,6 +55,8 @@ class UserActivationView(views.APIView):
         if RegisterTokenGenerator().check_token(user, token):
             user.is_active = True
             user.save()
+            auth_token = user.get_auth_token()
+            return redirect('/?auth_token={0}'.format(auth_token))
 
         return redirect('/login')
 
