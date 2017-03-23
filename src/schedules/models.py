@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from permissions.models import MetaPermissions
+from users.models import User
 
 
 class Place(models.Model):
@@ -93,15 +94,65 @@ class Day(models.Model):
     date = models.DateField(_('Дата'))
 
     class Meta(MetaPermissions):
-        verbose_name = _('День периода')
-        verbose_name_plural = _('Дни периодов')
+        verbose_name = _('День потока')
+        verbose_name_plural = _('Дни потоков')
 
     def __str__(self):
         return str(self.date)
 
 
-# class UserPosition(models.Model):
-#     """
-#     User on positional (M2M through model)
-#     """
-#     position = models.ForeignKey(Position, )
+class UserPosition(models.Model):
+    """
+    User on positional (M2M through model)
+    """
+    position = models.ForeignKey(
+        Position, related_name='user_positions', on_delete=models.CASCADE,
+        verbose_name=_('Позиция')
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name=_('Волонтёр')
+    )
+    team = models.ForeignKey(
+        'Team', on_delete=models.CASCADE, null=True, blank=True,
+        verbose_name=_('Команда')
+    )
+    shift = models.ForeignKey(Shift, on_delete=models.PROTECT)
+    days = models.ManyToManyField(Day, verbose_name=_('Дни потока'))
+    is_permanent = models.BooleanField(_('Закреплённый'))
+
+    class Meta(MetaPermissions):
+        verbose_name = _('Позиция пользователя')
+        verbose_name_plural = _('Позиции пользователя')
+
+    def __str__(self):
+        return str(self.id)
+
+
+class Team(models.Model):
+    """
+    User's teams for working on places
+    """
+    place = models.ForeignKey(
+        Place, on_delete=models.CASCADE, related_name='teams',
+        verbose_name=_('Объект')
+    )
+    team_leader_position = models.OneToOneField(
+        UserPosition, on_delete=models.PROTECT, null=True, blank=True,
+        related_name='team_leader', verbose_name=_('Старший волонтёр')
+    )
+    members = models.ManyToManyField(
+        User, through=UserPosition, verbose_name=_('Члены команды')
+    )
+    shift = models.ForeignKey(
+        Shift, on_delete=models.PROTECT, verbose_name=_('Смена')
+    )
+    period = models.ForeignKey(
+        Period, on_delete=models.PROTECT, verbose_name=_('Поток')
+    )
+
+    class Meta(MetaPermissions):
+        verbose_name = _('Команда')
+        verbose_name_plural = _('Команды')
+
+    def __str__(self):
+        return ','.join((self.place.name, self.period.name, self.shift.name))
