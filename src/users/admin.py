@@ -43,7 +43,7 @@ class UserAdmin(BaseUserAdmin):
     )
     form = UserChangeForm
     add_form = UserCreationForm
-    list_display = ('id', 'username', 'is_staff', 'role')
+    list_display = ('id', 'username', 'is_active', 'is_staff', 'role')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'role')
     search_fields = ('username',)
     ordering = ('username',)
