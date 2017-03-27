@@ -58,7 +58,10 @@ class UserActivationView(views.APIView):
             auth_token = user.get_auth_token()
             return redirect('/?auth_token={0}'.format(auth_token))
 
-        return redirect('/login')
+        return redirect('/?error_message={}'.format(
+            _('Неверный код активации пользователя, перейдите по ссылке '
+              'в письме')
+        ))
 
 
 class AuthTokenView(ObtainAuthToken):
