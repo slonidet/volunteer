@@ -1,11 +1,10 @@
 from django.contrib import admin
 from users.models import User, Story
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.admin import (
-    UserAdmin as BaseUserAdmin, UserChangeForm as BaseUserChangeForm,
-    UserCreationForm as BaseUserCreationForm,
-)
 from modeltranslation.admin import TranslationAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, \
+    UserChangeForm as BaseUserChangeForm, \
+    UserCreationForm as BaseUserCreationForm
 
 from users.models import Profile, ProfileAttachment
 
@@ -21,6 +20,10 @@ class UserChangeForm(BaseUserChangeForm):
         model = User
         fields = '__all__'
         readonly_fields = ('role',)
+
+
+class ProfileInline(admin.StackedInline):
+    model = Profile
 
 
 class UserAdmin(BaseUserAdmin):
@@ -50,6 +53,7 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ('username',)
     ordering = ('username',)
     filter_horizontal = ('groups', 'user_permissions',)
+    inlines = [ProfileInline]
 
 
 class ProfileAdmin(admin.ModelAdmin):
