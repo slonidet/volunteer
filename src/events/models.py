@@ -26,9 +26,18 @@ class Event(models.Model):
     address = models.CharField(_('адрес'), max_length=512)
     start = models.DateTimeField(_('начало мероприятия'))
     end = models.DateTimeField(_('окончание мероприятия'))
-    user_count = models.PositiveSmallIntegerField(_('количество участников'))
-    volunteer_count = models.PositiveSmallIntegerField(
-        _('количество волонтеров'))
+    participants_limit = models.PositiveSmallIntegerField(
+        _('максимальное количество участников'), default=0
+    )
+    volunteer_limit = models.PositiveSmallIntegerField(
+        _('максимальное количество волонтеров'), default=0
+    )
+    participants_count = models.PositiveSmallIntegerField(
+        _('количество записавшихся участников'), default=0
+    )
+    volunteers_count = models.PositiveSmallIntegerField(
+        _('количество записавшихся волонтеров'), default=0
+    )
     users = models.ManyToManyField(
         User, _('участники'), through='Participation')
     is_public = models.BooleanField(_('опубликовано'), default=True)
@@ -50,11 +59,19 @@ class Participation(models.Model):
     """
     Relational model between Event and Profile
     """
-    PARTICIPANT = 'participant'
-    VOLUNTEER = 'volunteer'
-    STATUS_CHOICES = ((PARTICIPANT, 'participant'), (VOLUNTEER, 'volunteer'))
+    STATUS_VOLUNTEER = 'volunteer'
+    STATUS_PARTICIPANT = 'participant'
+    STATUS_CHOICES = (
+        (STATUS_VOLUNTEER, _('волонтёр')),
+        (STATUS_PARTICIPANT, _('участник')),
+    )
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    event = models.OneToOneField(Event, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     status = models.CharField(
-        _('статус в мероприятии'), max_length=16, choices=STATUS_CHOICES)
+        _('статус участника'), max_length=16, choices=STATUS_CHOICES,
+        default=STATUS_PARTICIPANT
+    )
+
+    class Meta(MetaPermissions):
+        unique_together = (('user', 'event'),)
