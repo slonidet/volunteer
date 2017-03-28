@@ -91,7 +91,7 @@ class Day(models.Model):
         Period, related_name='days', on_delete=models.CASCADE,
         verbose_name=_('Период')
     )
-    date = models.DateField(_('Дата'))
+    date = models.DateField(_('Дата'), unique=True)
 
     class Meta(MetaPermissions):
         verbose_name = _('День потока')
