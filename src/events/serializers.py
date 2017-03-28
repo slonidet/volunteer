@@ -28,3 +28,7 @@ class AdminEventSerializer(AdminTranslationMixin, BaseEventSerializer):
 class EventSerializer(UserTranslationMixin, BaseEventSerializer):
     class Meta(BaseEventSerializer.Meta):
         exclude = ('is_public',)
+
+
+class ParticipateEventSerializer(serializers.Serializer):
+    status = serializers.CharField(max_length=16)
