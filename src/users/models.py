@@ -166,6 +166,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return token
 
+    def activate(self):
+        self.is_active = True
+        self.save()
+
     def __str__(self):
         return self.username
 

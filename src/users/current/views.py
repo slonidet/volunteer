@@ -1,4 +1,3 @@
-from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions
@@ -23,7 +22,6 @@ from users.models import Profile, ProfileAttachment, Story, ProfileComment
 from users.serializers import ProfileCommentSerializer
 from users.views import User
 from users.mixins import StoryRelatedViewMixin
-from volunteer import settings
 
 
 class UserRegistrationView(CreateAPIView):
@@ -53,12 +51,14 @@ class UserActivationView(views.APIView):
     def get(self, request, user_id, token):
         user = get_object_or_404(User, id=user_id, last_login=None)
         if RegisterTokenGenerator().check_token(user, token):
-            user.is_active = True
-            user.save()
+            user.activate()
             auth_token = user.get_auth_token()
             return redirect('/?auth_token={0}'.format(auth_token))
 
-        return redirect('/login')
+        return redirect('/?error_message={}'.format(
+            _('Неверный код активации пользователя, перейдите по ссылке '
+              'в письме')
+        ))
 
 
 class AuthTokenView(ObtainAuthToken):
@@ -156,20 +156,27 @@ class ResetPasswordView(GenericAPIView):
         email = serializer.validated_data['email']
 
         try:
-            token = User.objects.get(username=email).get_auth_token()
-            msg = _('Для смены пароля перейдите по ссылке {0}?auth_token={1}&'
-                    'reset_password=1')
-            reset_link = get_absolute_url('/')
-            result = send_mail(
-                _('Сброс пароля на сайте городских волонтеров'),
-                msg.format(reset_link, token),
-                settings.EMAIL_HOST_USER,
-                [email],
-            )
-
-            return Response({'result': result})
-
+            user = User.objects.get(username=email)
         except User.DoesNotExist:
             error_msg = _('Пользователь с данным e-mail не зарегистрирован')
-
             raise exceptions.NotFound(error_msg)
+
+        if not user.is_active and user.last_login:
+            raise exceptions.NotAcceptable(
+                _('Пользователь был деактивирован администратором'))
+        elif not user.is_active:
+            user.activate()
+
+        token = user.get_auth_token()
+        reset_link = get_absolute_url('/')
+        message = _('Для смены пароля перейдите по ссылке {0}?auth_token={1}&'
+                'reset_password=1')
+
+        user.email_user(
+            _('Сброс пароля на сайте городских волонтеров'),
+            message.format(reset_link, token),
+        )
+
+        return Response(
+            {'result': _('Ссылка восстановления пароля отправлена на почту')}
+        )
