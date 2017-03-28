@@ -113,7 +113,7 @@ class UserPosition(models.Model):
         User, on_delete=models.CASCADE, verbose_name=_('Волонтёр')
     )
     team = models.ForeignKey(
-        'Team', on_delete=models.CASCADE, null=True, blank=True,
+        'Team', on_delete=models.SET_NULL, null=True, blank=True,
         verbose_name=_('Команда')
     )
     shift = models.ForeignKey(Shift, on_delete=models.PROTECT)
@@ -123,6 +123,7 @@ class UserPosition(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Позиция пользователя')
         verbose_name_plural = _('Позиции пользователя')
+        unique_together = (('user', 'team'), )
 
     def __str__(self):
         return str(self.id)
@@ -137,8 +138,9 @@ class Team(models.Model):
         verbose_name=_('Объект')
     )
     team_leader_position = models.OneToOneField(
-        UserPosition, on_delete=models.PROTECT, null=True, blank=True,
-        related_name='team_leader', verbose_name=_('Старший волонтёр')
+        UserPosition, on_delete=models.PROTECT,
+        related_name='team_leader', verbose_name=_('Старший волонтёр'),
+        limit_choices_to={'is_permanent': True}
     )
     members = models.ManyToManyField(
         User, through=UserPosition, verbose_name=_('Члены команды')
