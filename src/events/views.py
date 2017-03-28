@@ -8,11 +8,13 @@ from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework import exceptions
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from events.filters import EventFilter
 from events.models import Event, Participation
-from events.serializers import AdminEventSerializer, EventSerializer
+from events.serializers import AdminEventSerializer, EventSerializer, \
+    ParticipateEventSerializer
 from users.models import User
 
 
@@ -29,7 +31,11 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     permission_classes = ()
 
-    @detail_route(methods=['post'], permission_classes=())
+    @detail_route(
+        methods=['post'],
+        permission_classes=(IsAuthenticated,),
+        serializer_class=ParticipateEventSerializer,
+    )
     def participate(self, request, pk=None):
         """
         Add user in event
@@ -38,8 +44,9 @@ class EventViewSet(viewsets.ModelViewSet):
         :return:
         """
         user = self.request.user
-        user_status = self.request.query_params['user_status']
-        print(user_status)
+        serializer = ParticipateEventSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        status = serializer.validated_data['status']
         approved_roles = (
             'approved',
             'tested',
@@ -59,7 +66,7 @@ class EventViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             event = Event.objects.select_for_update().get(id=pk)
             try:
-                if event.type == 'forum' and user_status == 'volunteer':
+                if event.type == 'forum' and status == 'volunteer':
                     if event.volunteers_count < event.volunteer_limit:
                         Participation.objects.create(
                             user=user, event=event,

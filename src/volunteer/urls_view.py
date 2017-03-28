@@ -68,6 +68,9 @@ def api_root(request, format=None):
         # Events
         'admin:events': reverse('adm:events:event-list', **params),
         'events': reverse('events:event-list', **params),
+        'events:participate': reverse(
+            'events:event-participate', **params, kwargs={'pk': 0}
+        ),
 
         # Badges
         'badges': reverse('badges:badge-list', **params),

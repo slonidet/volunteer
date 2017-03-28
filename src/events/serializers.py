@@ -28,3 +28,11 @@ class AdminEventSerializer(AdminTranslationMixin, BaseEventSerializer):
 class EventSerializer(UserTranslationMixin, BaseEventSerializer):
     class Meta(BaseEventSerializer.Meta):
         exclude = ('is_public',)
+
+
+class ParticipateEventSerializer(serializers.Serializer):
+    status = serializers.CharField(max_length=16)
+
+    def update(self, instance, validated_data):
+        instance.status = validated_data.get('status', instance.title)
+        return instance
