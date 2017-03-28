@@ -15,7 +15,6 @@ from events.filters import EventFilter
 from events.models import Event, Participation
 from events.serializers import AdminEventSerializer, EventSerializer, \
     ParticipateEventSerializer
-from users.models import User
 
 
 class AdminEventViewSet(viewsets.ModelViewSet):
@@ -56,9 +55,7 @@ class EventViewSet(viewsets.ModelViewSet):
             'reserved',
         )
 
-        approved_users = User.objects.filter(role__in=approved_roles)
-
-        if user not in approved_users:
+        if user.role not in approved_roles:
             error_msg = _('Чтобы принять участие в мероприятии, '
                           'Ваш профиль должен быть подтвержден')
             raise exceptions.PermissionDenied(error_msg)

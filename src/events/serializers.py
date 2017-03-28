@@ -32,7 +32,3 @@ class EventSerializer(UserTranslationMixin, BaseEventSerializer):
 
 class ParticipateEventSerializer(serializers.Serializer):
     status = serializers.CharField(max_length=16)
-
-    def update(self, instance, validated_data):
-        instance.status = validated_data.get('status', instance.title)
-        return instance
