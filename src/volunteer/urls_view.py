@@ -111,6 +111,9 @@ def api_root(request, format=None):
         # schedules
         'schedules:shifts': reverse('schedules:shift-list', **params),
         'schedules:periods': reverse('schedules:period-list', **params),
+        'admin:schedules:places': reverse(
+            'adm:schedules:place-list', **params
+        ),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
 
