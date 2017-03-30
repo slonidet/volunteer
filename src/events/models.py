@@ -73,6 +73,8 @@ class Participation(models.Model):
         _('статус участника'), max_length=16, choices=STATUS_CHOICES,
         default=STATUS_PARTICIPANT
     )
+    is_done = models.BooleanField(_('пользователь присутствовал'),
+                                  default=False)
 
     class Meta(MetaPermissions):
         unique_together = (('user', 'event'),)
