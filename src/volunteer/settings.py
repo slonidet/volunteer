@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'badges.apps.BadgesConfig',
     'notices.apps.NoticesConfig',
     'interviews.apps.InterviewsConfig',
+    'hall_of_fame.apps.HallOfFameConfig',
 ]
 
 MIDDLEWARE = [

@@ -94,6 +94,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                                        default=timezone.now)
     role = models.CharField(_('роль'), max_length=12, choices=ROLE_CHOICES,
                             default=ROLE_REGISTERED)
+    rating = models.PositiveSmallIntegerField(_('рейтинг волонтера'),
+                                              default=0)
 
     objects = UserManager()
 
