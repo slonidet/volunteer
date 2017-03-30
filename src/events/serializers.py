@@ -2,8 +2,9 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from core.translation_serializers import AdminTranslationMixin, \
     UserTranslationMixin
-from events.models import Event
+from events.models import Event, Participation
 from events.translation import EventTranslationOptions
+from users.models import User
 
 
 class BaseEventSerializer(serializers.ModelSerializer):
@@ -21,10 +22,33 @@ class BaseEventSerializer(serializers.ModelSerializer):
 
 
 class AdminEventSerializer(AdminTranslationMixin, BaseEventSerializer):
+    volunteers = serializers.SerializerMethodField()
+    participants = serializers.SerializerMethodField()
+
     class Meta(BaseEventSerializer.Meta):
         fields = '__all__'
 
+    def get_volunteers(self, obj):
+        users = User.objects.filter(
+            participation__event__id=obj.id,
+            participation__status=Participation.STATUS_VOLUNTEER
+        ).values('username')
+        return users
+
+    def get_participants(self, obj):
+        users = User.objects.filter(
+            participation__event__id=obj.id,
+            participation__status=Participation.STATUS_PARTICIPANT
+        ).values('username')
+
+        return users
+
 
 class EventSerializer(UserTranslationMixin, BaseEventSerializer):
+
     class Meta(BaseEventSerializer.Meta):
         exclude = ('is_public',)
+
+
+class ParticipateEventSerializer(serializers.Serializer):
+    status = serializers.CharField(max_length=16)
