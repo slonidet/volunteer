@@ -114,7 +114,7 @@ class UserPosition(models.Model):
     )
     team = models.ForeignKey(
         'Team', on_delete=models.SET_NULL, null=True, blank=True,
-        verbose_name=_('Команда')
+        verbose_name=_('Команда'), related_name='user_positions'
     )
     shift = models.ForeignKey(Shift, on_delete=models.PROTECT)
     days = models.ManyToManyField(Day, verbose_name=_('Дни потока'))

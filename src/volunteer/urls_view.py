@@ -114,6 +114,10 @@ def api_root(request, format=None):
         'admin:schedules:places': reverse(
             'adm:schedules:place-list', **params
         ),
+        'admin:schedules:teams': reverse('adm:schedules:team-list', **params),
+        'admin:schedules:user-position': reverse(
+            'adm:schedules:user-position-list', **params
+        ),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
 
