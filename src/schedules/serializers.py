@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
-from core.nested_serializer.serializers import NestedSerializerMixin
+from core.serializers import ForeignKeySerializerMixin
 from users.models import User, Profile
 from users.serializers import BaseUserSerializer
 from schedules.models import Shift, Period, Day, Place, Position, \
@@ -75,14 +75,14 @@ class PlaceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TeamSerializer(NestedSerializerMixin, serializers.ModelSerializer):
+class TeamSerializer(ForeignKeySerializerMixin, serializers.ModelSerializer):
     user_positions = ReadOnlyUserPositionSerializer(many=True, required=False)
-    # team_leader_position = UserPositionSerializer(required=False)
+    team_leader_position = ReadOnlyUserPositionSerializer(required=False)
 
     class Meta:
         model = Team
         exclude = ('members',)
-        nested_children_fields = ()
+        foreign_key_fields = ('team_leader_position',)
 
     user_position_ids = ()
 
@@ -144,4 +144,3 @@ class TeamSerializer(NestedSerializerMixin, serializers.ModelSerializer):
                 user_position.save()
 
         return super().update(instance, validated_data)
-
