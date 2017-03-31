@@ -45,9 +45,17 @@ class AdminEventSerializer(AdminTranslationMixin, BaseEventSerializer):
 
 
 class EventSerializer(UserTranslationMixin, BaseEventSerializer):
+    status = serializers.SerializerMethodField()
 
     class Meta(BaseEventSerializer.Meta):
-        exclude = ('is_public',)
+        exclude = ('is_public', 'users',)
+
+    def get_status(self, obj):
+        try:
+            participation = obj.participation.get(event=obj.id)
+            return participation.status
+        except:
+            return None
 
 
 class ParticipateEventSerializer(serializers.Serializer):
