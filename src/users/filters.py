@@ -17,7 +17,7 @@ class UserFilter(FilterSet):
         model = User
         fields = (
             'groups__name', 'role', 'is_active', 'available_for_interview',
-            'participation__event__id'
+            'participation__event__id', 'participation__status',
         )
 
     def available_for_interview_filter(self, queryset, name, value):
