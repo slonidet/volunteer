@@ -108,6 +108,9 @@ def api_root(request, format=None):
         # schedules
         'schedules:shifts': reverse('schedules:shift-list', **params),
         'schedules:periods': reverse('schedules:period-list', **params),
+        'schedules:user:schedule': reverse(
+            'schedules:user-schedule-list', **params
+        ),
         'admin:schedules:places': reverse(
             'adm:schedules:place-list', **params
         ),

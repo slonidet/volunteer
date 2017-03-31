@@ -2,7 +2,8 @@ from rest_framework import viewsets, permissions
 
 from schedules.models import Shift, Period, Place, Team, UserPosition
 from schedules.serializers import ShiftSerializer, PeriodSerializer, \
-    PlaceSerializer, TeamSerializer, UserPositionSerializer
+    PlaceSerializer, TeamSerializer, UserPositionSerializer, \
+    UserSchedulePlaceSerializer
 
 
 class ShiftViewSet(viewsets.ReadOnlyModelViewSet):
@@ -46,3 +47,18 @@ class AdminUserPositionViewSet(viewsets.ModelViewSet):
     queryset = UserPosition.objects.select_related('user__profile')\
         .prefetch_related('days').all()
     serializer_class = UserPositionSerializer
+
+
+class UserScheduleViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Place.objects.prefetch_related(
+        # 'positions', 'positions__user_positions',
+        'positions__user_positions__days', 'positions__user_positions__team'
+    ).all()
+    serializer_class = UserSchedulePlaceSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = None
+
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            positions__user_positions__user=self.request.user
+        )

@@ -152,3 +152,29 @@ class TeamSerializer(ForeignKeySerializerMixin, serializers.ModelSerializer):
                 user_position.save()
 
         return super().update(instance, validated_data)
+
+
+class SimpleTeamSerializer(TeamSerializer):
+    class Meta:
+        model = Team
+        fields = ('id', 'team_leader_position')
+
+
+class UserScheduleUserPositionSerializer(serializers.ModelSerializer):
+    days = DaySerializer(many=True, read_only=True)
+    team = SimpleTeamSerializer(read_only=True)
+
+    class Meta:
+        model = UserPosition
+        exclude = ('user',)
+
+
+class UserSchedulePositionSerializer(PositionSerializer):
+    user_positions = UserScheduleUserPositionSerializer(
+        many=True, read_only=True
+    )
+
+
+class UserSchedulePlaceSerializer(PlaceSerializer):
+    positions = UserSchedulePositionSerializer(many=True, read_only=True)
+
