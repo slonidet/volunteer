@@ -18,9 +18,9 @@ class NestedSerializerMixin(object):
     at the same time. If you don't mix ReloadOnUpdateMixin after update or
     create you get response without your changes.
 
-    Don't forget override Meta.nested_children_fields in serializer!
+    Don't forget override Meta.m2m_nested_fields in serializer!
 
-    nested_children_fields = ((parent_field, child_field), )
+    m2m_nested_fields = ((parent_field, child_field), )
     """
     nested_data = None
 
@@ -52,7 +52,7 @@ class NestedSerializerMixin(object):
 
     def _pop_related_objects(self, data):
         """ Pop all nested child objects from request data as noted in the
-        ``nested_children_fields`` property.
+        ``m2m_nested_fields`` property.
 
         :param data: request data
         :return: dictionary in teh following form::
@@ -150,3 +150,45 @@ class NestedSerializerMixin(object):
                 for object_id, instance in instance_mapping.items():
                     if object_id not in data_mapping:
                         instance.delete()
+
+
+class M2MNestedSerializerMixin(object):
+    m2m_nested_objects = None
+
+    class Meta:
+        m2m_nested_fields = ()
+
+    def is_valid(self, raise_exception=False):
+        for field_name in self.Meta.m2m_nested_fields:
+            nested_data = self.initial_data.pop(field_name, None)
+            if not nested_data:
+                continue
+
+            nested_object_ids = [i.get('id', 0) for i in nested_data]
+            nested_field = self.Meta.model._meta.get_field(field_name)
+            related_model = nested_field.related_model
+            self.m2m_nested_objects[field_name] = related_model.objects.filter(
+                id__in=nested_object_ids
+            )
+
+        return super().is_valid(raise_exception)
+
+    def create(self, validated_data):
+        instance = super().create(validated_data)
+
+        for field_name, nested_objects in self.m2m_nested_objects.items():
+            getattr(instance, field_name).set(nested_objects)
+
+        return instance
+
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+
+        if self.partial:
+            for field_name, nested_objects in self.m2m_nested_objects.items():
+                getattr(instance, field_name).add(nested_objects)
+        else:
+            for field_name, nested_objects in self.m2m_nested_objects.items():
+                getattr(instance, field_name).set(nested_objects)
+
+        return instance
