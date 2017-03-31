@@ -66,7 +66,8 @@ class Participation(models.Model):
         (STATUS_PARTICIPANT, _('участник')),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='participation')
     event = models.ForeignKey(Event, on_delete=models.CASCADE,
                               related_name='participation')
     status = models.CharField(_('статус участника'), max_length=16,
