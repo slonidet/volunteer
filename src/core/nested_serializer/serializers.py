@@ -153,7 +153,7 @@ class NestedSerializerMixin(object):
 
 
 class M2MNestedSerializerMixin(object):
-    m2m_nested_objects = None
+    m2m_nested_objects = {}
 
     class Meta:
         m2m_nested_fields = ()

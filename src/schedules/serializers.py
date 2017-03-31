@@ -60,7 +60,7 @@ class UserPositionSerializer(ForeignKeySerializerMixin,
                              M2MNestedSerializerMixin,
                              BaseUserPositionSerializer):
     user = UserSerializer()
-    days = DaySerializer(many=True)
+    days = DaySerializer(many=True, required=False)
 
     class Meta(BaseUserPositionSerializer.Meta):
         foreign_key_fields = ('user',)
