@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
+from core.nested_serializer.serializers import M2MNestedSerializerMixin
 from core.serializers import ForeignKeySerializerMixin
 from users.models import User, Profile
 from users.serializers import BaseUserSerializer
@@ -18,6 +19,7 @@ class DaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Day
         fields = '__all__'
+        extra_kwargs = {'date': {'validators': []}}
 
 
 class PeriodSerializer(serializers.ModelSerializer):
@@ -45,18 +47,24 @@ class UserSerializer(BaseUserSerializer):
         fields = ('id', 'username', 'profile')
 
 
-class UserPositionSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    days = DaySerializer(many=True)
+class BaseUserPositionSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    days = DaySerializer(many=True, read_only=True)
 
     class Meta:
         model = UserPosition
         fields = '__all__'
 
 
-class ReadOnlyUserPositionSerializer(UserPositionSerializer):
-    user = UserSerializer(read_only=True)
-    days = DaySerializer(many=True, read_only=True)
+class UserPositionSerializer(ForeignKeySerializerMixin,
+                             M2MNestedSerializerMixin,
+                             BaseUserPositionSerializer):
+    user = UserSerializer()
+    days = DaySerializer(many=True, required=False)
+
+    class Meta(BaseUserPositionSerializer.Meta):
+        foreign_key_fields = ('user',)
+        m2m_nested_fields = ('days',)
 
 
 class PositionSerializer(serializers.ModelSerializer):
@@ -76,8 +84,8 @@ class PlaceSerializer(serializers.ModelSerializer):
 
 
 class TeamSerializer(ForeignKeySerializerMixin, serializers.ModelSerializer):
-    user_positions = ReadOnlyUserPositionSerializer(many=True, required=False)
-    team_leader_position = ReadOnlyUserPositionSerializer(required=False)
+    user_positions = BaseUserPositionSerializer(many=True, required=False)
+    team_leader_position = BaseUserPositionSerializer(required=False)
 
     class Meta:
         model = Team
