@@ -176,6 +176,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'finish_expired_test',
         'schedule': crontab(minute='*'),
     },
+    'alert_users': {
+        'task': 'alert_users',
+        'schedule': crontab(day_of_month='*'),
+    }
 }
 
 
