@@ -111,6 +111,9 @@ def api_root(request, format=None):
         'schedules:user:schedule': reverse(
             'schedules:user-schedule-list', **params
         ),
+        'schedules:team-leader:schedule': reverse(
+            'schedules:team-leader-schedule-list', **params
+        ),
         'admin:schedules:places': reverse(
             'adm:schedules:place-list', **params
         ),

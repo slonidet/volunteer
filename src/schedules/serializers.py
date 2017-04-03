@@ -194,3 +194,20 @@ class UserScheduleUserPositionSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPosition
         exclude = ('user',)
+
+
+# Team Leader Schedule
+
+class TeamLeaderSchedulePlaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Place
+        fields = '__all__'
+
+
+class TeamLeaderScheduleTeamSerializer(serializers.ModelSerializer):
+    user_positions = BaseUserPositionSerializer(many=True, read_only=True)
+    place = TeamLeaderSchedulePlaceSerializer(read_only=True)
+
+    class Meta:
+        model = Team
+        exclude = ('members', 'team_leader_position')
