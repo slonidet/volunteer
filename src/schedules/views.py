@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions
 from schedules.models import Shift, Period, Place, Team, UserPosition
 from schedules.serializers import ShiftSerializer, PeriodSerializer, \
     PlaceSerializer, TeamSerializer, UserPositionSerializer, \
-    UserSchedulePlaceSerializer, UserScheduleUserPositionSerializer
+    UserScheduleUserPositionSerializer
 
 
 class ShiftViewSet(viewsets.ReadOnlyModelViewSet):
@@ -50,7 +50,9 @@ class AdminUserPositionViewSet(viewsets.ModelViewSet):
 
 
 class UserScheduleViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = UserPosition.objects.all()
+    queryset = UserPosition.objects.select_related(
+        'position__place', 'shift', 'team__team_leader_position__user__profile'
+    ).prefetch_related('days').all()
     serializer_class = UserScheduleUserPositionSerializer
     permission_classes = (permissions.IsAuthenticated,)
     pagination_class = None
