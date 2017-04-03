@@ -59,4 +59,4 @@ class EventSerializer(UserTranslationMixin, BaseEventSerializer):
 
 
 class ParticipateEventSerializer(serializers.Serializer):
-    status = serializers.CharField(max_length=16)
+    status = serializers.ChoiceField(choices=Participation.STATUS_CHOICES)
