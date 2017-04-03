@@ -15,13 +15,14 @@ def get_absolute_url(url):
     return uri + url
 
 
-def pluralization(number, args):
+def pluralization(number, arg):
     """
     Returns the correct Russsian form of noun depending of numeral
     :param number:
-    :param args: list of noun forms
-    :return: list
+    :param arg: string with three forms separated by space
+    :return: string with noun in correct form
     """
+    args = arg.split()
     a = number % 10
     b = number % 100
     if a == 1 and b != 11:
