@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions
 
+from schedules.filters import UserPositionFilter
 from schedules.models import Shift, Period, Place, Team, UserPosition
 from schedules.serializers import ShiftSerializer, PeriodSerializer, \
     PlaceSerializer, TeamSerializer, UserPositionSerializer, \
@@ -48,6 +49,7 @@ class AdminUserPositionViewSet(viewsets.ModelViewSet):
     queryset = UserPosition.objects.select_related('user__profile')\
         .prefetch_related('days').all()
     serializer_class = UserPositionSerializer
+    filter_class = UserPositionFilter
 
 
 class UserScheduleViewSet(viewsets.ReadOnlyModelViewSet):
