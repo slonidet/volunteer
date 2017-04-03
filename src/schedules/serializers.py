@@ -166,7 +166,8 @@ class UserScheduleUserPositionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserPosition
-        exclude = ('user',)
+        fields = '__all__'
+        # exclude = ('user',)
 
 
 class UserSchedulePositionSerializer(PositionSerializer):
