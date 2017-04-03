@@ -34,8 +34,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = (
-            'id', 'status', 'first_name', 'last_name', 'middle_name', 'gender',
-            'phone'
+            'id', 'first_name', 'last_name', 'middle_name', 'gender', 'phone'
         )
 
 
@@ -152,3 +151,63 @@ class TeamSerializer(ForeignKeySerializerMixin, serializers.ModelSerializer):
                 user_position.save()
 
         return super().update(instance, validated_data)
+
+
+# User Schedule serializers
+
+class UserScheduleUserPositionSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = UserPosition
+        fields = ('id', 'user')
+
+
+class UserScheduleTeamSerializer(serializers.ModelSerializer):
+    team_leader_position = UserScheduleUserPositionSerializer(read_only=True)
+
+    class Meta:
+        model = Team
+        fields = ('id', 'team_leader_position')
+
+
+class UserSchedulePlaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Place
+        fields = '__all__'
+
+
+class UserSchedulePositionSerializer(serializers.ModelSerializer):
+    place = UserSchedulePlaceSerializer(read_only=True)
+
+    class Meta:
+        model = Position
+        fields = '__all__'
+
+
+class UserScheduleUserPositionSerializer(serializers.ModelSerializer):
+    days = DaySerializer(many=True, read_only=True)
+    team = UserScheduleTeamSerializer(read_only=True)
+    position = UserSchedulePositionSerializer(read_only=True)
+    shift = ShiftSerializer(read_only=True)
+
+    class Meta:
+        model = UserPosition
+        exclude = ('user',)
+
+
+# Team Leader Schedule
+
+class TeamLeaderSchedulePlaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Place
+        fields = '__all__'
+
+
+class TeamLeaderScheduleTeamSerializer(serializers.ModelSerializer):
+    user_positions = BaseUserPositionSerializer(many=True, read_only=True)
+    place = TeamLeaderSchedulePlaceSerializer(read_only=True)
+
+    class Meta:
+        model = Team
+        exclude = ('members', 'team_leader_position')
