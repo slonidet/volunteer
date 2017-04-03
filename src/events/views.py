@@ -81,7 +81,7 @@ class EventViewSet(viewsets.ModelViewSet):
                     if event.participants_count < event.participants_limit:
                         Participation.objects.create(
                             user=user, event=event,
-                            status=Participation.STATUS_VOLUNTEER
+                            status=Participation.STATUS_PARTICIPANT
                         )
                         event.participants_count = F('participants_count') + 1
                         event.save()
