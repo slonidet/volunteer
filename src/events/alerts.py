@@ -1,5 +1,4 @@
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
 
 from core.helpers import pluralization
 from events.models import Event
@@ -19,9 +18,9 @@ def alert_users():
             if remaining in time_lapses:
                 day_form = pluralization(remaining, day_forms)
                 for user in users:
-                    title = _('Напоминание о {}'.format(event.title))
-                    message = _('До мероприятия {0} осталось {1} {2}'
-                                .format(event.title, remaining, day_form))
+                    title = 'Напоминание о {}'.format(event.title)
+                    message = 'До мероприятия {0} осталось {1} {2}'.format(
+                        event.title, remaining, day_form)
                     Notice.objects.create(title=title,
                                           message=message,
                                           user=user,
