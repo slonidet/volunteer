@@ -178,7 +178,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'alert_users': {
         'task': 'alert_users',
-        'schedule': crontab(day_of_month='*'),
+        'schedule': crontab(minute=0, hour=0),
     }
 }
 
