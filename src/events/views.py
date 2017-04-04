@@ -96,5 +96,5 @@ class EventViewSet(viewsets.ModelViewSet):
                 return Response(_('Вы записались на: {} как {}').format(
                     event.title, role
                 ))
-            except SyntaxError:
+            except IntegrityError:
                 return Response(_('Вы уже записаны на это мероприятие'))

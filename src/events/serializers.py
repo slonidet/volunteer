@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from core.translation_serializers import AdminTranslationMixin, \
@@ -52,9 +53,10 @@ class EventSerializer(UserTranslationMixin, BaseEventSerializer):
 
     def get_status(self, obj):
         try:
-            participation = obj.participation.get(event=obj.id)
+            participation = obj.participation.get(
+                event=obj, user=self.context['request'].user)
             return participation.status
-        except:
+        except ObjectDoesNotExist:
             return None
 
 
