@@ -15,6 +15,7 @@ from core.fields import PhoneField
 from core.helpers import get_absolute_url
 from permissions import DEFAULT_GROUP
 from permissions.models import MetaPermissions
+from schedules.models import Period, Shift
 from users.current.tokens import RegisterTokenGenerator
 
 
@@ -235,22 +236,6 @@ class Profile(models.Model):
         (BENEFIT_ACCEPTANCE, _('признание окружающих')),
         (BENEFIT_RESPECT, _('гордость и уважение близких')),
     )
-    WORK_PERIOD_FIRST = 'first'
-    WORK_PERIOD_SECOND = 'second'
-    WORK_PERIOD_THIRD = 'third'
-    WORK_PERIOD_ANY = 'any'
-    WORK_PERIOD_CHOICES = (
-        (WORK_PERIOD_FIRST, _('13 – 23 июня 2018 года')),
-        (WORK_PERIOD_SECOND, _('24 июня – 4 июля 2018 года')),
-        (WORK_PERIOD_THIRD, _('5 – 15 июля 2018 года')),
-        (WORK_PERIOD_ANY, _('в любой указанный период')),
-    )
-    WORK_SHIFT_FIRST = 'first'
-    WORK_SHIFT_SECOND = 'second'
-    WORK_SHIFT_CHOICES = (
-        (WORK_SHIFT_FIRST, _('10:00 – 16:00')),
-        (WORK_SHIFT_SECOND, _('16:00 – 22:00')),
-    )
     CLOTHES_SIZE_42 = 42
     CLOTHES_SIZE_44 = 44
     CLOTHES_SIZE_46 = 46
@@ -443,11 +428,11 @@ class Profile(models.Model):
         max_length=256, blank=True, null=True
     )
     work_period = models.CharField(
-        _('период работы во время чемпионата'), choices=WORK_PERIOD_CHOICES,
+        _('период работы во время чемпионата'), choices=Period.CHOICES,
         max_length=8
     )
     work_shift = models.CharField(
-        _('смена работы во время чемпионата'), choices=WORK_SHIFT_CHOICES,
+        _('смена работы во время чемпионата'), choices=Shift.CHOICES,
         max_length=8
     )
     participate_in_other = models.NullBooleanField(

@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from permissions.models import MetaPermissions
-from users.models import User
 
 
 class Place(models.Model):
@@ -59,7 +58,17 @@ class Shift(models.Model):
     """
     Volunteer's duty shift
     """
-    name = models.CharField(_('Название'), max_length=128)
+    FIRST = 'first'
+    SECOND = 'second'
+    CHOICES = (
+        (FIRST, _('10:00 – 16:00')),
+        (SECOND, _('16:00 – 22:00')),
+    )
+
+    name = models.CharField(_('Название'), max_length=128, unique=True)
+    system_name = models.CharField(
+        _('Системное имя'), max_length=8, unique=True, choices=CHOICES
+    )
 
     class Meta(MetaPermissions):
         verbose_name = _('Смена')
@@ -73,7 +82,21 @@ class Period(models.Model):
     """
     Volunteer's duty period
     """
-    name = models.CharField(_('Название'), max_length=128)
+    FIRST = 'first'
+    SECOND = 'second'
+    THIRD = 'third'
+    ANY = 'any'
+    CHOICES = (
+        (FIRST, _('13 – 23 июня 2018 года')),
+        (SECOND, _('24 июня – 4 июля 2018 года')),
+        (THIRD, _('5 – 15 июля 2018 года')),
+        (ANY, _('в любой указанный период')),
+    )
+
+    name = models.CharField(_('Название'), max_length=128, unique=True)
+    system_name = models.CharField(
+        _('Системное имя'), max_length=8, unique=True, choices=CHOICES
+    )
 
     class Meta(MetaPermissions):
         verbose_name = _('Поток')
@@ -110,7 +133,7 @@ class UserPosition(models.Model):
         verbose_name=_('Позиция')
     )
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name=_('Волонтёр')
+        'users.User', on_delete=models.CASCADE, verbose_name=_('Волонтёр')
     )
     team = models.ForeignKey(
         'Team', on_delete=models.SET_NULL, null=True, blank=True,
@@ -143,7 +166,7 @@ class Team(models.Model):
         limit_choices_to={'is_permanent': True}
     )
     members = models.ManyToManyField(
-        User, through=UserPosition, verbose_name=_('Члены команды')
+        'users.User', through=UserPosition, verbose_name=_('Члены команды')
     )
     shift = models.ForeignKey(
         Shift, on_delete=models.PROTECT, verbose_name=_('Смена')
