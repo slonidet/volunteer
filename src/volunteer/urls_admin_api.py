@@ -11,4 +11,6 @@ urlpatterns = [
     url(r'^interviews/', include('interviews.urls_admin', 'interviews')),
     url(r'^arbitrary-notices/', include(
         'notices.urls_admin', namespace='arbitrary-notices')),
+    url(r'^tests/', include('user_tests.urls_admin', namespace='tests')),
+
 ]

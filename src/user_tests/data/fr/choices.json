@@ -1,0 +1,362 @@
+[
+  {
+    "title": "Vous parlez français?",
+    "choices": [
+      [0, "Bien, et vous?"],
+      [0, "Non, je suis docteur"],
+      [1, "Oui, je suis française"]
+    ]
+  },
+  {
+    "title": "Quel ... votre nom ?",
+    "choices": [
+      [0, "es"],
+      [0, "a"],
+      [1, "est"]
+    ]
+  },
+  {
+    "title": "....., Monsieur, vous êtes Pierre Dulac ?",
+    "choices": [
+      [0, "Salut"],
+      [0, "Excuse-moi"],
+      [1, "Excusez-moi"]
+    ]
+  },
+  {
+    "title": "Elle est Américaine, elle parle....",
+    "choices": [
+      [1, "anglais"],
+      [0, "américain"],
+      [0, "anglaise"]
+    ]
+  },
+  {
+    "title": "Vous ...... quel âge ?",
+    "choices": [
+      [0, "avons"],
+      [0, "êtes"],
+      [1, "avez"]
+    ]
+  },
+  {
+    "title": "Je suis ... Venise, j’habite ... Rome.",
+    "choices": [
+      [0, "à, de"],
+      [0, "de, de"],
+      [1, "de, à"]
+    ]
+  },
+  {
+    "title": "C’est la règle de Jacques, c’est ... règle.",
+    "choices": [
+      [0, "son"],
+      [1, "sa"],
+      [0, "ton"]
+    ]
+  },
+  {
+    "title": "Ils ont cinq enfants, ... enfants vont à l’école.",
+    "choices": [
+      [1, "leurs"],
+      [0, "leur"],
+      [0, "vos"]
+    ]
+  },
+  {
+    "title": "Je vais ... cinéma avec mon ami Loulou.",
+    "choices": [
+      [0, "à la"],
+      [0, "du"],
+      [1, "au"]
+    ]
+  },
+  {
+    "title": "Marie aime Luc, elle ... regarde tout le temps.",
+    "choices": [
+      [0, "il"],
+      [1, "lui"],
+      [0, "le"]
+    ]
+  },
+  {
+    "title": "Je ... donne mon numéro de téléphone, il est gentil.",
+    "choices": [
+      [0, "le"],
+      [0, "il"],
+      [1, "lui"]
+    ]
+  },
+  {
+    "title": "Michelle et Sabine sont à Paris, téléphone-.....",
+    "choices": [
+      [1, "les"],
+      [0, "ils"],
+      [0, "leur"]
+    ]
+  },
+  {
+    "title": "Tu ......... ce travail en deux jours.",
+    "choices": [
+      [0, "a fait"],
+      [1, "as fait"],
+      [0, "as faire"]
+    ]
+  },
+  {
+    "title": "Ils ont acheté un programme et ils ......... au théâtre.",
+    "choices": [
+      [0, "ont allé"],
+      [1, "sont allés"],
+      [0, "sont allées"]
+    ]
+  },
+  {
+    "title": "Je suis occupée, tu vois que je .............. lire",
+    "choices": [
+      [1, "suis en train de"],
+      [0, "vais"],
+      [0, "viens de"]
+    ]
+  },
+  {
+    "title": "................... faire une commande, Monsieur ?",
+    "choices": [
+      [1, "allez-vous"],
+      [0, "êtes-vous"],
+      [0, "avez-vous"]
+    ]
+  },
+  {
+    "title": "J’aime l’automne, parce qu’ ......... automne il pleut.",
+    "choices": [
+      [1, "en"],
+      [0, "au"],
+      [0, "à l’"]
+    ]
+  },
+  {
+    "title": "Il fait froid dehors, je vais mettre mon..........",
+    "choices": [
+      [0, "gants"],
+      [1, "pull-over"],
+      [0, "soutien-gorge"]
+    ]
+  },
+  {
+    "title": "Qu’est-ce que tu prends, toi? Moi, je vais prendre ... thé vert et un morceau ... tarte.",
+    "choices": [
+      [0, "une, une"],
+      [1, "un, de"],
+      [0, "le, de la"]
+    ]
+  },
+  {
+    "title": "Le nouveau président est élu, on .... parle partout dans la ville.",
+    "choices": [
+      [0, "le"],
+      [0, "y"],
+      [1, "en"]
+    ]
+  },
+  {
+    "title": "..... partiras-tu en hiver ?",
+    "choices": [
+      [0, "que"],
+      [1, "où"],
+      [0, "qui"]
+    ]
+  },
+  {
+    "title": "J’ .......... n’importe où avec toi, mon amour !",
+    "choices": [
+      [0, "iras"],
+      [1, "irai"],
+      [0, "va"]
+    ]
+  },
+  {
+    "title": "Nous aimons les deux bouquets : celui-.... est élégant, mais .......... est plutôt romantique.",
+    "choices": [
+      [0, "çi, ce-là"],
+      [0, "là, cette"],
+      [1, "çi, celui-là"]
+    ]
+  },
+  {
+    "title": "J’ ........ de la fièvre parce que j’ ............... froid sous la pluie.",
+    "choices": [
+      [1, "avais, avais pris"],
+      [0, "suis, étais pris"],
+      [0, "étais, avais pris"]
+    ]
+  },
+  {
+    "title": "Tu (montrer) nos photos sur lesquelles nous (être) nus ?",
+    "choices": [
+      [1, "as montré, étions"],
+      [0, "montrais, étions"],
+      [0, "as montré, avons été"]
+    ]
+  },
+  {
+    "title": "Bon anniversaire ! Je souhaite que tu (être) heureuse !",
+    "choices": [
+      [0, "aies"],
+      [1, "sois"],
+      [0, "es"]
+    ]
+  },
+  {
+    "title": "C’est le cadeau de Jean ? Non, c’est pas ............ , il est trop cher.",
+    "choices": [
+      [0, "le mien"],
+      [0, "son"],
+      [1, "le sien"]
+    ]
+  },
+  {
+    "title": "Je n’ai ......... envie de te voir en ce moment ! Va-t’en !",
+    "choices": [
+      [0, "nul"],
+      [0, "rien"],
+      [1, "aucune"]
+    ]
+  },
+  {
+    "title": "Je lui ai proposé de l’argent, mais il n’en prendra ......",
+    "choices": [
+      [1, "jamais"],
+      [0, "pas jamais"],
+      [0, "du tout"]
+    ]
+  },
+  {
+    "title": "On pense que tu ..... nul en mathématiques, Julien.",
+    "choices": [
+      [1, "es"],
+      [0, "sois"],
+      [0, "soit"]
+    ]
+  },
+  {
+    "title": "Dis, mon petit, ........... (pouvoir)-tu me faire plaisir et te taire ?",
+    "choices": [
+      [0, "pourriez"],
+      [1, "pourrais"],
+      [0, "pouvez"]
+    ]
+  },
+  {
+    "title": "Si j’ ......... (être) célibataire, je te .............. (inviter) au cinéma, ma jolie.",
+    "choices": [
+      [1, "serais, invitais"],
+      [0, "étais, inviterais"],
+      [0, "était, invitera"]
+    ]
+  },
+  {
+    "title": "Il est devenu un grand artiste ......... soutien permanent de sa mère dévouée.",
+    "choices": [
+      [0, "malgré le"],
+      [1, "grâce au"],
+      [0, "parce que"]
+    ]
+  },
+  {
+    "title": "Tu as reçu encore une mauvaise note, j’en suis déçue, tu ........ (devoir) étudier mieux.",
+    "choices": [
+      [1, "devrais"],
+      [0, "devais"],
+      [0, "doit"]
+    ]
+  },
+  {
+    "title": "Ton enthousiasme, .............. crois à 000%.",
+    "choices": [
+      [1, "j’y"],
+      [0, "j’en"],
+      [0, "je le"]
+    ]
+  },
+  {
+    "title": "Vas-.... ! Si tu veux, tu peux gagner!",
+    "choices": [
+      [1, "y"],
+      [0, "le"],
+      [0, "t’en"]
+    ]
+  },
+  {
+    "title": "La police a trouvé le coupable, ................ l’affaire a été close.",
+    "choices": [
+      [0, "c’est quoi"],
+      [0, "donc voilà"],
+      [1, "c’est pourquoi"]
+    ]
+  },
+  {
+    "title": "................ tu ne saches rien sur la situation politique, tu essayes de discuter à ce sujet",
+    "choices": [
+      [0, "parce que"],
+      [0, "car"],
+      [1, "bien que"]
+    ]
+  },
+  {
+    "title": "Le médecin a ajouté que le patient ........ (avoir) une rare maladie.",
+    "choices": [
+      [0, "a eu"],
+      [0, "a"],
+      [1, "avait"]
+    ]
+  },
+  {
+    "title": "C’est toujours moi qui suis énervée pendant que vous ............. calme et lucide.",
+    "choices": [
+      [0, "étiez"],
+      [1, "êtes"],
+      [0, "soyez"]
+    ]
+  },
+  {
+    "title": "Je te passerai un coup de fil..............",
+    "choices": [
+      [0, "dès je suis descendu de l’avion"], 
+      [1, "dès que je serai descendu de l’avion"],
+      [0, "dès que je sois descendu de l’avion"]
+    ]
+  },
+  {
+    "title": "Le commissariat a gardé le silence, ...........les journalistes attendaient des nouvelles.",
+    "choices": [
+      [0, "au lieu de"],
+      [0, "parce que"],
+      [1, "tandis que"]
+    ]
+  },
+  {
+    "title": "On a caché les cadeaux de Noël ......., sur l’armoire, ............ d’un tas de journaux.",
+    "choices": [
+      [0, "en bas, sous"],
+      [0, "en haut, au-dessus"],
+      [1, "là-dedans, sur"]
+    ]
+  },
+  {
+    "title": "......................, j’ai rencontré Gérard. Et imagine, .......... nous allons nous marier!",
+    "choices": [
+      [0, "en une semaine, pendant deux mois"],
+      [0, "depuis une semaine, en deux mois"],
+      [1, "il y a une semaine, dans deux mois"]
+    ]
+  },
+  {
+    "title": "Dis, Robert, tu te souviens de notre premier bisou ? Mais oui, bien sûr que je..........",
+    "choices": [
+      [0, "m’y souviens"],
+      [0, "m’en souviens"],
+      [1, "me le souviens"]
+    ]
+  }
+]

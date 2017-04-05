@@ -34,8 +34,6 @@ class CurrentUserViewMixin(object):
 
 class CurrentUserSerializerMixin(object):
     """ Create object only for current (request) user """
-    class Meta:
-        fields = '__all__'
 
     def create(self, validated_data):
         user = self.context['request'].user

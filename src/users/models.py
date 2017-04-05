@@ -56,6 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     ROLE_REGISTERED = 'registered'  # registered user
     ROLE_CANDIDATE = 'candidate'    # create user profile
+    ROLE_APPROVED = 'approved'      # admin approved user profile
     ROLE_TESTED = 'tested'          # user passed all tests
     ROLE_INTERVIEWED = 'interviewed'  # user passed interview
     ROLE_PREPARED = 'prepared'      # user passed training
@@ -64,6 +65,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
         (ROLE_REGISTERED, _('Зарегистрированный пользователь')),
         (ROLE_CANDIDATE, _('Кандидат в волонтёры')),
+        (ROLE_APPROVED, _('Утверждённый кандидат в волонтёры')),
         (ROLE_TESTED, _('Кандидат в волонтеры, прошедший тестирование')),
         (ROLE_INTERVIEWED,
          _('Кандидат в волонтеры, прошедший отборочные процедуры')),
@@ -163,6 +165,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.save()
 
         return token
+
+    def activate(self):
+        self.is_active = True
+        self.save()
 
     def __str__(self):
         return self.username
@@ -500,6 +506,13 @@ class ProfileComment(models.Model):
     text = models.TextField(_('Текст'))
     created_at = models.DateTimeField(_('время создания'), auto_now_add=True)
 
+    class Meta(MetaPermissions):
+        verbose_name = _('Комментарий к анкете')
+        verbose_name_plural = _('Комментарии к анкете')
+
+    def __str__(self):
+        return str(self.id)
+
 
 class Story(models.Model):
     """
@@ -514,6 +527,7 @@ class Story(models.Model):
     admin_comment = models.TextField(
         _('коментарий администратора'), blank=True, null=True
     )
+    image = models.ImageField(_('фото'), blank=True, null=True)
 
     class Meta(MetaPermissions):
         verbose_name = _('волонтёрская история')
