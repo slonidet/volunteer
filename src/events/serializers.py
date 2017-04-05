@@ -54,9 +54,11 @@ class EventSerializer(UserTranslationMixin, BaseEventSerializer):
     def get_status(self, obj):
         try:
             participation = obj.participation.get(
-                event=obj, user=self.context['request'].user)
+                event=obj, user=self.context['request'].user
+            )
             return participation.status
-        except ObjectDoesNotExist:
+
+        except (ObjectDoesNotExist, TypeError):
             return None
 
 
