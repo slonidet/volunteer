@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import mixins
 from rest_framework import permissions
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
@@ -21,18 +22,31 @@ class NoticeViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
 
 
 class ArbitraryNoticeViewSet(ModelViewSet):
-    queryset = Notice.objects.filter()
+    queryset = Notice.objects.filter(is_arbitrary=True)
     serializer_class = ArbitraryNoticeSerializer
     permission_classes = (permissions.IsAdminUser,)
+    filter_fields = ('user__role',)
+    allowed_roles = {choice[0] for choice in User.ROLE_CHOICES}
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        users_by_role = User.objects.filter(
-            role=serializer.validated_data['role'])
-        for user in users_by_role:
-            Notice.objects.create(
-                message=serializer.validated_data['message'], user=user,
-                title=serializer.validated_data['title'],)
+        choosed_roles = set(request.data['roles'])
 
-        return Response(_('Нотификация отправленна'))
+        if choosed_roles <= self.allowed_roles:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            for role in choosed_roles:
+                users_by_role = User.objects.filter(
+                    role=role)
+
+                for user in users_by_role:
+                    Notice.objects.create(
+                        message=serializer.validated_data['message'],
+                        user=user, title=serializer.validated_data['title'],
+                        is_arbitrary=True,
+                    )
+
+            return Response(_('Нотификация отправленна'))
+
+        else:
+            raise ValidationError(_('Такой роли не существует'))
