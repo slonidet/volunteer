@@ -1,10 +1,12 @@
 from rest_framework import viewsets, permissions
 
-from schedules.filters import UserPositionFilter
+from schedules.filters import UserPositionFilter, RelevantUserFilter
 from schedules.models import Shift, Period, Place, Team, UserPosition
 from schedules.serializers import ShiftSerializer, PeriodSerializer, \
     PlaceSerializer, TeamSerializer, UserPositionSerializer, \
-    UserScheduleUserPositionSerializer, TeamLeaderScheduleTeamSerializer
+    UserScheduleUserPositionSerializer, TeamLeaderScheduleTeamSerializer, \
+    RelevantUserSerializer
+from users.models import User
 
 
 class ShiftViewSet(viewsets.ReadOnlyModelViewSet):
@@ -77,3 +79,13 @@ class TeamLeaderScheduleViewSet(viewsets.ReadOnlyModelViewSet):
         return super().get_queryset().filter(
             team_leader_position__user=self.request.user
         )
+
+
+class RelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.select_related('profile__work_period')\
+        .filter(
+            is_active=True,
+            role__in=(User.ROLE_MAIN_TEAM, User.ROLE_RESERVED)
+        )
+    serializer_class = RelevantUserSerializer
+    filter_class = RelevantUserFilter

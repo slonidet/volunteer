@@ -133,14 +133,17 @@ class UserPosition(models.Model):
         verbose_name=_('Позиция')
     )
     user = models.ForeignKey(
-        'users.User', on_delete=models.CASCADE, verbose_name=_('Волонтёр')
+        'users.User', on_delete=models.CASCADE, verbose_name=_('Волонтёр'),
+        related_name='user_positions'
     )
     team = models.ForeignKey(
         'Team', on_delete=models.SET_NULL, null=True, blank=True,
         verbose_name=_('Команда'), related_name='user_positions'
     )
     shift = models.ForeignKey(Shift, on_delete=models.PROTECT)
-    days = models.ManyToManyField(Day, verbose_name=_('Дни потока'))
+    days = models.ManyToManyField(
+        Day, verbose_name=_('Дни потока'), related_name='user_positions'
+    )
     is_permanent = models.BooleanField(_('Закреплённый'))
 
     class Meta(MetaPermissions):

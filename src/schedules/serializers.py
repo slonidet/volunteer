@@ -155,7 +155,7 @@ class TeamSerializer(ForeignKeySerializerMixin, serializers.ModelSerializer):
 
 # User Schedule serializers
 
-class UserScheduleUserPositionSerializer(serializers.ModelSerializer):
+class TeamLeaderPositionSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
     class Meta:
@@ -164,7 +164,7 @@ class UserScheduleUserPositionSerializer(serializers.ModelSerializer):
 
 
 class UserScheduleTeamSerializer(serializers.ModelSerializer):
-    team_leader_position = UserScheduleUserPositionSerializer(read_only=True)
+    team_leader_position = TeamLeaderPositionSerializer(read_only=True)
 
     class Meta:
         model = Team
@@ -211,3 +211,28 @@ class TeamLeaderScheduleTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         exclude = ('members', 'team_leader_position')
+
+
+# Relevant user
+
+class RelevantProfileSerializer(ProfileSerializer):
+    class Meta(ProfileSerializer.Meta):
+        fields = (
+            'id', 'first_name', 'last_name', 'middle_name', 'phone',
+            'work_period', 'work_shift', 'interesting_tourist_information',
+            'interesting_transportation', 'interesting_language',
+            'interesting_festival'
+        )
+
+
+class RelevantUserSerializer(BaseUserSerializer):
+    profile = RelevantProfileSerializer(read_only=True)
+    busy_days = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'role', 'profile', 'busy_days')
+
+    def get_busy_days(self, obj):
+        busy_days = Day.objects.filter(user_positions__user=obj)
+        return DaySerializer(busy_days, many=True).data
