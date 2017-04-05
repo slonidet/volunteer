@@ -6,5 +6,5 @@ class NoticesConfig(AppConfig):
     name = 'notices'
     verbose_name = _('нотификации')
 
-    # def ready(self):
-    #     from notices import signals
+    def ready(self):
+        from notices import signals
