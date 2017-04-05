@@ -429,6 +429,7 @@ class Profile(models.Model):
     )
     work_period = models.ForeignKey(
         Period, verbose_name=_('период работы во время чемпионата')
+
     )
     work_shift = models.ForeignKey(
         Shift, verbose_name=_('смена работы во время чемпионата')
