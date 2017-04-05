@@ -41,6 +41,7 @@ class ArbitraryNoticeViewSet(ModelViewSet):
 
                 for user in users_by_role:
                     Notice.objects.create(
+                        type=Notice.TYPE_ALERT,
                         message=serializer.validated_data['message'],
                         user=user, title=serializer.validated_data['title'],
                         is_arbitrary=True,
