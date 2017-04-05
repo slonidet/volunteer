@@ -427,11 +427,11 @@ class Profile(models.Model):
         _('категория водительского удостоверения и стаж вождения'),
         max_length=256, blank=True, null=True
     )
-    work_period_new = models.ForeignKey(
+    work_period = models.ForeignKey(
         Period, verbose_name=_('период работы во время чемпионата')
 
     )
-    work_shift_new = models.ForeignKey(
+    work_shift = models.ForeignKey(
         Shift, verbose_name=_('смена работы во время чемпионата')
     )
     participate_in_other = models.NullBooleanField(
