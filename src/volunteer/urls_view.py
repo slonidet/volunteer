@@ -83,6 +83,8 @@ def api_root(request, format=None):
 
         # Notices
         'notices': reverse('notices:notice-list', **params),
+        'admin:notices:arbitrary-notices': reverse(
+            'adm:arbitrary-notices:arbitrary-notices-list', **params),
 
         # Statistic
         'admin:statistic:main': reverse('adm:statistic:main', **params),

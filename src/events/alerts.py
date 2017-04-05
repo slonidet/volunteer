@@ -23,9 +23,6 @@ def alert_users():
                     message = _('До мероприятия {0} осталось {1} {2}'
                                 .format(event.title, remaining, day_form))
                     Notice.objects.create(
-                                        title=title,
-                                        message=message,
-                                        user=user,
-                                        type=Notice.TYPE_ALERT,
-                                        is_confirmed=None,
-                                        )
+                        title=title, message=message, user=user,
+                        type=Notice.TYPE_ALERT, is_confirmed=None,
+                    )

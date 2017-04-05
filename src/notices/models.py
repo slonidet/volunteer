@@ -26,6 +26,7 @@ class Notice(models.Model):
     message = models.TextField(_('сообщение'))
     created_at = models.DateTimeField(_('время создания'), auto_now_add=True)
     is_confirmed = models.NullBooleanField(_('подтверждено'))
+    is_arbitrary = models.BooleanField(default=False)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE,
                                      null=True, blank=True)
     object_id = models.PositiveIntegerField(null=True, blank=True)
