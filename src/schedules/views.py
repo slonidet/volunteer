@@ -89,3 +89,9 @@ class RelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
         )
     serializer_class = RelevantUserSerializer
     filter_class = RelevantUserFilter
+    ordering_fields = (
+        'role', 'profile__work_period__system_name',
+        'profile__interesting_tourist_information',
+        'profile__interesting_transportation', 'profile__interesting_language',
+        'profile__interesting_festival'
+    )
