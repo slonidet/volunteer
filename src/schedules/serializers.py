@@ -55,20 +55,33 @@ class BaseUserPositionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class UserSchedulePlaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Place
+        fields = '__all__'
+
+
+class UserSchedulePositionSerializer(serializers.ModelSerializer):
+    place = UserSchedulePlaceSerializer(read_only=True)
+
+    class Meta:
+        model = Position
+        fields = '__all__'
+
+
 class UserPositionSerializer(ForeignKeySerializerMixin,
                              M2MNestedSerializerMixin,
                              BaseUserPositionSerializer):
     user = UserSerializer()
     days = DaySerializer(many=True, required=False)
+    position = UserSchedulePositionSerializer()
 
     class Meta(BaseUserPositionSerializer.Meta):
-        foreign_key_fields = ('user',)
+        foreign_key_fields = ('user', 'position')
         m2m_nested_fields = ('days',)
 
 
 class PositionSerializer(serializers.ModelSerializer):
-    user_positions = UserPositionSerializer(many=True, read_only=True)
-
     class Meta:
         model = Position
         fields = '__all__'
@@ -171,20 +184,6 @@ class UserScheduleTeamSerializer(serializers.ModelSerializer):
         fields = ('id', 'team_leader_position')
 
 
-class UserSchedulePlaceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Place
-        fields = '__all__'
-
-
-class UserSchedulePositionSerializer(serializers.ModelSerializer):
-    place = UserSchedulePlaceSerializer(read_only=True)
-
-    class Meta:
-        model = Position
-        fields = '__all__'
-
-
 class UserScheduleUserPositionSerializer(serializers.ModelSerializer):
     days = DaySerializer(many=True, read_only=True)
     team = UserScheduleTeamSerializer(read_only=True)
@@ -215,7 +214,16 @@ class TeamLeaderScheduleTeamSerializer(serializers.ModelSerializer):
 
 # Relevant user
 
+class RelevantPeriodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Period
+        fields = '__all__'
+
+
 class RelevantProfileSerializer(ProfileSerializer):
+    work_period = RelevantPeriodSerializer(read_only=True)
+    work_shift = ShiftSerializer(read_only=True)
+
     class Meta(ProfileSerializer.Meta):
         fields = (
             'id', 'first_name', 'last_name', 'middle_name', 'phone',
