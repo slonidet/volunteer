@@ -24,11 +24,7 @@ class PeriodViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class AdminPlaceViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Place.objects.prefetch_related(
-        'positions', 'positions__user_positions',
-        'positions__user_positions__days', 'positions__user_positions__user',
-        'positions__user_positions__user__profile'
-    ).all()
+    queryset = Place.objects.prefetch_related('positions').all()
     serializer_class = PlaceSerializer
     filter_fields = (
         'id', 'positions', 'positions__functionality',
@@ -82,11 +78,11 @@ class TeamLeaderScheduleViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = User.objects.select_related('profile__work_period')\
-        .filter(
-            is_active=True,
-            role__in=(User.ROLE_MAIN_TEAM, User.ROLE_RESERVED)
-        )
+    queryset = User.objects.select_related(
+        'profile__work_period', 'profile__work_shift'
+    ).filter(
+        # is_active=True, role__in=(User.ROLE_MAIN_TEAM, User.ROLE_RESERVED)
+    )
     serializer_class = RelevantUserSerializer
     filter_class = RelevantUserFilter
     ordering_fields = (
