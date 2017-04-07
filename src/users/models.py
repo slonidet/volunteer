@@ -293,7 +293,7 @@ class Profile(models.Model):
         (SHOE_SIZE_40, _('40')), (SHOE_SIZE_41, _('41')),
         (SHOE_SIZE_42, _('42')), (SHOE_SIZE_43, _('43')),
         (SHOE_SIZE_44, _('44')), (SHOE_SIZE_45, _('45')),
-        (SHOE_SIZE_46, _('46')), (SHOE_SIZE_47, _('46')),
+        (SHOE_SIZE_46, _('46')), (SHOE_SIZE_47, _('47')),
     )
     INTERESTING_1 = 1
     INTERESTING_2 = 2
