@@ -519,3 +519,21 @@ class Story(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class StoryComment(models.Model):
+    """
+    Admin story comment
+    """
+    story = models.ForeignKey(
+        Story, related_name='comments', verbose_name=_('волонтёрская история')
+    )
+    text = models.TextField(_('Текст'))
+    created_at = models.DateTimeField(_('время создания'), auto_now_add=True)
+
+    class Meta(MetaPermissions):
+        verbose_name = _('комментарий волонтёрской истории')
+        verbose_name_plural = _('комментарии волонтёрских историй')
+
+    def __str__(self):
+        return str(self.id)

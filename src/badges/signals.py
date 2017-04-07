@@ -3,7 +3,7 @@ from django.dispatch import receiver
 
 from badges.models import Badge
 from notices.models import Notice
-from users.models import ProfileComment, Profile
+from users.models import ProfileComment, Profile, StoryComment, Story
 
 
 def create_badge(user, type):
@@ -43,3 +43,16 @@ def delete_profile_comment_badge(sender, instance, **kwargs):
     delete_all_badges(user=instance.user, type=ProfileComment._meta.model_name)
 
 
+@receiver(post_save, sender=StoryComment)
+def create_story_comment_badge(sender, instance, created, **kwargs):
+    if created:
+        create_badge(
+            user=instance.story.profile.user, type=sender._meta.model_name
+        )
+
+
+@receiver(post_save, sender=Story)
+def delete_story_comment_badge(sender, instance, **kwargs):
+    delete_all_badges(
+        user=instance.profile.user, type=StoryComment._meta.model_name
+    )
