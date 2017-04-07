@@ -508,14 +508,29 @@ class Story(models.Model):
     text = models.TextField(_('текст'))
     about_yourself = models.CharField(_('о себе'), max_length=1024)
     is_public = models.BooleanField(_('опубликовано'), default=False)
-    admin_comment = models.TextField(
-        _('коментарий администратора'), blank=True, null=True
-    )
     image = models.ImageField(_('фото'), blank=True, null=True)
 
     class Meta(MetaPermissions):
         verbose_name = _('волонтёрская история')
         verbose_name_plural = _('волонтёрские истории')
+
+    def __str__(self):
+        return str(self.id)
+
+
+class StoryComment(models.Model):
+    """
+    Admin story comment
+    """
+    story = models.ForeignKey(
+        Story, related_name='comments', verbose_name=_('волонтёрская история')
+    )
+    text = models.TextField(_('Текст'))
+    created_at = models.DateTimeField(_('время создания'), auto_now_add=True)
+
+    class Meta(MetaPermissions):
+        verbose_name = _('комментарий волонтёрской истории')
+        verbose_name_plural = _('комментарии волонтёрских историй')
 
     def __str__(self):
         return str(self.id)
