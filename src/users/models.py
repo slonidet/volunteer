@@ -508,9 +508,6 @@ class Story(models.Model):
     text = models.TextField(_('текст'))
     about_yourself = models.CharField(_('о себе'), max_length=1024)
     is_public = models.BooleanField(_('опубликовано'), default=False)
-    admin_comment = models.TextField(
-        _('коментарий администратора'), blank=True, null=True
-    )
     image = models.ImageField(_('фото'), blank=True, null=True)
 
     class Meta(MetaPermissions):
