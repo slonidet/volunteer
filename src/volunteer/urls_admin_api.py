@@ -10,7 +10,5 @@ urlpatterns = [
     url(r'^statistic/', include('statistic.urls_admin', 'statistic')),
     url(r'^interviews/', include('interviews.urls_admin', 'interviews')),
     url(r'^tests/', include('user_tests.urls_admin', namespace='tests')),
-    url(r'^hall_of_fame', include(
-        'hall_of_fame.urls_admin', namespace='hall_of_fame')),
-
+    url(r'^hall_of_fame/', include('hall_of_fame.urls_admin', 'hall_of_fame')),
 ]

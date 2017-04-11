@@ -109,6 +109,7 @@ def api_root(request, format=None):
         'admin:interviews:statuses': reverse('adm:interviews:status', **params),
 
         # HallOfFame
+        'hall_of_fame': reverse('hall_of_fame:hall_of_fame', **params),
         'admin:hall_of_fame': reverse(
             'adm:hall_of_fame:hall_of_fame-list', **params),
 
