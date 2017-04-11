@@ -1,5 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
+from rest_framework.fields import empty
 
 from core.nested_serializer.serializers import M2MNestedSerializerMixin
 from core.serializers import ForeignKeySerializerMixin
@@ -244,3 +245,55 @@ class RelevantUserSerializer(BaseUserSerializer):
     def get_busy_days(self, obj):
         busy_days = Day.objects.filter(user_positions__user=obj)
         return DaySerializer(busy_days, many=True).data
+
+
+# User Position Statistic
+
+class StatisticDaySerializer(serializers.ModelSerializer):
+    user_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Day
+        fields = '__all__'
+
+    def __init__(self, instance=None, data=empty, **kwargs):
+        self.day_statistics = kwargs.pop('day_statistics', None)
+
+        super().__init__(instance, data, **kwargs)
+
+    def get_user_count(self, obj):
+        return self.day_statistics.get(obj.id, 0)
+
+
+class StatisticPositionSerializer(serializers.ModelSerializer):
+    days = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Position
+        exclude = ('place',)
+
+    def get_days(self, obj):
+        days = self.parent.parent.days
+        statistics = self.parent.parent.statistics
+
+        try:
+            day_statistics = statistics[obj.place.id][obj.id]
+        except KeyError:
+            day_statistics = {}
+
+        return StatisticDaySerializer(
+            days, day_statistics=day_statistics, many=True).data
+
+
+class StatisticPlaceSerializer(serializers.ModelSerializer):
+    positions = StatisticPositionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Place
+        fields = '__all__'
+
+    def __init__(self, instance=None, data=empty, **kwargs):
+        self.days = kwargs.pop('days', None)
+        self.statistics = kwargs.pop('statistics', None)
+
+        super().__init__(instance, data, **kwargs)
