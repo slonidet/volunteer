@@ -66,13 +66,13 @@ class Participation(models.Model):
         (STATUS_PARTICIPANT, _('участник')),
     )
 
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    status = models.CharField(
-        _('статус участника'), max_length=16, choices=STATUS_CHOICES,
-        default=STATUS_PARTICIPANT
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='participation')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE,
+                              related_name='participation')
+    status = models.CharField(_('статус участника'), max_length=16,
+                              choices=STATUS_CHOICES,
+                              default=STATUS_PARTICIPANT)
     is_done = models.BooleanField(_('пользователь присутствовал'),
                                   default=False)
 
