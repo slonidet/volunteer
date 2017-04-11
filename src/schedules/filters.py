@@ -14,7 +14,10 @@ class UserPositionFilter(FilterSet):
 
     class Meta:
         model = UserPosition
-        fields = ('position__place', 'days__period', 'shift', 'without_team')
+        fields = (
+            'position__place', 'days__period', 'shift', 'without_team',
+            'position'
+        )
 
     def without_team_filter(self, queryset, name, value):
         return queryset.filter(team__isnull=value)
