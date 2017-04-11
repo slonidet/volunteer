@@ -111,9 +111,14 @@ class AdminUserPositionStatisticView(GenericAPIView):
             days = days.filter(period=request.query_params['days__period'])
 
         positions = Place.objects.prefetch_related('positions')
+        page = self.paginate_queryset(positions)
+        if page is not None:
+            serializer = self.get_serializer(
+                page, days=days, statistics=user_statistics, many=True)
+            return self.get_paginated_response(serializer.data)
+
         serializer = self.get_serializer(
-            positions, days=days, statistics=user_statistics, many=True
-        )
+            positions, days=days, statistics=user_statistics, many=True)
 
         return Response(serializer.data)
 
