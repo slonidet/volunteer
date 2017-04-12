@@ -6,6 +6,7 @@ django-filter==1.0.1
 django-multiselectfield==0.1.4
 django-modeltranslation==0.12
 social-auth-app-django==1.0.1
+django-import-export==0.5.1
 
 pytz==2016.10
 python-dateutil==2.6.0
