@@ -48,7 +48,7 @@ class EquipmentStatistic(generics.RetrieveAPIView):
         if is_shoes:
             for size in self.shoe_sizes:
                 final_list.append(Profile.objects.filter(
-                    shoe_size=size).count())
+                    shoe_size=size, user__role=User.ROLE_MAIN_TEAM).count())
 
             return final_list
 
@@ -56,7 +56,8 @@ class EquipmentStatistic(generics.RetrieveAPIView):
             for size in self.male_sizes:
                 final_list.append(Profile.objects.filter(
                     gender=Profile.GENDER_MALE,
-                    clothes_size_male=size).count())
+                    clothes_size_male=size,
+                    user__role=User.ROLE_MAIN_TEAM).count())
 
             return final_list
 
@@ -64,7 +65,8 @@ class EquipmentStatistic(generics.RetrieveAPIView):
             for size in self.female_sizes:
                 final_list.append(Profile.objects.filter(
                     gender=Profile.GENDER_FEMALE,
-                    clothes_size_female=size).count())
+                    clothes_size_female=size,
+                    user__role=User.ROLE_MAIN_TEAM).count())
 
             return final_list
 
