@@ -43,6 +43,7 @@ class AdminTeamViewSet(viewsets.ModelViewSet):
         'user_positions__user__profile'
     ).all()
     serializer_class = TeamSerializer
+    filter_fields = ('place', 'shift', 'period')
 
 
 class AdminUserPositionViewSet(viewsets.ModelViewSet):
@@ -83,7 +84,7 @@ class TeamLeaderScheduleViewSet(viewsets.ReadOnlyModelViewSet):
 class AdminRelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.select_related(
         'profile__work_period', 'profile__work_shift'
-    ).filter(
+    ).prefetch_related('user_positions__days').filter(
         is_active=True, role__in=(User.ROLE_MAIN_TEAM, User.ROLE_RESERVED)
     )
     serializer_class = RelevantUserSerializer
