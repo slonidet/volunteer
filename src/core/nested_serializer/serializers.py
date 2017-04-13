@@ -186,7 +186,7 @@ class M2MNestedSerializerMixin(object):
 
         if self.partial:
             for field_name, nested_objects in self.m2m_nested_objects.items():
-                getattr(instance, field_name).add(nested_objects)
+                getattr(instance, field_name).add(*nested_objects)
         else:
             for field_name, nested_objects in self.m2m_nested_objects.items():
                 getattr(instance, field_name).set(nested_objects)
