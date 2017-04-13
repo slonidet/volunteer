@@ -79,10 +79,7 @@ class CurrentUserStorySerializer(AdminStorySerializer):
     comments = StoryCommentSerializer(read_only=True, many=True)
 
     class Meta(BaseStorySerializer.Meta):
-        fields = [
-            'id', 'text', 'about_yourself', 'is_public', 'image', 'thumbnail',
-            'profile_photo', 'comments'
-        ]
+        fields = '__all__'
         read_only_fields = ('is_public',)
 
     def create(self, validated_data):
