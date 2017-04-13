@@ -6,7 +6,7 @@ from users.current.mixins import CurrentUserSerializerMixin
 from users.models import Profile, ProfileAttachment
 from users.serializers import User, UserSerializer, ProfileSerializer, \
     ProfileAttachmentSerializer, BaseUserSerializer, BaseStorySerializer, \
-    StoryCommentSerializer
+    AdminStorySerializer, StoryCommentSerializer
 
 
 class AuthProfileSerializer(serializers.ModelSerializer):
@@ -75,7 +75,7 @@ class CurrentUserProfileAttachmentSerializer(CurrentUserSerializerMixin,
         fields = '__all__'
 
 
-class CurrentUserStorySerializer(BaseStorySerializer):
+class CurrentUserStorySerializer(AdminStorySerializer):
     comments = StoryCommentSerializer(read_only=True, many=True)
 
     class Meta(BaseStorySerializer.Meta):
