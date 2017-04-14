@@ -243,7 +243,10 @@ class RelevantUserSerializer(BaseUserSerializer):
         fields = ('id', 'username', 'role', 'profile', 'busy_days')
 
     def get_busy_days(self, obj):
-        busy_days = Day.objects.filter(user_positions__user=obj)
+        busy_days = []
+        for user_position in obj.user_positions.all():
+            busy_days.extend(user_position.days.all())
+        # busy_days = obj.user_positions.all()
         return DaySerializer(busy_days, many=True).data
 
 

@@ -159,7 +159,6 @@ class UserPosition(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Позиция пользователя')
         verbose_name_plural = _('Позиции пользователя')
-        unique_together = (('user', 'team'), )
 
     def __str__(self):
         return str(self.id)
