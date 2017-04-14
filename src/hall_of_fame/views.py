@@ -8,11 +8,12 @@ from hall_of_fame.serializers import HallOfFameSerializer, \
 
 
 class AdminHallOfFameViewSet(ModelViewSet):
-    queryset = HallOfFame.objects.all()
+    queryset = HallOfFame.objects.all().select_related('user__profile')
     serializer_class = AdminHallOfFameSerializer
     permission_classes = (permissions.IsAdminUser,)
 
 
 class HallOfFameView(ListAPIView):
-    queryset = HallOfFame.objects.filter(is_published=True)
+    queryset = HallOfFame.objects.filter(is_published=True)\
+        .select_related('user__profile')
     serializer_class = HallOfFameSerializer
