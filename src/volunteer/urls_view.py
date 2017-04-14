@@ -37,6 +37,8 @@ def api_root(request, format=None):
         'admin:users:profile-attachments': reverse(
             'adm:users:profile-attachment-list', **params),
         'admin:users:stories': reverse('adm:users:story-list', **params),
+        'admin:users:story-comments': reverse(
+            'adm:users:story-comment-list', **params),
         'admin:users:groups': reverse('adm:users:group-list', **params),
         'users:stories': reverse('users:story-list', **params),
 
@@ -83,9 +85,12 @@ def api_root(request, format=None):
 
         # Notices
         'notices': reverse('notices:notice-list', **params),
+        'admin:notices:arbitrary-notices': reverse(
+            'adm:arbitrary-notices:arbitrary-notices-list', **params),
 
         # Statistic
         'admin:statistic:main': reverse('adm:statistic:main', **params),
+        'admin:statistic:equipment': reverse('adm:statistic:equipment', **params),
 
         # Social auth
         'social-auth:vk': reverse(
@@ -107,6 +112,26 @@ def api_root(request, format=None):
         'admin:interviews': reverse('adm:interviews:interview-list', **params),
         'admin:interviews:periods': reverse('adm:interviews:period', **params),
         'admin:interviews:statuses': reverse('adm:interviews:status', **params),
+
+        # schedules
+        'schedules:shifts': reverse('schedules:shift-list', **params),
+        'schedules:periods': reverse('schedules:period-list', **params),
+        'schedules:user:schedule': reverse(
+            'schedules:user-schedule-list', **params
+        ),
+        'schedules:team-leader:schedule': reverse(
+            'schedules:team-leader-schedule-list', **params
+        ),
+        'admin:schedules:places': reverse(
+            'adm:schedules:place-list', **params
+        ),
+        'admin:schedules:teams': reverse('adm:schedules:team-list', **params),
+        'admin:schedules:user-position': reverse(
+            'adm:schedules:user-position-list', **params
+        ),
+        'admin:schedules:relevant-users': reverse(
+            'adm:schedules:relevant-user-list', **params
+        ),
 
         # HallOfFame
         'hall_of_fame': reverse('hall_of_fame:hall_of_fame', **params),

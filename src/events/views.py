@@ -24,7 +24,7 @@ class AdminEventViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAdminUser,)
 
 
-class EventViewSet(viewsets.ReadOnlyModelViewSet):
+class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.filter(
         is_public=True, end__gt=datetime.now(tz=pytz.UTC)
     )
@@ -82,7 +82,7 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
                     if event.participants_count < event.participants_limit:
                         Participation.objects.create(
                             user=user, event=event,
-                            status=Participation.STATUS_VOLUNTEER
+                            status=Participation.STATUS_PARTICIPANT
                         )
                         event.participants_count = F('participants_count') + 1
                         event.save()

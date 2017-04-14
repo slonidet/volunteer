@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'badges.apps.BadgesConfig',
     'notices.apps.NoticesConfig',
     'interviews.apps.InterviewsConfig',
+    'schedules.apps.SchedulesConfig',
     'hall_of_fame.apps.HallOfFameConfig',
 ]
 
@@ -185,6 +186,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'finish_expired_test',
         'schedule': crontab(minute='*'),
     },
+    'alert_users': {
+        'task': 'alert_users',
+        'schedule': crontab(minute=0, hour=0),
+    }
 }
 
 
