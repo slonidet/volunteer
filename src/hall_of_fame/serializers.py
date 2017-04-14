@@ -20,11 +20,9 @@ class HallOfFameBaseSerializer(serializers.ModelSerializer):
         model_translation = HallOfFameTranslationOptions
 
 
-class AdminHallOfFameSerializer(HallOfFameBaseSerializer, AdminTranslationMixin):
-    rating = serializers.SerializerMethodField()
-
-    def get_rating(self, obj):
-        return obj.user.rating
+class AdminHallOfFameSerializer(HallOfFameBaseSerializer,
+                                AdminTranslationMixin):
+    rating = serializers.IntegerField(source='user.rating')
 
     class Meta(HallOfFameBaseSerializer.Meta):
         fields = '__all__'
@@ -33,4 +31,5 @@ class AdminHallOfFameSerializer(HallOfFameBaseSerializer, AdminTranslationMixin)
 class HallOfFameSerializer(HallOfFameBaseSerializer, UserTranslationMixin):
 
     class Meta(HallOfFameBaseSerializer.Meta):
-        fields = ['id', 'user', 'image', 'is_published', 'text', 'first_name', 'last_name' ]
+        fields = ['id', 'user', 'image', 'is_published', 'text', 'first_name',
+                  'last_name', ]
