@@ -1,5 +1,8 @@
+import collections
+
 from django.db.models import Q
 from rest_framework import generics
+from rest_framework import permissions
 from rest_framework.response import Response
 
 from events.models import Event
@@ -24,3 +27,44 @@ class AdminStatistic(generics.RetrieveAPIView):
         data['video_count'] = Video.objects.all().count()
 
         return Response(data)
+
+
+class ProfileGenderAgeStatView(generics.RetrieveAPIView):
+    queryset = Profile.objects.all()
+    permission_classes = (permissions.IsAdminUser, )
+
+    count_males = Profile.objects.filter(gender=Profile.GENDER_MALE).count()
+    count_females = Profile.objects.filter(
+        gender=Profile.GENDER_FEMALE).count()
+    count_all = count_males + count_females
+
+    def retrieve(self, request, *args, **kwargs):
+        data = dict()
+        data['gender'] = get_percentage(
+            self.count_all, [self.count_females, self.count_males])
+        data['age'] = self.get_age_groups_percentage()
+        return Response(data)
+
+    def get_age_groups_percentage(self):
+        ages_list = []
+        for profile in Profile.objects.all():
+            ages_list.append(profile.age)
+
+        ages_dict = collections.Counter(ages_list)
+        age_groups = {'14-16': (14, 15),
+                      '16-18': (16, 17),
+                      '18-25': (range(17))}
+        for age_group in age_groups:
+
+        return ages_dict
+
+
+
+def get_percentage(total, values):
+    if type(values) == list:
+        final_dict = dict()
+        for value in values:
+            final_dict[value] = 100 * float(value) / float(total)
+        return final_dict
+    else:
+        return 100 * float(values) / float(total)
