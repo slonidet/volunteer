@@ -11,7 +11,6 @@ class HallOfFameBaseSerializer(serializers.ModelSerializer):
         '300x300', options={"crop": "center"},
         source='user.profile.story.image', read_only=True
     )
-
     first_name = serializers.CharField(source='user.profile.first_name')
     last_name = serializers.CharField(source='user.profile.last_name')
 
