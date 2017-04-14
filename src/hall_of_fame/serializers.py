@@ -13,6 +13,15 @@ class HallOfFameBaseSerializer(ModelSerializer):
         source='user.profile.story.image', read_only=True
     )
 
+    first_name = SerializerMethodField()
+    last_name = SerializerMethodField()
+
+    def get_first_name(self, obj):
+        return obj.user.profile.first_name
+
+    def get_last_name(self, obj):
+        return obj.user.profile.last_name
+
     class Meta:
         model = HallOfFame
         model_translation = HallOfFameTranslationOptions
@@ -31,4 +40,4 @@ class AdminHallOfFameSerializer(HallOfFameBaseSerializer, AdminTranslationMixin)
 class HallOfFameSerializer(HallOfFameBaseSerializer, UserTranslationMixin):
 
     class Meta(HallOfFameBaseSerializer.Meta):
-        fields = ['id', 'user', 'image', 'is_published', 'text', ]
+        fields = ['id', 'user', 'image', 'is_published', 'text', 'first_name', 'last_name' ]
