@@ -246,7 +246,6 @@ class RelevantUserSerializer(BaseUserSerializer):
         busy_days = []
         for user_position in obj.user_positions.all():
             busy_days.extend(user_position.days.all())
-        # busy_days = obj.user_positions.all()
         return DaySerializer(busy_days, many=True).data
 
 
