@@ -17,3 +17,4 @@ class HallOfFameView(ListAPIView):
     queryset = HallOfFame.objects.filter(is_published=True)\
         .select_related('user__profile')
     serializer_class = HallOfFameSerializer
+    permission_classes = ()
