@@ -11,8 +11,10 @@ class HallOfFameBaseSerializer(serializers.ModelSerializer):
         '300x300', options={"crop": "center"},
         source='user.profile.story.image', read_only=True
     )
-    first_name = serializers.CharField(source='user.profile.first_name')
-    last_name = serializers.CharField(source='user.profile.last_name')
+    first_name = serializers.CharField(
+        source='user.profile.first_name', read_only=True)
+    last_name = serializers.CharField(
+        source='user.profile.last_name', read_only=True)
 
     class Meta:
         model = HallOfFame
@@ -21,7 +23,7 @@ class HallOfFameBaseSerializer(serializers.ModelSerializer):
 
 class AdminHallOfFameSerializer(HallOfFameBaseSerializer,
                                 AdminTranslationMixin):
-    rating = serializers.IntegerField(source='user.rating')
+    rating = serializers.IntegerField(source='user.rating', read_only=True)
 
     class Meta(HallOfFameBaseSerializer.Meta):
         fields = '__all__'
