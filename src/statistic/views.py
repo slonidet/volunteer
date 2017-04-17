@@ -46,21 +46,20 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
         return Response(data)
 
     def get_age_groups_percentage(self):
-        ages_list = []
-        for profile in Profile.objects.all():
-            ages_list.append(profile.age)
-
-        ages_dict = collections.Counter(ages_list)
         age_groups = {'14-16': tuple(range(14, 17)),
                       '16-18': tuple(range(16, 18)),
                       '18-25': tuple(range(18, 25)),
                       '25-35': tuple(range(25, 35)),
                       '35-55': tuple(range(35, 55)), }
+        ages_list = []
+        for profile in Profile.objects.all():
+            ages_list.append(profile.age)
+
+        ages_dict = collections.Counter(ages_list)
         print(age_groups)
-        # for age_group in age_groups:
+        for age_group in age_groups:
 
         return ages_dict
-
 
 
 def get_percentage(total, values):
