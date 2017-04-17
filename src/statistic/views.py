@@ -56,8 +56,9 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
             ages_list.append(profile.age)
 
         ages_dict = collections.Counter(ages_list)
-        print(age_groups)
         for age_group in age_groups:
+            for age in ages_list:
+                if age in age_group:
 
         return ages_dict
 
