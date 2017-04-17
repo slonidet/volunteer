@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'multiselectfield',
     'sorl.thumbnail',
     'social_django',
+    'import_export',
 
     'users.apps.UsersConfig',
     'gallery.apps.GalleryConfig',
