@@ -37,8 +37,6 @@ def api_root(request, format=None):
         'admin:users:profile-attachments': reverse(
             'adm:users:profile-attachment-list', **params),
         'admin:users:stories': reverse('adm:users:story-list', **params),
-        'admin:users:story-comments': reverse(
-            'adm:users:story-comment-list', **params),
         'admin:users:groups': reverse('adm:users:group-list', **params),
         'users:stories': reverse('users:story-list', **params),
 
@@ -90,6 +88,8 @@ def api_root(request, format=None):
 
         # Statistic
         'admin:statistic:main': reverse('adm:statistic:main', **params),
+        'admin:statistic:profiles:gender_age': reverse(
+            'adm:statistic:profiles_gender_age', **params),
         'admin:statistic:equipment': reverse('adm:statistic:equipment', **params),
 
         # Social auth
