@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.db.models.functions import Length
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.response import Response
@@ -56,7 +57,7 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
 
     def get_age_groups_percentage(self):
 
-        group_14_16 = tuple(range(14, 17))
+        group_14_16 = tuple(range(14, 16))
         group_16_18 = tuple(range(16, 18))
         group_18_25 = tuple(range(18, 25))
         group_25_35 = tuple(range(25, 35))
@@ -148,3 +149,23 @@ class EquipmentStatistic(generics.RetrieveAPIView):
         }
 
         return Response(equipment_data)
+
+
+class GeoStatistic(generics.RetrieveAPIView):
+    queryset = Profile.objects.all()
+    permission_classes = (permissions.IsAdminUser,)
+
+    def retrieve(self, request, *args, **kwargs):
+        data = dict()
+        data['country'] = self.get_country_percentage()
+
+        return Response(data)
+
+    def get_country_percentage(self):
+        count_all = self.queryset.count()
+        number_of_russians = Profile.objects.annotate(
+            passport_number_len=Length('passport_number')).filter(
+            passport_number_len__gt=9)
+        number_of_foreigners = count_all - number_of_russians
+
+        return get_percentage(count_all, number_of_foreigners)
