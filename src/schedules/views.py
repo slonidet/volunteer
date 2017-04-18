@@ -49,7 +49,7 @@ class AdminTeamViewSet(viewsets.ModelViewSet):
 class AdminUserPositionViewSet(viewsets.ModelViewSet):
     queryset = UserPosition.objects.select_related(
         'user__profile', 'position__place'
-    ).prefetch_related('days').distinct()
+    ).prefetch_related('days', 'user__user_positions__days').distinct()
     serializer_class = UserPositionSerializer
     filter_class = UserPositionFilter
 
