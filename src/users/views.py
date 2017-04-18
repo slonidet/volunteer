@@ -9,11 +9,13 @@ from rest_framework.viewsets import GenericViewSet
 
 from users.filters import UserFilter
 from users.mixins import ExcludeAnonymousViewMixin, StoryRelatedViewMixin
-from users.models import Profile, ProfileAttachment, Story, ProfileComment
+from users.models import Profile, ProfileAttachment, Story, ProfileComment, \
+    StoryComment
 from users.models import User
 from users.serializers import ProfileSerializer, ProfileAttachmentSerializer, \
     AdminStorySerializer, StorySerializer, UserGroupSerializer, \
-    ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer
+    ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer, \
+    StoryCommentSerializer
 
 
 class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
@@ -104,9 +106,15 @@ class AdminProfileAttachmentViewSet(viewsets.ModelViewSet):
 class AdminStoryViewSet(StoryRelatedViewMixin, mixins.RetrieveModelMixin,
                         mixins.UpdateModelMixin, mixins.ListModelMixin,
                         GenericViewSet):
-    queryset = Story.objects.all()
+    queryset = Story.objects.prefetch_related('comments').all()
     serializer_class = AdminStorySerializer
     filter_fields = ('is_public', )
+
+
+class AdminStoryCommentViewSet(viewsets.ModelViewSet):
+    queryset = StoryComment.objects.all()
+    serializer_class = StoryCommentSerializer
+    filter_fields = ('story',)
 
 
 class StoryViewSet(StoryRelatedViewMixin, viewsets.ReadOnlyModelViewSet):
