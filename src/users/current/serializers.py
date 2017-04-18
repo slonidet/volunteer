@@ -6,7 +6,7 @@ from users.current.mixins import CurrentUserSerializerMixin
 from users.models import Profile, ProfileAttachment
 from users.serializers import User, UserSerializer, ProfileSerializer, \
     ProfileAttachmentSerializer, BaseUserSerializer, BaseStorySerializer, \
-    AdminStorySerializer
+    AdminStorySerializer, StoryCommentSerializer
 
 
 class AuthProfileSerializer(serializers.ModelSerializer):
@@ -64,23 +64,23 @@ class CurrentUserSerializer(UserSerializer):
 
 class CurrentUserProfileSerializer(CurrentUserSerializerMixin,
                                    ProfileSerializer):
-
     class Meta(ProfileSerializer.Meta):
         pass
 
 
 class CurrentUserProfileAttachmentSerializer(CurrentUserSerializerMixin,
                                              ProfileAttachmentSerializer):
-
     class Meta:
         model = ProfileAttachment
         fields = '__all__'
 
 
 class CurrentUserStorySerializer(AdminStorySerializer):
+    comments = StoryCommentSerializer(read_only=True, many=True)
+
     class Meta(BaseStorySerializer.Meta):
         fields = '__all__'
-        read_only_fields = ('is_public', 'admin_comment')
+        read_only_fields = ('is_public',)
 
     def create(self, validated_data):
         try:

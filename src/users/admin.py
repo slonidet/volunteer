@@ -5,6 +5,7 @@ from modeltranslation.admin import TranslationAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, \
     UserChangeForm as BaseUserChangeForm, \
     UserCreationForm as BaseUserCreationForm
+from import_export.admin import ImportExportActionModelAdmin
 
 from users.models import Profile, ProfileAttachment
 
@@ -58,10 +59,10 @@ class UserAdmin(BaseUserAdmin):
     inlines = [ProfileInline]
 
 
-class ProfileAdmin(admin.ModelAdmin):
+class ProfileAdmin(ImportExportActionModelAdmin):
     list_display = ('id', 'first_name', 'last_name', 'middle_name', 'gender',
                     'status')
-    list_filter = ('status', 'gender')
+    list_filter = ('status', 'gender', 'user__role',)
 
 
 class ProfileAttachmentAdmin(admin.ModelAdmin):
