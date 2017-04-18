@@ -40,6 +40,7 @@ def _set_candidate_role(instance, checked_model_field):
 
 @receiver(post_save, sender=Profile)
 def set_approved_role(sender, instance, **kwargs):
+    import pdb; pdb.set_trace()
     status = instance.status
     user = instance.user
 
@@ -49,11 +50,6 @@ def set_approved_role(sender, instance, **kwargs):
     )
     if need_set_approved_role:
         user.role = User.ROLE_APPROVED
-        user.save()
-
-    elif status != Profile.STATUS_APPROVED and user.role == User.ROLE_APPROVED:
-        # rollback user approved role if admin change profile status
-        user.role = User.ROLE_CANDIDATE
         user.save()
 
 
