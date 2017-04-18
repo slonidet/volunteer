@@ -1,5 +1,3 @@
-import collections
-
 from django.db.models import Q
 from rest_framework import generics
 from rest_framework import permissions
@@ -40,35 +38,48 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         data = dict()
-        data['gender'] = get_percentage(
-            self.count_all, [self.count_females, self.count_males])
+        data['gender'] = self.get_gender_percentage()
         data['age'] = self.get_age_groups_percentage()
         return Response(data)
 
+    def get_gender_percentage(self):
+        genders_percents_dict = dict()
+        genders_percents_dict['male'] = get_percentage(
+            self.count_all, self.count_males)
+        genders_percents_dict['female'] = get_percentage(
+            self.count_all, self.count_females)
+
+        return genders_percents_dict
+
     def get_age_groups_percentage(self):
-        age_groups = {'14-16': (tuple(range(14, 17)), []),
-                      '16-18': (tuple(range(16, 18)), []),
-                      '18-25': (tuple(range(18, 25)), []),
-                      '25-35': (tuple(range(25, 35)), []),
-                      '35-55': (tuple(range(35, 55)), []), }
+
+        group_14_16 = tuple(range(14, 17))
+        group_16_18 = tuple(range(16, 18))
+        group_18_25 = tuple(range(18, 25))
+        group_25_35 = tuple(range(25, 35))
+        group_35_55 = tuple(range(35, 55))
+        group_55_110 = tuple(range(55, 110))
+
         people_in_groups = {
-            tuple(range(14, 16)): 0,
-            tuple(range(16, 18)): 0,
-            tuple(range(18, 25)): 0,
-            tuple(range(25, 35)): 0,
-            tuple(range(35, 55)): 0,
+            group_14_16: 0,
+            group_16_18: 0,
+            group_18_25: 0,
+            group_25_35: 0,
+            group_35_55: 0,
+            group_55_110: 0,
         }
         ages_list = [profile.age for profile in Profile.objects.all()]
-        # for profile in Profile.objects.all():
-        #     ages_list.append(profile.age)
+        ages_percents_dict = dict()
 
-        # ages_dict = collections.Counter(ages_list)
         for age_group in people_in_groups:
             for age in ages_list:
                 if age in age_group:
                     people_in_groups[age_group] += 1
+            key_string = str(age_group[0]) + '-' + str(age_group[-1])
+            ages_percents_dict[key_string] = get_percentage(
+                self.count_all, people_in_groups[age_group])
 
-        return people_in_groups
+        return ages_percents_dict
 
 
 def get_percentage(total, values):
