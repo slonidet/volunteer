@@ -7,6 +7,9 @@ from volunteer.urls_view import api_root
 urlpatterns = [
     url(r'^$', api_root, name='api-root'),
 
+    # django social auth
+    url(r'^social-auth/', include('social_auth.urls', namespace='social')),
+
     # admin api
     url(r'^admin/', include('volunteer.urls_admin_api', namespace='adm')),
 
@@ -19,4 +22,8 @@ urlpatterns = [
     url(r'^static/', include('static.urls', namespace='static')),
     url(r'^events/', include('events.urls', namespace='events')),
     url(r'^tests/', include('user_tests.urls', namespace='tests')),
+    url(r'^badges/', include('badges.urls', namespace='badges')),
+    url(r'^notices/', include('notices.urls', namespace='notices')),
+    url(r'^schedules/', include('schedules.urls', namespace='schedules')),
+    url(r'^hall_of_fame/', include('hall_of_fame.urls', 'hall_of_fame')),
 ]

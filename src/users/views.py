@@ -1,27 +1,31 @@
 from django.contrib.auth.models import Group
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
-from rest_framework import exceptions
+from rest_framework import exceptions, permissions
 from rest_framework import status, viewsets, mixins
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from users.filters import UserFilter
 from users.mixins import ExcludeAnonymousViewMixin, StoryRelatedViewMixin
-from users.models import Profile, ProfileAttachment, Story, ProfileComment
+from users.models import Profile, ProfileAttachment, Story, ProfileComment, \
+    StoryComment
 from users.models import User
 from users.serializers import ProfileSerializer, ProfileAttachmentSerializer, \
     AdminStorySerializer, StorySerializer, UserGroupSerializer, \
-    ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer
+    ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer, \
+    StoryCommentSerializer
 
 
 class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
                        mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                        mixins.ListModelMixin, GenericViewSet):
     queryset = User.objects.select_related(
-        'profile', 'profile_attachment').prefetch_related('groups')
+        'profile', 'profile_attachment').prefetch_related('groups').filter(
+        is_superuser=False)
     serializer_class = AdminUserSerializer
-    filter_fields = ('groups__name', 'role')
+    filter_class = UserFilter
     search_fields = ('username', 'profile__first_name', 'profile__last_name',
                      'profile__middle_name', 'profile__phone')
 
@@ -29,7 +33,7 @@ class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
 class AdminProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = ProfileSerializer
-    filter_fields = ('user', 'status')
+    filter_fields = ('user', 'status', 'user__role')
     search_fields = ('first_name', 'last_name', 'middle_name')
 
     @detail_route(methods=['get', 'post'],
@@ -61,8 +65,9 @@ class AdminProfileViewSet(viewsets.ModelViewSet):
         serializer.save()
 
         # set working profile status
-        profile.status = Profile.STATUS_WORKING
-        profile.save()
+        Profile.objects.filter(pk=profile.pk).update(
+            status=Profile.STATUS_WORKING
+        )
 
         headers = self.get_success_headers(serializer.data)
         return Response(
@@ -101,9 +106,15 @@ class AdminProfileAttachmentViewSet(viewsets.ModelViewSet):
 class AdminStoryViewSet(StoryRelatedViewMixin, mixins.RetrieveModelMixin,
                         mixins.UpdateModelMixin, mixins.ListModelMixin,
                         GenericViewSet):
-    queryset = Story.objects.all()
+    queryset = Story.objects.prefetch_related('comments').all()
     serializer_class = AdminStorySerializer
     filter_fields = ('is_public', )
+
+
+class AdminStoryCommentViewSet(viewsets.ModelViewSet):
+    queryset = StoryComment.objects.all()
+    serializer_class = StoryCommentSerializer
+    filter_fields = ('story',)
 
 
 class StoryViewSet(StoryRelatedViewMixin, viewsets.ReadOnlyModelViewSet):
@@ -116,3 +127,4 @@ class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all().order_by('id')
     serializer_class = UserGroupSerializer
     pagination_class = None
+    permission_classes = (permissions.IsAuthenticated,)

@@ -15,7 +15,7 @@ class Command(BaseCommand):
            '--test - takes test name\n' \
            '--time_available - takes available time to pass a test\n' \
            '--task - takes task name\n' \
-           '--expert_appraisal - takes if task should be appraise'
+           '--evaluation_algorithm - takes if task should be auto appraise'
 
     def add_arguments(self, parser):
 
@@ -56,12 +56,15 @@ class Command(BaseCommand):
         )
 
         parser.add_argument(
-            '--expert_appraisal',
+            '--evaluation_algorithm',
+            required=False,
             action='store',
-            dest='expert_appraisal',
-            help='Stores if task should be appraise',
+            dest='evaluation_algorithm',
+            help='Stores if task should be auto appraise',
             type=bool
         )
+
+        parser.set_defaults(evaluation_algorithm=Task.ALGORITHM_AUTO_APPRAISAL)
 
     def handle(self, *args, **options):
 
@@ -70,7 +73,7 @@ class Command(BaseCommand):
         test = options['test']
         time_available = options['time_available']
         task = options['task']
-        expert_appraisal = options['expert_appraisal']
+        evaluation_algorithm = options['evaluation_algorithm']
 
         json_data = open(file).read()
         json_data = json.loads(json_data)
@@ -79,7 +82,8 @@ class Command(BaseCommand):
             name=test, time_available=time_available
         )
         task_object, task_created = Task.objects.get_or_create(
-            test=test_object, name=task, expert_appraisal=expert_appraisal
+            test=test_object, name=task,
+            evaluation_algorithm=evaluation_algorithm
         )
 
         for item in json_data:

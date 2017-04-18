@@ -1,21 +1,22 @@
 from django.shortcuts import redirect
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions
 from rest_framework import views, status, permissions
-from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.generics import (
     get_object_or_404, CreateAPIView, RetrieveUpdateAPIView,
-    ListAPIView)
+    ListAPIView, GenericAPIView)
 from rest_framework.mixins import CreateModelMixin
 
 from rest_framework.response import Response
+
+from core.helpers import get_absolute_url
 from users.current.mixins import CurrentUserViewMixin, \
     NotAllowEditApprovedProfileMixin
 from users.current.serializers import AuthUserSerializer, \
     CurrentUserSerializer, CurrentUserProfileSerializer, \
-    CurrentUserProfileAttachmentSerializer, CurrentUserStorySerializer
+    CurrentUserProfileAttachmentSerializer, CurrentUserStorySerializer, \
+    ResetPasswordSerializer
 from users.current.tokens import RegisterTokenGenerator
 from users.models import Profile, ProfileAttachment, Story, ProfileComment
 from users.serializers import ProfileCommentSerializer
@@ -50,10 +51,14 @@ class UserActivationView(views.APIView):
     def get(self, request, user_id, token):
         user = get_object_or_404(User, id=user_id, last_login=None)
         if RegisterTokenGenerator().check_token(user, token):
-            user.is_active = True
-            user.save()
+            user.activate()
+            auth_token = user.get_auth_token()
+            return redirect('/?auth_token={0}'.format(auth_token))
 
-        return redirect('/login')
+        return redirect('/?error_message={}'.format(
+            _('Неверный код активации пользователя, перейдите по ссылке '
+              'в письме')
+        ))
 
 
 class AuthTokenView(ObtainAuthToken):
@@ -61,10 +66,8 @@ class AuthTokenView(ObtainAuthToken):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        user.last_login = timezone.now()
-        user.save()
         user_serializer = AuthUserSerializer(user)
-        token, created = Token.objects.get_or_create(user=user)
+        token = user.get_auth_token()
 
         return Response({
             'user': user_serializer.data,
@@ -120,7 +123,7 @@ class CurrentUserProfileCommentView(ListAPIView):
 
 
 class CurrentUserStoryView(StoryRelatedViewMixin, BaseCurrentUserView):
-    queryset = Story.objects.all()
+    queryset = Story.objects.prefetch_related('comments').all()
     user_pk_lookup_field = 'profile__user__pk'
     serializer_class = CurrentUserStorySerializer
 
@@ -141,3 +144,39 @@ class CurrentUserStoryView(StoryRelatedViewMixin, BaseCurrentUserView):
                 _('Нельзя редактировать историю после публикации'))
 
         return super().update(request, *args, **kwargs)
+
+
+class ResetPasswordView(GenericAPIView):
+    permission_classes = ()
+    serializer_class = ResetPasswordSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+
+        try:
+            user = User.objects.get(username=email)
+        except User.DoesNotExist:
+            error_msg = _('Пользователь с данным e-mail не зарегистрирован')
+            raise exceptions.NotFound(error_msg)
+
+        if not user.is_active and user.last_login:
+            raise exceptions.NotAcceptable(
+                _('Пользователь был деактивирован администратором'))
+        elif not user.is_active:
+            user.activate()
+
+        token = user.get_auth_token()
+        reset_link = get_absolute_url('/')
+        message = _('Для смены пароля перейдите по ссылке {0}?auth_token={1}&'
+                'reset_password=1')
+
+        user.email_user(
+            _('Сброс пароля на сайте городских волонтеров'),
+            message.format(reset_link, token),
+        )
+
+        return Response(
+            {'result': _('Ссылка восстановления пароля отправлена на почту')}
+        )

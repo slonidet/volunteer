@@ -25,6 +25,7 @@ def api_root(request, format=None):
         'user:profile:comments': reverse('user:current-user-profile-comments',
                                          **params),
         'user:story': reverse('user:current-user-story', **params),
+        'user:reset-password': reverse('user:reset-password', **params),
 
         # Users
         'admin:users': reverse('adm:users:user-list', **params),
@@ -36,6 +37,8 @@ def api_root(request, format=None):
         'admin:users:profile-attachments': reverse(
             'adm:users:profile-attachment-list', **params),
         'admin:users:stories': reverse('adm:users:story-list', **params),
+        'admin:users:story-comments': reverse(
+            'adm:users:story-comment-list', **params),
         'admin:users:groups': reverse('adm:users:group-list', **params),
         'users:stories': reverse('users:story-list', **params),
 
@@ -53,12 +56,17 @@ def api_root(request, format=None):
         'news': reverse('news:news-list', **params),
 
         # User Tests
+        'admin:users:tests': reverse('adm:tests:user-answer-list', **params),
+        'admin:users:tests:average-score': reverse(
+            'adm:tests:average-score-list', **params
+        ),
         'tests': reverse('tests:test-list', **params),
         'tests:tasks': reverse('tests:task-list', **params),
         'tests:tasks:questions': reverse('tests:question-list', **params),
-        'tests:tasks:questions:options': reverse('tests:option-list', **params),
+        'tests:tasks:questions:options': reverse('tests:option-list',
+                                                 **params),
         'tests:user:tests': reverse('tests:user-test-list', **params),
-        # 'tests:user:answers': reverse('tests:user-answer-list', **params),
+        'tests:user:answers': reverse('tests:user-answer-list', **params),
 
         # Static pages
         'admin:static-pages': reverse('adm:static:page-list', **params),
@@ -67,9 +75,72 @@ def api_root(request, format=None):
         # Events
         'admin:events': reverse('adm:events:event-list', **params),
         'events': reverse('events:event-list', **params),
+        'events:participate': reverse(
+            'events:event-participate', **params, kwargs={'pk': 0}
+        ),
+
+        # Badges
+        'badges': reverse('badges:badge-list', **params),
+        'badges:types': reverse('badges:types', **params),
+
+        # Notices
+        'notices': reverse('notices:notice-list', **params),
+        'admin:notices:arbitrary-notices': reverse(
+            'adm:arbitrary-notices:arbitrary-notices-list', **params),
 
         # Statistic
         'admin:statistic:main': reverse('adm:statistic:main', **params),
+        'admin:statistic:equipment': reverse('adm:statistic:equipment', **params),
+
+        # Social auth
+        'social-auth:vk': reverse(
+            'social:begin', **params, kwargs={'backend': 'vk-oauth2'}),
+        'social-auth:facebook': reverse(
+            'social:begin', **params, kwargs={'backend': 'facebook'}),
+        'social-auth:twitter': reverse(
+            'social:begin', **params, kwargs={'backend': 'twitter'}),
+        'social-auth:mailru': reverse(
+            'social:begin', **params, kwargs={'backend': 'mailru-oauth2'}),
+        'social-auth:odnoklassniki': reverse(
+            'social:begin', **params,
+            kwargs={'backend': 'odnoklassniki-oauth2'}
+        ),
+
+        # Interviews
+        'admin:interviews:interviewers': reverse(
+            'adm:interviews:interviewer-list', **params),
+        'admin:interviews': reverse('adm:interviews:interview-list', **params),
+        'admin:interviews:periods': reverse('adm:interviews:period', **params),
+        'admin:interviews:statuses': reverse('adm:interviews:status', **params),
+
+        # schedules
+        'schedules:shifts': reverse('schedules:shift-list', **params),
+        'schedules:periods': reverse('schedules:period-list', **params),
+        'schedules:user:schedule': reverse(
+            'schedules:user-schedule-list', **params
+        ),
+        'schedules:team-leader:schedule': reverse(
+            'schedules:team-leader-schedule-list', **params
+        ),
+        'admin:schedules:places': reverse(
+            'adm:schedules:place-list', **params
+        ),
+        'admin:schedules:teams': reverse('adm:schedules:team-list', **params),
+        'admin:schedules:user-position': reverse(
+            'adm:schedules:user-position-list', **params
+        ),
+        'admin:schedules:relevant-users': reverse(
+            'adm:schedules:relevant-user-list', **params
+        ),
+        'admin:schedules:user-position-statistics': reverse(
+            'adm:schedules:user-position-statistic', **params
+        ),
+
+        # HallOfFame
+        'hall_of_fame': reverse('hall_of_fame:hall_of_fame', **params),
+        'admin:hall_of_fame': reverse(
+            'adm:hall_of_fame:hall_of_fame-list', **params),
+
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
 
