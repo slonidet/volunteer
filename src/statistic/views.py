@@ -28,6 +28,9 @@ class AdminStatistic(generics.RetrieveAPIView):
 
 
 class ProfileGenderAgeStatView(generics.RetrieveAPIView):
+    """
+    Show percentage for gender and age groups from user profiles
+    """
     queryset = Profile.objects.all()
     permission_classes = (permissions.IsAdminUser, )
 
