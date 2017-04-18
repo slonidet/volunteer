@@ -153,6 +153,12 @@ class NestedSerializerMixin(object):
 
 
 class M2MNestedSerializerMixin(object):
+    """
+    Nested serializer mixin for M2M fields.
+    
+    You need mix serializer mixin to you serializer and append M2M fields to 
+    Meta.m2m_nested_fields.
+    """
     m2m_nested_objects = {}
 
     class Meta:

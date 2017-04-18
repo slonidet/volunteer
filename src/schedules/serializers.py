@@ -47,6 +47,20 @@ class UserSerializer(BaseUserSerializer):
         fields = ('id', 'username', 'profile')
 
 
+class BusyDaysUserSerializer(UserSerializer):
+    busy_days = serializers.SerializerMethodField()
+
+    class Meta(UserSerializer.Meta):
+        fields = ('id', 'username', 'role', 'profile', 'busy_days')
+
+    def get_busy_days(self, obj):
+        busy_days = []
+        for user_position in obj.user_positions.all():
+            busy_days.extend(user_position.days.all())
+
+        return DaySerializer(busy_days, many=True).data
+
+
 class BaseUserPositionSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     days = DaySerializer(many=True, read_only=True)
@@ -73,7 +87,7 @@ class UserSchedulePositionSerializer(serializers.ModelSerializer):
 class UserPositionSerializer(ForeignKeySerializerMixin,
                              M2MNestedSerializerMixin,
                              BaseUserPositionSerializer):
-    user = UserSerializer()
+    user = BusyDaysUserSerializer()
     days = DaySerializer(many=True, required=False)
     position = UserSchedulePositionSerializer()
 
@@ -234,17 +248,8 @@ class RelevantProfileSerializer(ProfileSerializer):
         )
 
 
-class RelevantUserSerializer(BaseUserSerializer):
+class RelevantUserSerializer(BusyDaysUserSerializer):
     profile = RelevantProfileSerializer(read_only=True)
-    busy_days = serializers.SerializerMethodField()
-
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'role', 'profile', 'busy_days')
-
-    def get_busy_days(self, obj):
-        busy_days = Day.objects.filter(user_positions__user=obj)
-        return DaySerializer(busy_days, many=True).data
 
 
 # User Position Statistic
