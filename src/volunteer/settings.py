@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'notices.apps.NoticesConfig',
     'interviews.apps.InterviewsConfig',
     'schedules.apps.SchedulesConfig',
+    'chats.apps.ChatsConfig',
 ]
 
 MIDDLEWARE = [

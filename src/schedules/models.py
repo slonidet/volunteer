@@ -193,25 +193,3 @@ class Team(models.Model):
 
     def __str__(self):
         return ','.join((self.place.name, self.period.name, self.shift.name))
-
-
-class TeamMessages(models.Model):
-    """
-    Messages for Teams
-    """
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, related_name='messages',
-        verbose_name=_('Команда')
-    )
-    sender = models.ForeignKey(
-        'users.User', on_delete=models.CASCADE, related_name='messages',
-        verbose_name=_('Отправитель')
-    )
-    text = models.TextField(_('Текст'))
-
-    class Meta(MetaPermissions):
-        verbose_name = _('Сообщение')
-        verbose_name_plural = _('Сообщения')
-
-    def __str__(self):
-        return self.id
