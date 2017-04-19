@@ -40,7 +40,6 @@ def _set_candidate_role(instance, checked_model_field):
 
 @receiver(post_save, sender=Profile)
 def set_approved_role(sender, instance, **kwargs):
-    import pdb; pdb.set_trace()
     status = instance.status
     user = instance.user
 
