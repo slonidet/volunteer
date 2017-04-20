@@ -12,4 +12,6 @@ __pycache__/
 ubuntu-xenial-16.04-cloudimg-console.log
 celerybeat-schedule
 .DS_Store
-org.kde.konsole.desktop
+*.sql
+src/.vscode
+src/org.kde.konsole.desktop
