@@ -49,6 +49,7 @@ class Position(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Позиция')
         verbose_name_plural = _('Позиции')
+        ordering = ('name', )
 
     def __str__(self):
         return self.name

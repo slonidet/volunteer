@@ -99,7 +99,7 @@ class AdminRelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class AdminUserPositionStatisticView(GenericAPIView):
     queryset = UserPosition.objects.prefetch_related('days').select_related(
-        'position__place').all()
+        'position__place').all().order_by('name')
     serializer_class = StatisticPlaceSerializer
     filter_fields = ('shift', 'days__period')
 
