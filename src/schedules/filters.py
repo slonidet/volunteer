@@ -37,7 +37,7 @@ class RelevantUserFilter(FilterSet):
         model = User
         fields = (
             'profile__work_shift', 'profile__work_period', 'username',
-            'available_days'
+            'available_days', 'role'
         )
 
     def work_period_filter(self, queryset, name, value):
