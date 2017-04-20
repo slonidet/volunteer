@@ -1,5 +1,6 @@
-from django.db.models import Q
+from django.db.models import Q, timezone
 from rest_framework import generics
+from rest_framework import permissions
 from rest_framework.response import Response
 
 from events.models import Event
@@ -24,3 +25,22 @@ class AdminStatistic(generics.RetrieveAPIView):
         data['video_count'] = Video.objects.all().count()
 
         return Response(data)
+
+
+class UserStatistic(generics.RetrieveAPIView):
+    queryset = Profile.objects.all()
+    permission_classes = (permissions.IsAdminUser,)
+
+    def retrieve(self, request, *args, **kwargs):
+        data = dict()
+
+        return Response(3)
+
+    def count_for_period(self, time_mesure, number):
+        if time_mesure == 'day':
+            since = timezone.now() - timezone.timedelta(days=number)
+
+
+
+
+
