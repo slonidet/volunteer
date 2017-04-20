@@ -255,6 +255,43 @@ class ProfileGeoStatistic(generics.RetrieveAPIView):
         return get_percentage(count_all, number_of_foreigners)
 
 
+class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
+    queryset = Profile.objects.all()
+    permission_classes = (permissions.IsAdminUser,)
+
+    def retrieve(self, request, *args, **kwargs):
+        data = dict()
+        data['french'] = self.queryset.filter(
+            Q(other_language__icontains='french') |
+            Q(other_language__icontains='французский')).count()
+        data['spanish'] = self.queryset.filter(
+            Q(other_language__icontains='spanish') |
+            Q(other_language__icontains='испанский')).count()
+        data['german'] = self.queryset.filter(
+            Q(other_language__icontains='german') |
+            Q(other_language__icontains='немецкий')).count()
+        data['italian'] = self.queryset.filter(
+            Q(other_language__icontains='italian') |
+            Q(other_language__icontains='итальянский')).count()
+        data['japanese'] = self.queryset.filter(
+            Q(other_language__icontains='japanese') |
+            Q(other_language__icontains='японский')).count()
+        data['chinese'] = self.queryset.filter(
+            Q(other_language__icontains='chinese') |
+            Q(other_language__icontains='mandarin') |
+            Q(other_language__icontains='китайский')).count()
+        data['ukrainian'] = self.queryset.filter(
+            Q(other_language__icontains='ukrainian') |
+            Q(other_language__icontains='украинский')).count()
+        data['armenian'] = self.queryset.filter(
+            Q(other_language__icontains='armenian') |
+            Q(other_language__icontains='армянский')).count()
+        data['portuguese'] = self.queryset.filter(
+            Q(other_language__icontains='portuguese') |
+            Q(other_language__icontains='португальский')).count()
+        return Response(data)
+
+
 def get_percentage(total, values):
     """
     Return percents proportion of value if 'value' is number. Returns dict of
