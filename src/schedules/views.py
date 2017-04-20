@@ -86,7 +86,7 @@ class AdminRelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
         'profile__work_period', 'profile__work_shift'
     ).prefetch_related('user_positions__days').filter(
         is_active=True, role__in=(User.ROLE_MAIN_TEAM, User.ROLE_RESERVED)
-    )
+    ).order_by('role')
     serializer_class = RelevantUserSerializer
     filter_class = RelevantUserFilter
     ordering_fields = (
@@ -99,7 +99,7 @@ class AdminRelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class AdminUserPositionStatisticView(GenericAPIView):
     queryset = UserPosition.objects.prefetch_related('days').select_related(
-        'position__place').all()
+        'position__place').all().order_by('name')
     serializer_class = StatisticPlaceSerializer
     filter_fields = ('shift', 'days__period')
 

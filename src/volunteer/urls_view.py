@@ -37,6 +37,8 @@ def api_root(request, format=None):
         'admin:users:profile-attachments': reverse(
             'adm:users:profile-attachment-list', **params),
         'admin:users:stories': reverse('adm:users:story-list', **params),
+        'admin:users:story-comments': reverse(
+            'adm:users:story-comment-list', **params),
         'admin:users:groups': reverse('adm:users:group-list', **params),
         'users:stories': reverse('users:story-list', **params),
 
@@ -138,6 +140,7 @@ def api_root(request, format=None):
         'admin:schedules:relevant-users': reverse(
             'adm:schedules:relevant-user-list', **params
         ),
+<<<<<<<<< Temporary merge branch 1
         'admin:schedules:user-position-statistics': reverse(
             'adm:schedules:user-position-statistic', **params
         ),

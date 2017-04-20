@@ -32,7 +32,7 @@ class Position(models.Model):
             _('Информационно-туристическая функция')
         ),
         (FUNCTIONALITY_TRANSPORTATION, _('Транспортная функция')),
-        (FUNCTIONALITY_LANGUAGE, _('Лингвистическая функцияфункция')),
+        (FUNCTIONALITY_LANGUAGE, _('Лингвистическая функция')),
         (FUNCTIONALITY_FESTIVAL, _('Фестиваль болельщиков')),
     )
 
@@ -49,6 +49,7 @@ class Position(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Позиция')
         verbose_name_plural = _('Позиции')
+        ordering = ('name', )
 
     def __str__(self):
         return self.name
