@@ -91,8 +91,6 @@ def api_root(request, format=None):
         'admin:statistic:profiles:gender_age': reverse(
             'adm:statistic:profiles_gender_age', **params),
         'admin:statistic:equipment': reverse('adm:statistic:equipment', **params),
-        'admin:statistic:profiles:gender_age': reverse(
-            'adm:statistic:profiles_gender_age', **params),
         'admin:statistic:profiles:geo': reverse(
             'adm:statistic:profiles_geo', **params),
         'admin:statistic:profiles:interesting': reverse(
