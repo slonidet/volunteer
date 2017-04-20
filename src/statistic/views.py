@@ -28,74 +28,6 @@ class AdminStatistic(generics.RetrieveAPIView):
         return Response(data)
 
 
-class ProfileGenderAgeStatView(generics.RetrieveAPIView):
-    """
-    Show percentage for gender and age groups from user profiles
-    """
-    queryset = Profile.objects.all()
-    permission_classes = (permissions.IsAdminUser, )
-
-    count_males = Profile.objects.filter(gender=Profile.GENDER_MALE).count()
-    count_females = Profile.objects.filter(
-        gender=Profile.GENDER_FEMALE).count()
-    count_all = count_males + count_females
-
-    def retrieve(self, request, *args, **kwargs):
-        data = dict()
-        data['gender'] = self.get_gender_percentage()
-        data['age'] = self.get_age_groups_percentage()
-        return Response(data)
-
-    def get_gender_percentage(self):
-        genders_percents_dict = dict()
-        genders_percents_dict['male'] = get_percentage(
-            self.count_all, self.count_males)
-        genders_percents_dict['female'] = get_percentage(
-            self.count_all, self.count_females)
-
-        return genders_percents_dict
-
-    def get_age_groups_percentage(self):
-
-        group_14_16 = tuple(range(14, 16))
-        group_16_18 = tuple(range(16, 18))
-        group_18_25 = tuple(range(18, 25))
-        group_25_35 = tuple(range(25, 35))
-        group_35_55 = tuple(range(35, 55))
-        group_55_110 = tuple(range(55, 110))
-
-        people_in_groups = {
-            group_14_16: 0,
-            group_16_18: 0,
-            group_18_25: 0,
-            group_25_35: 0,
-            group_35_55: 0,
-            group_55_110: 0,
-        }
-        ages_list = [profile.age for profile in Profile.objects.all()]
-        ages_percents_dict = dict()
-
-        for age_group in people_in_groups:
-            for age in ages_list:
-                if age in age_group:
-                    people_in_groups[age_group] += 1
-            key_string = str(age_group[0]) + '-' + str(age_group[-1])
-            ages_percents_dict[key_string] = get_percentage(
-                self.count_all, people_in_groups[age_group])
-
-        return ages_percents_dict
-
-
-def get_percentage(total, values):
-    if type(values) == list:
-        final_dict = dict()
-        for value in values:
-            final_dict[value] = 100 * float(value) / float(total)
-        return final_dict
-    else:
-        return 100 * float(values) / float(total)
-
-
 class EquipmentStatistic(generics.RetrieveAPIView):
     """
     Statistic about amount of equipment
@@ -174,6 +106,7 @@ class ProfileInterestingStatistic(generics.RetrieveAPIView):
             count_all, interesting_language_values)
         data['interesting_festival_values'] = get_percentage(
             count_all, interesting_festival_values)
+
         return Response(data)
 
 
@@ -293,17 +226,6 @@ class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
         return Response(data)
 
 
-def get_percentage(total, values):
-    """
-    Return percents proportion of value if 'value' is number. Returns dict of
-    percents proportions of values if 'value' is list.
-    :param total:
-    :param values:
-    :return: dict or number
-    """
-    return 100 * float(values) / float(total)
-
-
 class GeoStatistic(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
     permission_classes = (permissions.IsAdminUser,)
@@ -322,3 +244,14 @@ class GeoStatistic(generics.RetrieveAPIView):
         number_of_foreigners = count_all - number_of_russians
 
         return get_percentage(count_all, number_of_foreigners)
+
+
+def get_percentage(total, values):
+    """
+    Return percents proportion of value if 'value' is number. Returns dict of
+    percents proportions of values if 'value' is list.
+    :param total:
+    :param values:
+    :return: dict or number
+    """
+    return 100 * float(values) / float(total)
