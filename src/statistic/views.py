@@ -289,6 +289,7 @@ class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
         data['portuguese'] = self.queryset.filter(
             Q(other_language__icontains='portuguese') |
             Q(other_language__icontains='португальский')).count()
+
         return Response(data)
 
 
