@@ -86,7 +86,7 @@ class AdminRelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
         'profile__work_period', 'profile__work_shift'
     ).prefetch_related('user_positions__days').filter(
         is_active=True, role__in=(User.ROLE_MAIN_TEAM, User.ROLE_RESERVED)
-    ).order_by('role')
+    )
     serializer_class = RelevantUserSerializer
     filter_class = RelevantUserFilter
     ordering_fields = (
@@ -99,9 +99,10 @@ class AdminRelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class AdminUserPositionStatisticView(GenericAPIView):
     queryset = UserPosition.objects.prefetch_related('days').select_related(
-        'position__place').all().order_by('name')
+        'position__place').all()
     serializer_class = StatisticPlaceSerializer
-    filter_fields = ('shift', 'days__period')
+    filter_fields = ('shift', 'days__period',
+                     'position__place__name')
 
     def get(self, request, *args, **kwargs):
         user_positions = self.filter_queryset(self.get_queryset()).distinct()
@@ -113,6 +114,12 @@ class AdminUserPositionStatisticView(GenericAPIView):
             days = days.filter(period=request.query_params['days__period'])
 
         positions = Place.objects.prefetch_related('positions')
+        
+        name = request.query_params.get('position__place__name', None)
+        if name:
+            positions = positions.filter(name__icontains=name)
+        position_name = request.query_params.get('position', None)
+
         page = self.paginate_queryset(positions)
         if page is not None:
             serializer = self.get_serializer(
