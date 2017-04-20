@@ -134,16 +134,38 @@ class ProfileGeoStatistic(generics.RetrieveAPIView):
 
 class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
-    parser_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAdminUser,)
 
     def retrieve(self, request, *args, **kwargs):
         data = dict()
         data['french'] = self.queryset.filter(
             Q(other_language__icontains='french') |
-            Q(other_language__icontains='французский'))
-        # data['german'] = self.queryset.filter(
-        #     other_language__icontains='german')
-
+            Q(other_language__icontains='французский')).count()
+        data['spanish'] = self.queryset.filter(
+            Q(other_language__icontains='spanish') |
+            Q(other_language__icontains='испанский')).count()
+        data['german'] = self.queryset.filter(
+            Q(other_language__icontains='german') |
+            Q(other_language__icontains='немецкий')).count()
+        data['italian'] = self.queryset.filter(
+            Q(other_language__icontains='italian') |
+            Q(other_language__icontains='итальянский')).count()
+        data['japanese'] = self.queryset.filter(
+            Q(other_language__icontains='japanese') |
+            Q(other_language__icontains='японский')).count()
+        data['chinese'] = self.queryset.filter(
+            Q(other_language__icontains='chinese') |
+            Q(other_language__icontains='mandarin') |
+            Q(other_language__icontains='китайский')).count()
+        data['ukrainian'] = self.queryset.filter(
+            Q(other_language__icontains='ukrainian') |
+            Q(other_language__icontains='украинский')).count()
+        data['armenian'] = self.queryset.filter(
+            Q(other_language__icontains='armenian') |
+            Q(other_language__icontains='армянский')).count()
+        data['portuguese'] = self.queryset.filter(
+            Q(other_language__icontains='portuguese') |
+            Q(other_language__icontains='португальский')).count()
         return Response(data)
 
 
