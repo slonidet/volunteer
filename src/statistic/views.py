@@ -132,6 +132,21 @@ class ProfileGeoStatistic(generics.RetrieveAPIView):
         return get_percentage(count_all, number_of_foreigners)
 
 
+class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
+    queryset = Profile.objects.all()
+    parser_classes = (permissions.IsAdminUser,)
+
+    def retrieve(self, request, *args, **kwargs):
+        data = dict()
+        data['french'] = self.queryset.filter(
+            Q(other_language__icontains='french') |
+            Q(other_language__icontains='французский'))
+        # data['german'] = self.queryset.filter(
+        #     other_language__icontains='german')
+
+        return Response(data)
+
+
 def get_percentage(total, values):
     """
     Return percents proportion of value if 'value' is number. Returns dict of

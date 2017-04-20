@@ -94,6 +94,8 @@ def api_root(request, format=None):
             'adm:statistic:profiles_geo', **params),
         'admin:statistic:profiles:interesting': reverse(
             'adm:statistic:profiles_interesting', **params),
+        'admin:statistic:profiles:language': reverse(
+            'adm:statistic:profiles_language', **params),
 
         # Social auth
         'social-auth:vk': reverse(
