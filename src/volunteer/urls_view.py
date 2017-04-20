@@ -140,7 +140,6 @@ def api_root(request, format=None):
         'admin:schedules:relevant-users': reverse(
             'adm:schedules:relevant-user-list', **params
         ),
-<<<<<<<<< Temporary merge branch 1
         'admin:schedules:user-position-statistics': reverse(
             'adm:schedules:user-position-statistic', **params
         ),
