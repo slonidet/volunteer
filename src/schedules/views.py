@@ -86,7 +86,7 @@ class AdminRelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
         'profile__work_period', 'profile__work_shift'
     ).prefetch_related('user_positions__days').filter(
         is_active=True, role__in=(User.ROLE_MAIN_TEAM, User.ROLE_RESERVED)
-    )
+    ).order_by('role')
     serializer_class = RelevantUserSerializer
     filter_class = RelevantUserFilter
     ordering_fields = (
