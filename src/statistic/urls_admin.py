@@ -10,4 +10,7 @@ urlpatterns = [
     url(r'profiles/geo/$', views.ProfileGeoStatistic.as_view(), name='profiles_geo'),
     url(r'profiles/interesting/$', views.ProfileInterestingStatistic.as_view(),
         name='profiles_interesting'),
+    url(r'profiles/gender-age/$', views.ProfileGenderAgeStatView.as_view(),
+        name='profiles_gender_age'),
+    url(r'equipment/$', views.EquipmentStatistic.as_view(), name='equipment'),
 ]

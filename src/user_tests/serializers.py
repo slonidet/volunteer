@@ -313,4 +313,3 @@ class AdminAverageTestScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = '__all__'
-
