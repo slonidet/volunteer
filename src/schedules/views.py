@@ -1,11 +1,13 @@
 from rest_framework import viewsets, permissions
+from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
 
 from schedules.filters import UserPositionFilter, RelevantUserFilter
-from schedules.models import Shift, Period, Place, Team, UserPosition
+from schedules.models import Shift, Period, Place, Team, UserPosition, Day
 from schedules.serializers import ShiftSerializer, PeriodSerializer, \
     PlaceSerializer, TeamSerializer, UserPositionSerializer, \
     UserScheduleUserPositionSerializer, TeamLeaderScheduleTeamSerializer, \
-    RelevantUserSerializer
+    RelevantUserSerializer, StatisticPlaceSerializer
 from users.models import User
 
 
@@ -41,11 +43,13 @@ class AdminTeamViewSet(viewsets.ModelViewSet):
         'user_positions__user__profile'
     ).all()
     serializer_class = TeamSerializer
+    filter_fields = ('place', 'shift', 'period')
 
 
 class AdminUserPositionViewSet(viewsets.ModelViewSet):
-    queryset = UserPosition.objects.select_related('user__profile')\
-        .prefetch_related('days').all()
+    queryset = UserPosition.objects.select_related(
+        'user__profile', 'position__place'
+    ).prefetch_related('days', 'user__user_positions__days').distinct()
     serializer_class = UserPositionSerializer
     filter_class = UserPositionFilter
 
@@ -77,11 +81,11 @@ class TeamLeaderScheduleViewSet(viewsets.ReadOnlyModelViewSet):
         )
 
 
-class RelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
+class AdminRelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.select_related(
         'profile__work_period', 'profile__work_shift'
-    ).filter(
-        # is_active=True, role__in=(User.ROLE_MAIN_TEAM, User.ROLE_RESERVED)
+    ).prefetch_related('user_positions__days').filter(
+        is_active=True, role__in=(User.ROLE_MAIN_TEAM, User.ROLE_RESERVED)
     )
     serializer_class = RelevantUserSerializer
     filter_class = RelevantUserFilter
@@ -91,3 +95,68 @@ class RelevantUserViewSet(viewsets.ReadOnlyModelViewSet):
         'profile__interesting_transportation', 'profile__interesting_language',
         'profile__interesting_festival'
     )
+
+
+class AdminUserPositionStatisticView(GenericAPIView):
+    queryset = UserPosition.objects.prefetch_related('days').select_related(
+        'position__place').all()
+    serializer_class = StatisticPlaceSerializer
+    filter_fields = ('shift', 'days__period')
+
+    def get(self, request, *args, **kwargs):
+        user_positions = self.filter_queryset(self.get_queryset()).distinct()
+        user_statistics = self.get_user_statistics(user_positions)
+
+        days = Day.objects.all()
+        period = request.query_params.get('days__period', None)
+        if period:
+            days = days.filter(period=request.query_params['days__period'])
+
+        positions = Place.objects.prefetch_related('positions')
+        page = self.paginate_queryset(positions)
+        if page is not None:
+            serializer = self.get_serializer(
+                page, days=days, statistics=user_statistics, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(
+            positions, days=days, statistics=user_statistics, many=True)
+
+        return Response(serializer.data)
+
+    @staticmethod
+    def get_user_statistics(user_positions):
+        """
+        User statistic per day. Return dict structure
+        {
+            place_id: {
+                position_id: {
+                    date_id: 5,
+                    ...
+                },
+                ...
+            } ,
+            ...
+        }
+        :param user_positions: UserPosition queryset
+        :return: 
+        """
+        statistics = {}
+
+        for user_position in user_positions:
+            for day in user_position.days.all():
+                try:
+                    position = user_position.position
+                    statistics[position.place.id][position.id][day.id] += 1
+
+                except KeyError:
+                    if position.place.id not in statistics:
+                        statistics[position.place.id] = {}
+
+                    if position.id not in statistics[position.place.id]:
+                        statistics[position.place.id][position.id] = {}
+
+                    if day.id not in statistics[position.place.id][position.id]:
+                        statistics[position.place.id][position.id][day.id] = 1
+
+        return statistics

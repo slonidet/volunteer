@@ -62,7 +62,7 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
      apt-get update
-     apt-get install -y gcc libssl-dev, gettext
+     apt-get install -y gcc build-essential libssl-dev libffi-dev gettext
      apt-get install -y python3-dev python3-venv
      apt-get install -y libmysqlclient-dev
      apt-get install -y redis-server

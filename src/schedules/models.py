@@ -60,9 +60,17 @@ class Shift(models.Model):
     """
     FIRST = 'first'
     SECOND = 'second'
+    THIRD = 'third'
+    FOURTH = 'fourth'
+    FIFTH = 'fifth'
+    SIXTH = 'sixth'
     CHOICES = (
         (FIRST, _('10:00 – 16:00')),
         (SECOND, _('16:00 – 22:00')),
+        (THIRD, _('22:00 – 04:00')),
+        (FOURTH, _('04:00 – 10:00')),
+        (FIFTH, _('14:00 – 20:00')),
+        (SIXTH, _('20:00 – 02:00')),
     )
 
     name = models.CharField(_('Название'), max_length=128, unique=True)
@@ -85,11 +93,13 @@ class Period(models.Model):
     FIRST = 'first'
     SECOND = 'second'
     THIRD = 'third'
+    FOURTH = 'fourth'
     ANY = 'any'
     CHOICES = (
-        (FIRST, _('13 – 23 июня 2018 года')),
-        (SECOND, _('24 июня – 4 июля 2018 года')),
-        (THIRD, _('5 – 15 июля 2018 года')),
+        (FIRST, _('10 – 19 июня 2018 года')),
+        (SECOND, _('20 июня – 29 июня 2018 года')),
+        (THIRD, _('30 июня – 9 июля 2018 года')),
+        (FOURTH, _('10 июля – 19 июля 2018 года')),
         (ANY, _('в любой указанный период')),
     )
 
@@ -149,7 +159,6 @@ class UserPosition(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Позиция пользователя')
         verbose_name_plural = _('Позиции пользователя')
-        unique_together = (('user', 'team'), )
 
     def __str__(self):
         return str(self.id)
