@@ -34,8 +34,11 @@ class UserAnalytics(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         data = dict()
-        data['number_of_users'] = self.count_for_period(
-            request.GET['mesure'], int(request.GET['number']))
+        if request.GET:
+            data['number_of_users'] = self.count_for_period(
+                request.GET['mesure'], int(request.GET['number']))
+        else:
+            data['number_of_users'] = self.queryset.count()
 
         return Response(data)
 
