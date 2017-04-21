@@ -12,4 +12,6 @@ urlpatterns = [
         name='profiles_interesting'),
     url(r'profiles/language/$', views.ProfileSecondLanguageStatistic.as_view(),
         name='profiles_language'),
+    url(r'users/$', views.UserAnalytics.as_view(),
+        name='users'),
 ]

@@ -99,6 +99,7 @@ def api_root(request, format=None):
             'adm:statistic:profiles_interesting', **params),
         'admin:statistic:profiles:language': reverse(
             'adm:statistic:profiles_language', **params),
+        'admin:statistic:users': reverse('adm:statistic:users', **params),
 
         # Social auth
         'social-auth:vk': reverse(
