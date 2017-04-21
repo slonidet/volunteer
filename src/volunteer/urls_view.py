@@ -88,6 +88,8 @@ def api_root(request, format=None):
 
         # Statistic
         'admin:statistic:main': reverse('adm:statistic:main', **params),
+        'admin:statistic:users:analytics': reverse(
+            'admin:statistic:users:analytics', **params),
 
         # Social auth
         'social-auth:vk': reverse(

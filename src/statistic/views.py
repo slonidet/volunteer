@@ -1,4 +1,5 @@
-from django.db.models import Q, timezone
+from django.db.models import Q
+from django.utils import timezone
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.response import Response
@@ -27,20 +28,23 @@ class AdminStatistic(generics.RetrieveAPIView):
         return Response(data)
 
 
-class UserStatistic(generics.RetrieveAPIView):
-    queryset = Profile.objects.all()
+class UserAnalytics(generics.RetrieveAPIView):
+    queryset = User.objects.all()
     permission_classes = (permissions.IsAdminUser,)
 
     def retrieve(self, request, *args, **kwargs):
         data = dict()
+        data['number_of_users'] = self.count_for_period(
+            request.data['mesure'], request.data['number'])
 
-        return Response(3)
+        return Response(data)
 
     def count_for_period(self, time_mesure, number):
         if time_mesure == 'day':
             since = timezone.now() - timezone.timedelta(days=number)
-
-
-
+            return User.objects.filter(date_joined__gt=since).count()
+        # if time_mesure == 'month':
+        #     since = timezone.now() - timezone.timedelta(months=number)
+        #     return User.objects.filter(date_joined__gt=since).count()
 
 
