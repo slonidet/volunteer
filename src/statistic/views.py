@@ -139,7 +139,7 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
 
     def get_age_groups_percentage(self):
 
-        group_14_16 = tuple(range(14, 17))
+        group_14_16 = tuple(range(14, 16))
         group_16_18 = tuple(range(16, 18))
         group_18_25 = tuple(range(18, 25))
         group_25_35 = tuple(range(25, 35))
