@@ -35,16 +35,21 @@ class UserAnalytics(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         data = dict()
         data['number_of_users'] = self.count_for_period(
-            request.data['mesure'], request.data['number'])
+            request.GET['mesure'], int(request.GET['number']))
 
         return Response(data)
 
     def count_for_period(self, time_mesure, number):
+        print(type(number))
         if time_mesure == 'day':
             since = timezone.now() - timezone.timedelta(days=number)
             return User.objects.filter(date_joined__gt=since).count()
-        # if time_mesure == 'month':
-        #     since = timezone.now() - timezone.timedelta(months=number)
-        #     return User.objects.filter(date_joined__gt=since).count()
-
-
+        if time_mesure == 'week':
+            since = timezone.now() - timezone.timedelta(weeks=number)
+            return User.objects.filter(date_joined__gt=since).count()
+        if time_mesure == 'month':
+            since = timezone.now() - timezone.timedelta(days=number*30)
+            return User.objects.filter(date_joined__gt=since).count()
+        if time_mesure == 'year':
+            since = timezone.now() - timezone.timedelta(days=number*365)
+            return User.objects.filter(date_joined__gt=since).count()
