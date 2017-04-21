@@ -270,7 +270,6 @@ class UserAnalytics(generics.RetrieveAPIView):
         return Response(data)
 
     def count_for_period(self, time_mesure, number):
-        print(type(number))
         if time_mesure == 'day':
             since = timezone.now() - timezone.timedelta(days=number)
             return User.objects.filter(date_joined__gt=since).count()
