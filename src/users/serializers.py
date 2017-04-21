@@ -59,14 +59,15 @@ class GroupSerializer(serializers.ModelSerializer):
 class BaseUserSerializer(serializers.ModelSerializer):
     username = serializers.EmailField(label='Адрес электронной почты')
 
+    _exclude_fields = ('role', 'is_superuser', 'is_staff', 'last_login',
+                        'date_joined')
     @cached_property
     def _writable_fields(self):
         """ Exclude from writable fields """
         writable_fields = super()._writable_fields
-        exclude_fields = ('role', 'is_superuser', 'is_staff', 'last_login',
-                          'date_joined')
 
-        return [i for i in writable_fields if i.source not in exclude_fields]
+        return [i for i in writable_fields
+                if i.source not in self._exclude_fields]
 
 
 class SimpleUserSerializer(BaseUserSerializer):
@@ -139,6 +140,9 @@ class UserSerializer(BaseUserSerializer):
 
 class AdminUserSerializer(UserSerializer):
     groups = GroupSerializer(many=True, required=False)
+
+    _exclude_fields = ('is_superuser', 'is_staff', 'last_login',
+                        'date_joined')
 
     class Meta(UserSerializer.Meta):
         read_only_fields = ('profile', 'profile_attachment')
