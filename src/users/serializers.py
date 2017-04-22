@@ -13,7 +13,7 @@ from core.serializers import HyperlinkedSorlImageField
 from core.translation_serializers import AdminTranslationMixin, \
     UserTranslationMixin
 from permissions import GROUPS
-from users.models import Profile, ProfileAttachment, Story
+from users.models import Profile, ProfileAttachment, Story, StoryComment
 from users.models import User, ProfileComment
 from users.translation import StoryTranslationOptions
 
@@ -195,7 +195,15 @@ class BaseStorySerializer(serializers.ModelSerializer):
         model_translation = StoryTranslationOptions
 
 
+class StoryCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoryComment
+        fields = '__all__'
+
+
 class AdminStorySerializer(AdminTranslationMixin, BaseStorySerializer):
+    comments = StoryCommentSerializer(read_only=True, many=True)
+
     class Meta(BaseStorySerializer.Meta):
         fields = '__all__'
 

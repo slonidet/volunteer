@@ -1,6 +1,6 @@
-Django==1.10.4
-django-debug-toolbar==1.6
-djangorestframework==3.5.3
+Django==1.10.7
+django-debug-toolbar==1.7
+djangorestframework==3.5.4
 django-crispy-forms==1.6.1
 django-filter==1.0.1
 django-multiselectfield==0.1.4
