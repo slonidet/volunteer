@@ -80,7 +80,7 @@ class CurrentUserStorySerializer(AdminStorySerializer):
 
     class Meta(BaseStorySerializer.Meta):
         fields = '__all__'
-        read_only_fields = ('is_public', 'admin_comment')
+        read_only_fields = ('is_public',)
 
     def create(self, validated_data):
         try:
