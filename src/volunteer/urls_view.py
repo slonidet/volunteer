@@ -92,16 +92,16 @@ def api_root(request, format=None):
 
         # Statistic
         'admin:statistic:main': reverse('adm:statistic:main', **params),
+        'admin:statistic:users': reverse('adm:statistic:users', **params),
+        'admin:statistic:equipment': reverse('adm:statistic:equipment', **params),
         'admin:statistic:profiles:gender_age': reverse(
             'adm:statistic:profiles_gender_age', **params),
-        'admin:statistic:equipment': reverse('adm:statistic:equipment', **params),
         'admin:statistic:profiles:geo': reverse(
             'adm:statistic:profiles_geo', **params),
         'admin:statistic:profiles:interesting': reverse(
             'adm:statistic:profiles_interesting', **params),
         'admin:statistic:profiles:language': reverse(
             'adm:statistic:profiles_language', **params),
-        'admin:statistic:users': reverse('adm:statistic:users', **params),
 
         # Social auth
         'social-auth:vk': reverse(
@@ -124,7 +124,7 @@ def api_root(request, format=None):
         'admin:interviews:periods': reverse('adm:interviews:period', **params),
         'admin:interviews:statuses': reverse('adm:interviews:status', **params),
 
-        # schedules
+        # Schedules
         'schedules:shifts': reverse('schedules:shift-list', **params),
         'schedules:periods': reverse('schedules:period-list', **params),
         'schedules:user:schedule': reverse(
@@ -147,11 +147,11 @@ def api_root(request, format=None):
             'adm:schedules:user-position-statistic', **params
         ),
 
-        # HallOfFame
-        'hall_of_fame': reverse('hall_of_fame:hall_of_fame', **params),
-        'admin:hall_of_fame': reverse(
-            'adm:hall_of_fame:hall_of_fame-list', **params),
-
+        # Hall of fame
+        'hall-of-fame': reverse('hall-of-fame:hall-of-fame', **params),
+        'admin:hall-of-fame': reverse(
+            'adm:hall-of-fame:hall-of-fame-list', **params
+        ),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
 

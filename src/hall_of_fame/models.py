@@ -5,10 +5,10 @@ from users.models import User
 
 
 class HallOfFame(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             unique=True,
-                             verbose_name=_('Пользователь'),
-                             related_name='hall_of_fame')
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='hall_of_fame',
+        verbose_name=_('Пользователь')
+    )
     text = models.TextField(_('Текст'))
     is_published = models.BooleanField(_('Опубликованно'), default=False)
 

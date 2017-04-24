@@ -13,5 +13,5 @@ urlpatterns = [
         'notices.urls_admin', namespace='arbitrary-notices')),
     url(r'^tests/', include('user_tests.urls_admin', 'tests')),
     url(r'^schedules/', include('schedules.urls_admin', 'schedules')),
-    url(r'^hall_of_fame/', include('hall_of_fame.urls_admin', 'hall_of_fame')),
+    url(r'^hall-of-fame/', include('hall_of_fame.urls_admin', 'hall-of-fame')),
 ]

@@ -267,6 +267,10 @@ MEDIA_ROOT = os.path.join(
     os.path.dirname(BASE_DIR), 'public', 'media'
 )
 
+# Enable client-side JavaScript access to CSRF token
+SESSION_COOKIE_HTTPONLY = False
+CSRF_COOKIE_HTTPONLY = False
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
@@ -308,5 +312,6 @@ if DEBUG:
 
     # additional modules for development
     INSTALLED_APPS += ('debug_toolbar', )
-    MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] \
-                 + MIDDLEWARE
+    MIDDLEWARE = [
+        'debug_toolbar.middleware.DebugToolbarMiddleware'
+    ] + MIDDLEWARE
