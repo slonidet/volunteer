@@ -122,7 +122,7 @@ def api_root(request, format=None):
         'admin:interviews:periods': reverse('adm:interviews:period', **params),
         'admin:interviews:statuses': reverse('adm:interviews:status', **params),
 
-        # schedules
+        # Schedules
         'schedules:shifts': reverse('schedules:shift-list', **params),
         'schedules:periods': reverse('schedules:period-list', **params),
         'schedules:user:schedule': reverse(
@@ -143,6 +143,12 @@ def api_root(request, format=None):
         ),
         'admin:schedules:user-position-statistics': reverse(
             'adm:schedules:user-position-statistic', **params
+        ),
+
+        # Hall of fame
+        'hall-of-fame': reverse('hall-of-fame:hall-of-fame', **params),
+        'admin:hall-of-fame': reverse(
+            'adm:hall-of-fame:hall-of-fame-list', **params
         ),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
