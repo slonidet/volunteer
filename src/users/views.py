@@ -123,7 +123,11 @@ class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
 
-class AdminProfileCityProfessionSearch(GenericViewSet, mixins.ListModelMixin):
+class AdminProfileCityProfessionSearch(mixins.ListModelMixin, GenericViewSet):
+    """
+    View for table that refers profile's full name, address and profession
+    """
+    queryset = Profile.objects.all()
     serializer_class = ProfileCityProfessionSearchSerializer
     permission_classes = (permissions.IsAdminUser,)
 
