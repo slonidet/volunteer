@@ -4,7 +4,7 @@ from hall_of_fame.views import AdminHallOfFameViewSet
 
 
 router = routers.DefaultRouter()
-router.register('', AdminHallOfFameViewSet, base_name='hall_of_fame')
+router.register('', AdminHallOfFameViewSet, base_name='hall-of-fame')
 
 
 urlpatterns = [] + router.urls
