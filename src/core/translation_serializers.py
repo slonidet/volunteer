@@ -37,7 +37,9 @@ class BaseTranslationMixin(object):
 
 class AdminTranslationMixin(BaseTranslationMixin):
     """
-    Translation serializer mixin for admin api
+    Translation serializer mixin for admin api.
+    
+    Admin can view translation fields for all used languages. 
     """
 
     def get_field_names(self, declared_fields, info):
@@ -71,7 +73,9 @@ class AdminTranslationMixin(BaseTranslationMixin):
 
 class UserTranslationMixin(BaseTranslationMixin):
     """
-    Translation serializer mixin for user api
+    Translation serializer mixin for user api.
+    
+    User can view only translation for his locale.
     """
 
     def get_field_names(self, declared_fields, info):

@@ -5,16 +5,14 @@ from django.utils.translation import ugettext_lazy as _
 from events.models import Event
 from notices.models import Notice
 from permissions.models import MetaPermissions
-from users.models import User, ProfileComment
+from users.models import User, ProfileComment, StoryComment
 
 
 class Badge(models.Model):
     TYPE_CHOICES = (
-        # (Event._meta.model_name, Event._meta.verbose_name),
         (Notice._meta.model_name, Notice._meta.verbose_name),
         (ProfileComment._meta.model_name, ProfileComment._meta.verbose_name),
-        # TODO: вынести story comment в отдельную модель
-        # ('story_comment', _('Комментарий к волонтёрской истории')),
+        (StoryComment._meta.model_name, StoryComment._meta.verbose_name),
     )
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='badges',

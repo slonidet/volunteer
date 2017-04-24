@@ -15,6 +15,7 @@ from core.fields import PhoneField
 from core.helpers import get_absolute_url
 from permissions import DEFAULT_GROUP
 from permissions.models import MetaPermissions
+from schedules.models import Period, Shift
 from users.current.tokens import RegisterTokenGenerator
 
 
@@ -94,6 +95,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                                        default=timezone.now)
     role = models.CharField(_('роль'), max_length=12, choices=ROLE_CHOICES,
                             default=ROLE_REGISTERED)
+    rating = models.PositiveSmallIntegerField(_('рейтинг пользователя'),
+                                              default=0)
 
     objects = UserManager()
 
@@ -235,22 +238,6 @@ class Profile(models.Model):
         (BENEFIT_ACCEPTANCE, _('признание окружающих')),
         (BENEFIT_RESPECT, _('гордость и уважение близких')),
     )
-    WORK_PERIOD_FIRST = 'first'
-    WORK_PERIOD_SECOND = 'second'
-    WORK_PERIOD_THIRD = 'third'
-    WORK_PERIOD_ANY = 'any'
-    WORK_PERIOD_CHOICES = (
-        (WORK_PERIOD_FIRST, _('13 – 23 июня 2018 года')),
-        (WORK_PERIOD_SECOND, _('24 июня – 4 июля 2018 года')),
-        (WORK_PERIOD_THIRD, _('5 – 15 июля 2018 года')),
-        (WORK_PERIOD_ANY, _('в любой указанный период')),
-    )
-    WORK_SHIFT_FIRST = 'first'
-    WORK_SHIFT_SECOND = 'second'
-    WORK_SHIFT_CHOICES = (
-        (WORK_SHIFT_FIRST, _('10:00 – 16:00')),
-        (WORK_SHIFT_SECOND, _('16:00 – 22:00')),
-    )
     CLOTHES_SIZE_42 = 42
     CLOTHES_SIZE_44 = 44
     CLOTHES_SIZE_46 = 46
@@ -293,7 +280,7 @@ class Profile(models.Model):
         (SHOE_SIZE_40, _('40')), (SHOE_SIZE_41, _('41')),
         (SHOE_SIZE_42, _('42')), (SHOE_SIZE_43, _('43')),
         (SHOE_SIZE_44, _('44')), (SHOE_SIZE_45, _('45')),
-        (SHOE_SIZE_46, _('46')), (SHOE_SIZE_47, _('46')),
+        (SHOE_SIZE_46, _('46')), (SHOE_SIZE_47, _('47')),
     )
     INTERESTING_1 = 1
     INTERESTING_2 = 2
@@ -442,13 +429,12 @@ class Profile(models.Model):
         _('категория водительского удостоверения и стаж вождения'),
         max_length=256, blank=True, null=True
     )
-    work_period = models.CharField(
-        _('период работы во время чемпионата'), choices=WORK_PERIOD_CHOICES,
-        max_length=8
+    work_period = models.ForeignKey(
+        Period, verbose_name=_('период работы во время чемпионата')
+
     )
-    work_shift = models.CharField(
-        _('смена работы во время чемпионата'), choices=WORK_SHIFT_CHOICES,
-        max_length=8
+    work_shift = models.ForeignKey(
+        Shift, verbose_name=_('смена работы во время чемпионата')
     )
     participate_in_other = models.NullBooleanField(
         _('готовы ли Вы принимать участие в других мероприятиях, '
@@ -524,14 +510,29 @@ class Story(models.Model):
     text = models.TextField(_('текст'))
     about_yourself = models.CharField(_('о себе'), max_length=1024)
     is_public = models.BooleanField(_('опубликовано'), default=False)
-    admin_comment = models.TextField(
-        _('коментарий администратора'), blank=True, null=True
-    )
     image = models.ImageField(_('фото'), blank=True, null=True)
 
     class Meta(MetaPermissions):
         verbose_name = _('волонтёрская история')
         verbose_name_plural = _('волонтёрские истории')
+
+    def __str__(self):
+        return str(self.id)
+
+
+class StoryComment(models.Model):
+    """
+    Admin story comment
+    """
+    story = models.ForeignKey(
+        Story, related_name='comments', verbose_name=_('волонтёрская история')
+    )
+    text = models.TextField(_('Текст'))
+    created_at = models.DateTimeField(_('время создания'), auto_now_add=True)
+
+    class Meta(MetaPermissions):
+        verbose_name = _('комментарий волонтёрской истории')
+        verbose_name_plural = _('комментарии волонтёрских историй')
 
     def __str__(self):
         return str(self.id)
