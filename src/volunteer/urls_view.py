@@ -90,6 +90,7 @@ def api_root(request, format=None):
 
         # Statistic
         'admin:statistic:main': reverse('adm:statistic:main', **params),
+        'admin:statistic:users': reverse('adm:statistic:users', **params),
         'admin:statistic:equipment': reverse('adm:statistic:equipment', **params),
 
         # Social auth
