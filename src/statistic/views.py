@@ -30,6 +30,9 @@ class AdminPanelStatistic(generics.RetrieveAPIView):
 
 
 class UserStatistic(generics.RetrieveAPIView):
+    """
+    Shows analytics about registration on given period
+    """
     queryset = User.objects.all()
     permission_classes = (permissions.IsAdminUser,)
 
