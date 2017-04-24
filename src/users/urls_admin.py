@@ -12,6 +12,8 @@ router.register('profile-attachments', AdminProfileAttachmentViewSet,
 router.register('stories', AdminStoryViewSet, base_name='story')
 router.register('story-comments', AdminStoryCommentViewSet, 'story-comment')
 router.register('groups', AdminUserGroupViewSet, base_name='group')
+router.register('profession-city', AdminProfileCityProfessionSearch,
+                base_name='profession_city')
 router.register('', AdminUserViewSet, base_name='user')
 
 

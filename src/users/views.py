@@ -15,7 +15,7 @@ from users.models import User
 from users.serializers import ProfileSerializer, ProfileAttachmentSerializer, \
     AdminStorySerializer, StorySerializer, UserGroupSerializer, \
     ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer, \
-    StoryCommentSerializer
+    ProfileCityProfessionSearchSerializer
 
 
 class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
@@ -128,3 +128,24 @@ class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserGroupSerializer
     pagination_class = None
     permission_classes = (permissions.IsAuthenticated,)
+
+
+class AdminProfileCityProfessionSearch(mixins.ListModelMixin, GenericViewSet):
+    """
+    View for table that refers profile's full name, address and profession
+    """
+    queryset = Profile.objects.all()
+    serializer_class = ProfileCityProfessionSearchSerializer
+    permission_classes = (permissions.IsAdminUser,)
+
+    def get_queryset(self):
+        queryset = Profile.objects.all()
+        address = self.request.query_params.get('address', None)
+        profession = self.request.query_params.get('profession', None)
+        if address is not None:
+            queryset = Profile.objects.filter(
+                residential_address__icontains=address)
+        if profession is not None:
+            queryset = Profile.objects.filter(position__icontains=profession)
+
+        return queryset

@@ -243,8 +243,15 @@ class UserGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ('id', 'name', 'display_name')
+        fields = ('id', 'name', 'display_name',)
         read_only_fields = ('name',)
 
     def get_display_name(self, obj):
         return GROUPS.get(obj.name, '')
+
+
+class ProfileCityProfessionSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('last_name', 'first_name', 'middle_name',
+                  'residential_address', 'position',)
