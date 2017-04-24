@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'multiselectfield',
     'sorl.thumbnail',
     'social_django',
+    'import_export',
 
     'users.apps.UsersConfig',
     'gallery.apps.GalleryConfig',
@@ -66,6 +67,8 @@ INSTALLED_APPS = [
     'badges.apps.BadgesConfig',
     'notices.apps.NoticesConfig',
     'interviews.apps.InterviewsConfig',
+    'schedules.apps.SchedulesConfig',
+    'hall_of_fame.apps.HallOfFameConfig',
 ]
 
 MIDDLEWARE = [
@@ -307,3 +310,6 @@ if DEBUG:
     INSTALLED_APPS += ('debug_toolbar', )
     MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] \
                  + MIDDLEWARE
+
+SESSION_COOKIE_HTTPONLY = False
+CSRF_COOKIE_HTTPONLY = False
