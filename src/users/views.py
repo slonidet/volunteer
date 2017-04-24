@@ -15,7 +15,7 @@ from users.models import User
 from users.serializers import ProfileSerializer, ProfileAttachmentSerializer, \
     AdminStorySerializer, StorySerializer, UserGroupSerializer, \
     ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer, \
-    ProfileCityProfessionSearchSerializer
+    ProfileCityProfessionSearchSerializer, StoryCommentSerializer
 
 
 class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,

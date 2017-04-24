@@ -2,8 +2,7 @@ from rest_framework import routers
 
 from users.views import AdminProfileViewSet, AdminProfileAttachmentViewSet, \
     AdminStoryViewSet, AdminStoryCommentViewSet, AdminUserGroupViewSet, \
-    AdminUserViewSet
-
+    AdminUserViewSet, AdminProfileCityProfessionSearch
 
 router = routers.DefaultRouter()
 router.register('profiles', AdminProfileViewSet, base_name='profile')
