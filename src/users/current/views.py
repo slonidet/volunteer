@@ -123,7 +123,7 @@ class CurrentUserProfileCommentView(ListAPIView):
 
 
 class CurrentUserStoryView(StoryRelatedViewMixin, BaseCurrentUserView):
-    queryset = Story.objects.all()
+    queryset = Story.objects.prefetch_related('comments').all()
     user_pk_lookup_field = 'profile__user__pk'
     serializer_class = CurrentUserStorySerializer
 

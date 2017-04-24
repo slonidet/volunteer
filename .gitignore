@@ -13,5 +13,6 @@ ubuntu-xenial-16.04-cloudimg-console.log
 celerybeat-schedule
 .DS_Store
 *.sql
-src/.vscode
 src/org.kde.konsole.desktop
+src/.vscode
+
