@@ -240,3 +240,9 @@ class UserGroupSerializer(serializers.ModelSerializer):
 
     def get_display_name(self, obj):
         return GROUPS.get(obj.name, '')
+
+
+class ProfileCityProfessionSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('last_name', 'residential_address', 'position',)

@@ -38,6 +38,8 @@ def api_root(request, format=None):
             'adm:users:profile-attachment-list', **params),
         'admin:users:stories': reverse('adm:users:story-list', **params),
         'admin:users:groups': reverse('adm:users:group-list', **params),
+        'admin:users:profession-city': reverse(
+            'adm:users:profession_city-list', **params),
         'users:stories': reverse('users:story-list', **params),
 
         # Gallery
