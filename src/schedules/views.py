@@ -101,28 +101,52 @@ class AdminUserPositionStatisticView(GenericAPIView):
     queryset = UserPosition.objects.prefetch_related('days').select_related(
         'position__place').all()
     serializer_class = StatisticPlaceSerializer
-    filter_fields = ('shift', 'days__period')
+    filter_fields = ['shift', 'days__period', 'position__place__name']
 
     def get(self, request, *args, **kwargs):
-        user_positions = self.filter_queryset(self.get_queryset()).distinct()
-        user_statistics = self.get_user_statistics(user_positions)
+        places = self.get_places_queryset()
 
-        days = Day.objects.all()
-        period = request.query_params.get('days__period', None)
-        if period:
-            days = days.filter(period=request.query_params['days__period'])
-
-        positions = Place.objects.prefetch_related('positions')
-        page = self.paginate_queryset(positions)
+        serializer_params = self.get_serializer_params()
+        page = self.paginate_queryset(places)
         if page is not None:
             serializer = self.get_serializer(
-                page, days=days, statistics=user_statistics, many=True)
+                page, **serializer_params)
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(
-            positions, days=days, statistics=user_statistics, many=True)
+            places, **serializer_params)
 
         return Response(serializer.data)
+
+    def get_places_queryset(self):
+        places = Place.objects.prefetch_related('positions')
+        name = self.request.query_params.get('position__place__name', None)
+        if name:
+            places = places.filter(name__icontains=name)
+        if 'position__place__name' in self.filter_fields:
+            self.filter_fields.remove('position__place__name')
+        return places
+
+    def get_serializer_params(self):
+        return dict(
+            days=self.get_days_context(),
+            statistics=self.get_user_statistics_context(),
+            many=True
+        )
+
+    def get_days_context(self):
+        days = Day.objects.all()
+        period = self.request.query_params.get('days__period', None)
+        if period:
+            days = days.filter(period=self.request.query_params['days__period'])
+        return days
+
+    def get_user_statistics_context(self):
+        user_positions = self.filter_queryset(self.get_queryset()).distinct()
+        if 'position__place__name' not in self.filter_fields:
+            self.filter_fields.append('position__place__name')
+        user_statistics = self.get_user_statistics(user_positions)
+        return user_statistics
 
     @staticmethod
     def get_user_statistics(user_positions):

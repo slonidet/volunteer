@@ -37,6 +37,8 @@ def api_root(request, format=None):
         'admin:users:profile-attachments': reverse(
             'adm:users:profile-attachment-list', **params),
         'admin:users:stories': reverse('adm:users:story-list', **params),
+        'admin:users:story-comments': reverse(
+            'adm:users:story-comment-list', **params),
         'admin:users:groups': reverse('adm:users:group-list', **params),
         'users:stories': reverse('users:story-list', **params),
 
@@ -88,6 +90,16 @@ def api_root(request, format=None):
 
         # Statistic
         'admin:statistic:main': reverse('adm:statistic:main', **params),
+        'admin:statistic:users': reverse('adm:statistic:users', **params),
+        'admin:statistic:equipment': reverse('adm:statistic:equipment', **params),
+        'admin:statistic:profiles:gender_age': reverse(
+            'adm:statistic:profiles_gender_age', **params),
+        'admin:statistic:profiles:geo': reverse(
+            'adm:statistic:profiles_geo', **params),
+        'admin:statistic:profiles:interesting': reverse(
+            'adm:statistic:profiles_interesting', **params),
+        'admin:statistic:profiles:language': reverse(
+            'adm:statistic:profiles_language', **params),
 
         # Social auth
         'social-auth:vk': reverse(
@@ -110,7 +122,7 @@ def api_root(request, format=None):
         'admin:interviews:periods': reverse('adm:interviews:period', **params),
         'admin:interviews:statuses': reverse('adm:interviews:status', **params),
 
-        # schedules
+        # Schedules
         'schedules:shifts': reverse('schedules:shift-list', **params),
         'schedules:periods': reverse('schedules:period-list', **params),
         'schedules:user:schedule': reverse(
@@ -131,6 +143,12 @@ def api_root(request, format=None):
         ),
         'admin:schedules:user-position-statistics': reverse(
             'adm:schedules:user-position-statistic', **params
+        ),
+
+        # Hall of fame
+        'hall-of-fame': reverse('hall-of-fame:hall-of-fame', **params),
+        'admin:hall-of-fame': reverse(
+            'adm:hall-of-fame:hall-of-fame-list', **params
         ),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))

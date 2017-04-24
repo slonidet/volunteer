@@ -95,6 +95,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                                        default=timezone.now)
     role = models.CharField(_('роль'), max_length=12, choices=ROLE_CHOICES,
                             default=ROLE_REGISTERED)
+    rating = models.PositiveSmallIntegerField(_('рейтинг пользователя'),
+                                              default=0)
 
     objects = UserManager()
 
@@ -278,7 +280,7 @@ class Profile(models.Model):
         (SHOE_SIZE_40, _('40')), (SHOE_SIZE_41, _('41')),
         (SHOE_SIZE_42, _('42')), (SHOE_SIZE_43, _('43')),
         (SHOE_SIZE_44, _('44')), (SHOE_SIZE_45, _('45')),
-        (SHOE_SIZE_46, _('46')), (SHOE_SIZE_47, _('46')),
+        (SHOE_SIZE_46, _('46')), (SHOE_SIZE_47, _('47')),
     )
     INTERESTING_1 = 1
     INTERESTING_2 = 2
@@ -508,14 +510,29 @@ class Story(models.Model):
     text = models.TextField(_('текст'))
     about_yourself = models.CharField(_('о себе'), max_length=1024)
     is_public = models.BooleanField(_('опубликовано'), default=False)
-    admin_comment = models.TextField(
-        _('коментарий администратора'), blank=True, null=True
-    )
     image = models.ImageField(_('фото'), blank=True, null=True)
 
     class Meta(MetaPermissions):
         verbose_name = _('волонтёрская история')
         verbose_name_plural = _('волонтёрские истории')
+
+    def __str__(self):
+        return str(self.id)
+
+
+class StoryComment(models.Model):
+    """
+    Admin story comment
+    """
+    story = models.ForeignKey(
+        Story, related_name='comments', verbose_name=_('волонтёрская история')
+    )
+    text = models.TextField(_('Текст'))
+    created_at = models.DateTimeField(_('время создания'), auto_now_add=True)
+
+    class Meta(MetaPermissions):
+        verbose_name = _('комментарий волонтёрской истории')
+        verbose_name_plural = _('комментарии волонтёрских историй')
 
     def __str__(self):
         return str(self.id)
