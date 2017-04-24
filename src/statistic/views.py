@@ -9,7 +9,7 @@ from gallery.models import Photo, Video
 from users.models import User, Profile
 
 
-class AdminStatistic(generics.RetrieveAPIView):
+class AdminPanelStatistic(generics.RetrieveAPIView):
     """ Statistic for admin panel """
     queryset = Profile.objects.all()
 
@@ -28,30 +28,33 @@ class AdminStatistic(generics.RetrieveAPIView):
         return Response(data)
 
 
-class UserAnalytics(generics.RetrieveAPIView):
+class UserStatistic(generics.RetrieveAPIView):
     queryset = User.objects.all()
     permission_classes = (permissions.IsAdminUser,)
 
     def retrieve(self, request, *args, **kwargs):
-        data = dict()
-        if request.GET:
-            data['number_of_users'] = self.count_for_period(
-                request.GET['mesure'], int(request.GET['number']))
-        else:
-            data['number_of_users'] = self.queryset.count()
+        queryset = self.get_queryset()
+        time_measure = request.query_params.get('mesure', None)
+        time_measure_number = request.query_params.get('number', None)
 
-        return Response(data)
+        if time_measure and time_measure_number:
+            queryset = self.user_filtering_by_period(
+                queryset, time_measure, time_measure_number
+            )
 
-    def count_for_period(self, time_mesure, number):
-        if time_mesure == 'day':
-            since = timezone.now() - timezone.timedelta(days=number)
-            return User.objects.filter(date_joined__gt=since).count()
-        if time_mesure == 'week':
-            since = timezone.now() - timezone.timedelta(weeks=number)
-            return User.objects.filter(date_joined__gt=since).count()
-        if time_mesure == 'month':
-            since = timezone.now() - timezone.timedelta(days=number*30)
-            return User.objects.filter(date_joined__gt=since).count()
-        if time_mesure == 'year':
-            since = timezone.now() - timezone.timedelta(days=number*365)
-            return User.objects.filter(date_joined__gt=since).count()
+        return Response({'number_of_users': queryset.count()})
+
+    @staticmethod
+    def user_filtering_by_period(queryset, time_measure, time_measure_number):
+        time_measure_number = int(time_measure_number)
+        time_measures = {
+            'day': lambda x: x,
+            'week': lambda x: x * 7,
+            'month': lambda x: x * 30,
+            'year': lambda x: x * 365,
+        }
+
+        days_number = time_measures.get(time_measure)(time_measure_number)
+        begin = timezone.now() - timezone.timedelta(days=days_number)
+
+        return queryset.filter(date_joined__gt=begin)
