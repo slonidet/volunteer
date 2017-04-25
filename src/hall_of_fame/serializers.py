@@ -29,7 +29,7 @@ class AdminHallOfFameSerializer(HallOfFameBaseSerializer,
         fields = '__all__'
 
 
-class HallOfFameSerializer(HallOfFameBaseSerializer, UserTranslationMixin):
+class HallOfFameSerializer(UserTranslationMixin, HallOfFameBaseSerializer):
 
     class Meta(HallOfFameBaseSerializer.Meta):
         fields = ['id', 'user', 'image', 'is_published', 'text', 'first_name',
