@@ -1,13 +1,13 @@
 from django.contrib import admin
-from users.models import User, Story
 from django.utils.translation import ugettext_lazy as _
-from modeltranslation.admin import TranslationAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, \
     UserChangeForm as BaseUserChangeForm, \
     UserCreationForm as BaseUserCreationForm
 from import_export.admin import ImportExportActionModelAdmin
+from modeltranslation.admin import TranslationAdmin
 
-from users.models import Profile, ProfileAttachment
+from users.admin_resources import ProfileAdminResource
+from users.models import User, Story, Profile, ProfileAttachment
 
 
 class UserCreationForm(BaseUserCreationForm):
@@ -47,8 +47,6 @@ class UserAdmin(BaseUserAdmin):
     )
     form = UserChangeForm
     add_form = UserCreationForm
-    list_display = ('username', 'is_staff', 'role')
-    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
     list_display = (
         'id', 'username', 'is_active', 'is_staff', 'role', 'date_joined'
     )
@@ -63,6 +61,9 @@ class ProfileAdmin(ImportExportActionModelAdmin):
     list_display = ('id', 'first_name', 'last_name', 'middle_name', 'gender',
                     'status')
     list_filter = ('status', 'gender', 'user__role',)
+
+    def get_export_resource_class(self):
+        return ProfileAdminResource
 
 
 class ProfileAttachmentAdmin(admin.ModelAdmin):
