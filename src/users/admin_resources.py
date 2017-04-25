@@ -1,5 +1,6 @@
 from import_export.resources import ModelResource
-from .models import Profile
+
+from users.models import Profile
 
 
 class ProfileAdminResource(ModelResource):
