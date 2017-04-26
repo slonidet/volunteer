@@ -142,39 +142,39 @@ msgstr "Interviewers"
 
 #: interviews/models.py:21
 msgid "09-10"
-msgstr ""
+msgstr "09-10"
 
 #: interviews/models.py:21
 msgid "10-11"
-msgstr ""
+msgstr "10-11"
 
 #: interviews/models.py:21
 msgid "11-12"
-msgstr ""
+msgstr "11-12"
 
 #: interviews/models.py:21
 msgid "12-13"
-msgstr ""
+msgstr "12-13"
 
 #: interviews/models.py:22
 msgid "13-14"
-msgstr ""
+msgstr "13-14"
 
 #: interviews/models.py:22
 msgid "14-15"
-msgstr ""
+msgstr "14-15"
 
 #: interviews/models.py:22
 msgid "15-16"
-msgstr ""
+msgstr "15-16"
 
 #: interviews/models.py:22
 msgid "16-17"
-msgstr ""
+msgstr "16-17"
 
 #: interviews/models.py:23
 msgid "17-18"
-msgstr ""
+msgstr "17-18"
 
 #: interviews/models.py:31
 msgid "Ожидает подтверждения"
@@ -513,7 +513,7 @@ msgstr "is staff"
 
 #: users/models.py:82
 msgid "Designates whether the user can log into this admin site."
-msgstr ""
+msgstr "Указывает, может ли пользователь на сайт администратора."
 
 #: users/models.py:86
 msgid "активный"
@@ -524,6 +524,8 @@ msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
+"Указывает, следует ли считать пользователя активным. "
+"Снимите этот флажок, а не удаляйте учетные записи."
 
 #: users/models.py:93
 msgid "дата регистрации"
@@ -663,155 +665,155 @@ msgstr "4:00 PM - 10:00 PM"
 
 #: users/models.py:260
 msgid "XXS (42)"
-msgstr ""
+msgstr "XXS (42)"
 
 #: users/models.py:260
 msgid "XS (44)"
-msgstr ""
+msgstr "XS (44)"
 
 #: users/models.py:261
 msgid "S (46)"
-msgstr ""
+msgstr "S (46)"
 
 #: users/models.py:261
 msgid "M (48)"
-msgstr ""
+msgstr "M (48)"
 
 #: users/models.py:262
 msgid "L (50)"
-msgstr ""
+msgstr "L (50)"
 
 #: users/models.py:262
 msgid "XL (52)"
-msgstr ""
+msgstr "XL (52)"
 
 #: users/models.py:263
 msgid "XXL (54)"
-msgstr ""
+msgstr "XXL (54)"
 
 #: users/models.py:263
 msgid "2XL (56)"
-msgstr ""
+msgstr "2XL (56)"
 
 #: users/models.py:264
 msgid "3XL (58)"
-msgstr ""
+msgstr "3XL (58)"
 
 #: users/models.py:267
 msgid "XS (42)"
-msgstr ""
+msgstr "XS (42)"
 
 #: users/models.py:267
 msgid "S (44)"
-msgstr ""
+msgstr "S (44)"
 
 #: users/models.py:268
 msgid "M (46)"
-msgstr ""
+msgstr "M (46)"
 
 #: users/models.py:268
 msgid "L (48)"
-msgstr ""
+msgstr "L (48)"
 
 #: users/models.py:269
 msgid "XL (50)"
-msgstr ""
+msgstr "XL (50)"
 
 #: users/models.py:269
 msgid "XXL (52)"
-msgstr ""
+msgstr "XXL (52)"
 
 #: users/models.py:286
 msgid "34"
-msgstr ""
+msgstr "34"
 
 #: users/models.py:286
 msgid "35"
-msgstr ""
+msgstr "35"
 
 #: users/models.py:287
 msgid "36"
-msgstr ""
+msgstr "36"
 
 #: users/models.py:287
 msgid "37"
-msgstr ""
+msgstr "37"
 
 #: users/models.py:288
 msgid "38"
-msgstr ""
+msgstr "38"
 
 #: users/models.py:288
 msgid "39"
-msgstr ""
+msgstr "39"
 
 #: users/models.py:289
 msgid "40"
-msgstr ""
+msgstr "40"
 
 #: users/models.py:289
 msgid "41"
-msgstr ""
+msgstr "41"
 
 #: users/models.py:290
 msgid "42"
-msgstr ""
+msgstr "42"
 
 #: users/models.py:290
 msgid "43"
-msgstr ""
+msgstr "43"
 
 #: users/models.py:291
 msgid "44"
-msgstr ""
+msgstr "44"
 
 #: users/models.py:291
 msgid "45"
-msgstr ""
+msgstr "45"
 
 #: users/models.py:292
 msgid "46"
-msgstr ""
+msgstr "46"
 
 #: users/models.py:299 users/models.py:315
 msgid "1"
-msgstr ""
+msgstr "1"
 
 #: users/models.py:300 users/models.py:316
 msgid "2"
-msgstr ""
+msgstr "2"
 
 #: users/models.py:301 users/models.py:317
 msgid "3"
-msgstr ""
+msgstr "3"
 
 #: users/models.py:302 users/models.py:318
 msgid "4"
-msgstr ""
+msgstr "4"
 
 #: users/models.py:319
 msgid "5"
-msgstr ""
+msgstr "5"
 
 #: users/models.py:320
 msgid "6"
-msgstr ""
+msgstr "6"
 
 #: users/models.py:321
 msgid "7"
-msgstr ""
+msgstr "7"
 
 #: users/models.py:322
 msgid "8"
-msgstr ""
+msgstr "8"
 
 #: users/models.py:323
 msgid "9"
-msgstr ""
+msgstr "9"
 
 #: users/models.py:324
 msgid "10"
-msgstr ""
+msgstr "10"
 
 #: users/models.py:330
 msgid "на рассмотрении"
