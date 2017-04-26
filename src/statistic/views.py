@@ -252,25 +252,5 @@ class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
         return Response(data)
 
 
-class GeoStatistic(generics.RetrieveAPIView):
-    queryset = Profile.objects.all()
-    permission_classes = (permissions.IsAdminUser,)
-
-    def retrieve(self, request, *args, **kwargs):
-        data = dict()
-        data['country'] = self.get_country_percentage()
-
-        return Response(data)
-
-    def get_country_percentage(self):
-        count_all = self.queryset.count()
-        number_of_russians = Profile.objects.annotate(
-            passport_number_len=Length('passport_number')).filter(
-            passport_number_len__gt=9)
-        number_of_foreigners = count_all - number_of_russians
-
-        return get_percentage(count_all, number_of_foreigners)
-
-
 def get_percentage(total, values):
     return 100 * float(values) / float(total)
