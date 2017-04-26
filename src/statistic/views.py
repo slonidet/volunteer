@@ -2,7 +2,6 @@ from django.db.models import Q
 from django.utils import timezone
 from django.db.models.functions import Length
 from rest_framework import generics
-from rest_framework import permissions
 from rest_framework.response import Response
 
 from events.models import Event
@@ -31,7 +30,6 @@ class AdminPanelStatistic(generics.RetrieveAPIView):
 
 class UserStatistic(generics.RetrieveAPIView):
     queryset = User.objects.all()
-    permission_classes = (permissions.IsAdminUser,)
 
     def retrieve(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -66,7 +64,6 @@ class EquipmentStatistic(generics.RetrieveAPIView):
     Statistic about amount of equipment
     """
     queryset = Profile.objects.filter(user__role=User.ROLE_MAIN_TEAM)
-    permission_classes = (permissions.IsAdminUser,)
     male_sizes = [size[0] for size in Profile.CLOTHES_SIZE_MALE_CHOICES]
     female_sizes = [size[0] for size in Profile.CLOTHES_SIZE_FEMALE_CHOICES]
     shoe_sizes = [size[0] for size in Profile.SHOE_SIZE_CHOICES]
@@ -118,7 +115,6 @@ class EquipmentStatistic(generics.RetrieveAPIView):
 
 class ProfileInterestingStatistic(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
-    permission_classes = (permissions.IsAdminUser,)
 
     def retrieve(self, request, *args, **kwargs):
         count_all = self.queryset.count()
@@ -147,7 +143,6 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
     Show percentage for gender and age groups from user profiles
     """
     queryset = Profile.objects.all()
-    permission_classes = (permissions.IsAdminUser, )
 
     count_males = Profile.objects.filter(gender=Profile.GENDER_MALE).count()
     count_females = Profile.objects.filter(
@@ -202,7 +197,6 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
 
 class ProfileGeoStatistic(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
-    permission_classes = (permissions.IsAdminUser,)
 
     def retrieve(self, request, *args, **kwargs):
         data = dict()
@@ -222,7 +216,6 @@ class ProfileGeoStatistic(generics.RetrieveAPIView):
 
 class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
-    permission_classes = (permissions.IsAdminUser,)
 
     def retrieve(self, request, *args, **kwargs):
         data = dict()
@@ -259,11 +252,4 @@ class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
 
 
 def get_percentage(total, values):
-    """
-    Return percents proportion of value if 'value' is number. Returns dict of
-    percents proportions of values if 'value' is list.
-    :param total:
-    :param values:
-    :return: dict or number
-    """
     return 100 * float(values) / float(total)
