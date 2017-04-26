@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
-from rest_framework import exceptions, permissions
+from rest_framework import exceptions
 from rest_framework import status, viewsets, mixins
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
@@ -127,7 +127,6 @@ class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all().order_by('id')
     serializer_class = UserGroupSerializer
     pagination_class = None
-    permission_classes = (permissions.IsAuthenticated,)
 
 
 class AdminProfileCityProfessionSearch(mixins.ListModelMixin, GenericViewSet):
@@ -136,7 +135,6 @@ class AdminProfileCityProfessionSearch(mixins.ListModelMixin, GenericViewSet):
     """
     queryset = Profile.objects.all()
     serializer_class = ProfileCityProfessionSearchSerializer
-    permission_classes = (permissions.IsAdminUser,)
 
     def get_queryset(self):
         queryset = Profile.objects.all()
