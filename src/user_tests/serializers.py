@@ -7,8 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from core.serializers import ForeignKeySerializerMixin
 from user_tests.models import Test, Task, Question, AnswerOptions, UserTest, \
-    UserAnswer, CattellOptions, CattellFactorMixin, CattellSten, \
-    CattellInterpretation
+    UserAnswer, CattellOptions, CattellFactorMixin, CattellSten
+from user_tests.cattell import CattellInterpretation
 
 
 class TestSerializer(serializers.ModelSerializer):
