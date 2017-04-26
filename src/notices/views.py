@@ -8,6 +8,7 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from notices.models import Notice
 from notices.serializers import NoticeSerializer, ArbitraryNoticeSerializer
 from users.models import User
+from notices.tasks import create_notifications
 
 
 class NoticeViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
@@ -35,17 +36,14 @@ class ArbitraryNoticeViewSet(ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            for role in choosed_roles:
-                users_by_role = User.objects.filter(
-                    role=role)
+            user_ids_by_role = [obj['id'] for obj in User.objects.filter(
+                role__in=choosed_roles).values('id')]
 
-                for user in users_by_role:
-                    Notice.objects.create(
-                        type=Notice.TYPE_ALERT,
-                        message=serializer.validated_data['message'],
-                        user=user, title=serializer.validated_data['title'],
-                        is_arbitrary=True,
-                    )
+            create_notifications.delay(
+                user_ids_by_role,
+                serializer.validated_data['message'],
+                serializer.validated_data['title']
+            )
 
             return Response(_('Нотификация отправленна'))
 
