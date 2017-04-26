@@ -24,4 +24,6 @@ urlpatterns = [
     url(r'^tests/', include('user_tests.urls', namespace='tests')),
     url(r'^badges/', include('badges.urls', namespace='badges')),
     url(r'^notices/', include('notices.urls', namespace='notices')),
+    url(r'^schedules/', include('schedules.urls', namespace='schedules')),
+    url(r'^hall-of-fame/', include('hall_of_fame.urls', 'hall-of-fame')),
 ]

@@ -13,7 +13,7 @@ from core.serializers import HyperlinkedSorlImageField
 from core.translation_serializers import AdminTranslationMixin, \
     UserTranslationMixin
 from permissions import GROUPS
-from users.models import Profile, ProfileAttachment, Story
+from users.models import Profile, ProfileAttachment, Story, StoryComment
 from users.models import User, ProfileComment
 from users.translation import StoryTranslationOptions
 
@@ -59,14 +59,17 @@ class GroupSerializer(serializers.ModelSerializer):
 class BaseUserSerializer(serializers.ModelSerializer):
     username = serializers.EmailField(label='Адрес электронной почты')
 
+    _exclude_from_writable_fields = (
+        'role', 'is_superuser', 'is_staff', 'last_login', 'date_joined'
+    )
+
     @cached_property
     def _writable_fields(self):
         """ Exclude from writable fields """
         writable_fields = super()._writable_fields
-        exclude_fields = ('role', 'is_superuser', 'is_staff', 'last_login',
-                          'date_joined')
 
-        return [i for i in writable_fields if i.source not in exclude_fields]
+        return [i for i in writable_fields
+                if i.source not in self._exclude_from_writable_fields]
 
 
 class SimpleUserSerializer(BaseUserSerializer):
@@ -140,6 +143,10 @@ class UserSerializer(BaseUserSerializer):
 class AdminUserSerializer(UserSerializer):
     groups = GroupSerializer(many=True, required=False)
 
+    _exclude_from_writable_fields = (
+        'is_superuser', 'is_staff', 'last_login', 'date_joined'
+    )
+
     class Meta(UserSerializer.Meta):
         read_only_fields = ('profile', 'profile_attachment')
 
@@ -195,7 +202,15 @@ class BaseStorySerializer(serializers.ModelSerializer):
         model_translation = StoryTranslationOptions
 
 
+class StoryCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoryComment
+        fields = '__all__'
+
+
 class AdminStorySerializer(AdminTranslationMixin, BaseStorySerializer):
+    comments = StoryCommentSerializer(read_only=True, many=True)
+
     class Meta(BaseStorySerializer.Meta):
         fields = '__all__'
 

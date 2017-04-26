@@ -1,11 +1,12 @@
-Django==1.10.4
-django-debug-toolbar==1.6
-djangorestframework==3.5.3
+Django==1.10.7
+django-debug-toolbar==1.7
+djangorestframework==3.5.4
 django-crispy-forms==1.6.1
 django-filter==1.0.1
 django-multiselectfield==0.1.4
 django-modeltranslation==0.12
 social-auth-app-django==1.0.1
+django-import-export==0.5.1
 
 pytz==2016.10
 python-dateutil==2.6.0

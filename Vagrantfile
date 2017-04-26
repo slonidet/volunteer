@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
   #   vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-     vb.memory = "700"
+     vb.memory = "1024"
   end
   #
   # View the documentation for the provider you are using for more
@@ -62,7 +62,7 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
      apt-get update
-     apt-get install -y gcc libssl-dev, gettext
+     apt-get install -y gcc build-essential libssl-dev libffi-dev gettext
      apt-get install -y python3-dev python3-venv
      apt-get install -y libmysqlclient-dev
      apt-get install -y redis-server
