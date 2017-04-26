@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'interviews.apps.InterviewsConfig',
     'schedules.apps.SchedulesConfig',
     'hall_of_fame.apps.HallOfFameConfig',
+    'permission_manager.apps.PermissionManagerConfig',
 ]
 
 MIDDLEWARE = [
