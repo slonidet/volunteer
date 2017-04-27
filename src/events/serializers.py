@@ -27,13 +27,14 @@ class AdminEventSerializer(AdminTranslationMixin, BaseEventSerializer):
     participants = serializers.SerializerMethodField()
 
     class Meta(BaseEventSerializer.Meta):
-        fields = '__all__'
+        exclude = ('users',)
 
     def get_volunteers(self, obj):
         users = User.objects.filter(
             participation__event__id=obj.id,
             participation__status=Participation.STATUS_VOLUNTEER
         ).values('username')
+
         return users
 
     def get_participants(self, obj):
@@ -43,6 +44,17 @@ class AdminEventSerializer(AdminTranslationMixin, BaseEventSerializer):
         ).values('username')
 
         return users
+
+
+class AdminParticipationSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(source='user.profile.first_name',
+                                       read_only=True)
+    last_name = serializers.CharField(source='user.profile.last_name',
+                                      read_only=True)
+
+    class Meta:
+        model = Participation
+        fields = '__all__'
 
 
 class EventSerializer(UserTranslationMixin, BaseEventSerializer):
