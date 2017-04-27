@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from events.filters import EventFilter
 from events.models import Event, Participation
 from events.serializers import AdminEventSerializer, EventSerializer, \
-    ParticipateEventSerializer
+    ParticipateEventSerializer, AdminParticipationSerializer
 
 
 class AdminEventViewSet(viewsets.ModelViewSet):
@@ -22,6 +22,12 @@ class AdminEventViewSet(viewsets.ModelViewSet):
     serializer_class = AdminEventSerializer
     filter_class = EventFilter
     permission_classes = (permissions.IsAdminUser,)
+
+
+class AdminParticipationViewSet(viewsets.ModelViewSet):
+    queryset = Participation.objects.all()
+    serializer_class = AdminParticipationSerializer
+    filter_fields = ('event', 'status',)
 
 
 class EventViewSet(viewsets.ModelViewSet):
