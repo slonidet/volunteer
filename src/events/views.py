@@ -27,6 +27,7 @@ class AdminEventViewSet(viewsets.ModelViewSet):
 class AdminParticipationViewSet(viewsets.ModelViewSet):
     queryset = Participation.objects.all()
     serializer_class = AdminParticipationSerializer
+    filter_fields = ('event', 'status',)
 
 
 class EventViewSet(viewsets.ModelViewSet):
