@@ -25,27 +25,28 @@ class NoticeViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
 class ArbitraryNoticeViewSet(ModelViewSet):
     queryset = Notice.objects.filter(is_arbitrary=True)
     serializer_class = ArbitraryNoticeSerializer
-    permission_classes = (permissions.IsAdminUser,)
     filter_fields = ('user__role',)
     allowed_roles = {choice[0] for choice in User.ROLE_CHOICES}
 
     def create(self, request, *args, **kwargs):
-        choosed_roles = set(request.data['roles'])
+        try:
+            chosen_roles = set(request.data.get('roles', None))
+        except TypeError:
+            raise ValidationError(_('Не переданы "roles"'))
 
-        if choosed_roles <= self.allowed_roles:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-
-            user_ids_by_role = [obj['id'] for obj in User.objects.filter(
-                role__in=choosed_roles).values('id')]
-
-            create_notifications.delay(
-                user_ids_by_role,
-                serializer.validated_data['message'],
-                serializer.validated_data['title']
-            )
-
-            return Response(_('Нотификация отправленна'))
-
-        else:
+        if not chosen_roles.issubset(self.allowed_roles):
             raise ValidationError(_('Такой роли не существует'))
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user_ids_by_role = [obj['id'] for obj in User.objects.filter(
+            role__in=chosen_roles).values('id')]
+
+        create_notifications.delay(
+            user_ids_by_role,
+            serializer.validated_data['message'],
+            serializer.validated_data['title']
+        )
+
+        return Response(_('Нотификация отправленна'))

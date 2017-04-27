@@ -12,4 +12,4 @@ class NoticeSerializer(serializers.ModelSerializer):
 class ArbitraryNoticeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notice
-        fields = ('created_at', 'id', 'message', 'title', )
+        fields = ('id', 'created_at', 'message', 'title', )
