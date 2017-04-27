@@ -2,7 +2,9 @@ from django.conf.urls import url
 
 from statistic.views import AdminPanelStatistic, UserStatistic, \
     EquipmentStatistic, ProfileGenderAgeStatView, ProfileGeoStatistic, \
-    ProfileInterestingStatistic, ProfileSecondLanguageStatistic
+    ProfileInterestingStatistic, ProfileSecondLanguageStatistic, \
+    ProfileEnglishLanguageStatistic
+
 
 urlpatterns = [
     url(r'main/$', AdminPanelStatistic.as_view(), name='main'),
@@ -17,4 +19,6 @@ urlpatterns = [
         name='profiles_interesting'),
     url(r'profiles/language/$', ProfileSecondLanguageStatistic.as_view(),
         name='profiles_language'),
+    url(r'profiles/english/$', ProfileEnglishLanguageStatistic.as_view(),
+        name='profiles_english'),
 ]

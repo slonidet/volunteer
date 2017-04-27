@@ -220,6 +220,23 @@ class ProfileGeoStatistic(generics.RetrieveAPIView):
         return get_percentage(count_all, number_of_foreigners)
 
 
+class ProfileEnglishLanguageStatistic(generics.RetrieveAPIView):
+    queryset = Profile.objects.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        data = dict()
+        data['elementary'] = self.queryset.filter(
+            english=Profile.ENGLISH_ELEMENTARY).count()
+        data['intermediate'] = self.queryset.filter(
+            english=Profile.ENGLISH_INTERMEDIATE).count()
+        data['upper intermediate'] = self.queryset.filter(
+            english=Profile.ENGLISH_UPPER_INTERMEDIATE).count()
+        data['fluent'] = self.queryset.filter(
+            english=Profile.ENGLISH_FLUENT).count()
+
+        return Response(data)
+
+
 class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
     permission_classes = (permissions.IsAdminUser,)
