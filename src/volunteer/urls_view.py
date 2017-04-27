@@ -148,7 +148,10 @@ def api_root(request, format=None):
         # Hall of fame
         'hall-of-fame': reverse('hall-of-fame:hall-of-fame', **params),
         'admin:hall-of-fame': reverse(
-            'adm:hall-of-fame:hall-of-fame-list', **params
+            'adm:hall-of-fame:user_hall_of_fame-list', **params
+        ),
+        'admin:users:hall-of-fame': reverse(
+            'adm:hall-of-fame:hall_of_fame-list', **params
         ),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
