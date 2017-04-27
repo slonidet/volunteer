@@ -203,7 +203,8 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
     def get_oldest(self):
         earliest_birthday = self.queryset.aggregate(
             min_birthday=Min('birthday'))['min_birthday']
-        oldest_profile = self.queryset.get(birthday=earliest_birthday)
+        oldest_profile = self.queryset.filter(
+            birthday=earliest_birthday).first()
         profile_data = dict()
         profile_data['first_name'] = oldest_profile.first_name
         profile_data['middle_name'] = oldest_profile.middle_name
