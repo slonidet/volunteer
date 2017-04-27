@@ -13,9 +13,14 @@ class TeamMessagesSerializer(serializers.ModelSerializer):
         user_id = self.context['request'].user.id
         if not value.members.filter(id=user_id).exists():
             raise serializers.ValidationError(
-                _('You can\'t write message to team that isn\'t include you')
+                'You can\'t write message to team that isn\'t include you'
             )
         return value
+
+    class Meta:
+        model = TeamMessages
+        fields = '__all__'
+
 
 class TeamMessagesListSerializer(serializers.ModelSerializer):
     sender = UserSerializer()
