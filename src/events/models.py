@@ -78,3 +78,8 @@ class Participation(models.Model):
 
     class Meta(MetaPermissions):
         unique_together = (('user', 'event'),)
+        verbose_name = _('участие в мероприятии')
+        verbose_name_plural = _('участие в мероприятиях')
+
+    def __str__(self):
+        return str(self.id)
