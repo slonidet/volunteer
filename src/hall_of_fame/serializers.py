@@ -4,6 +4,7 @@ from core.translation_serializers import UserTranslationMixin, \
     AdminTranslationMixin
 from hall_of_fame.models import HallOfFame
 from hall_of_fame.translation import HallOfFameTranslationOptions
+from users.models import User
 
 
 class HallOfFameBaseSerializer(serializers.ModelSerializer):
@@ -34,3 +35,21 @@ class HallOfFameSerializer(UserTranslationMixin, HallOfFameBaseSerializer):
     class Meta(HallOfFameBaseSerializer.Meta):
         fields = ['id', 'user', 'image', 'is_published', 'text', 'first_name',
                   'last_name', ]
+
+
+class AdminUsersHallOfFameSerializer(serializers.ModelSerializer):
+    last_name = serializers.CharField(
+        source='profile.last_name', read_only=True
+    )
+    first_name = serializers.CharField(
+        source='profile.first_name', read_only=True
+    )
+    hall_of_fame = serializers.HyperlinkedRelatedField(
+        read_only=True, view_name='adm:hall-of-fame:user_hall_of_fame-detail'
+    )
+    is_published = serializers.BooleanField(source='hall_of_fame.is_published')
+
+    class Meta:
+        model = User
+        fields = ('id', 'last_name', 'first_name', 'rating', 'hall_of_fame',
+                  'is_published',)
