@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^tests/', include('user_tests.urls_admin', 'tests')),
     url(r'^schedules/', include('schedules.urls_admin', 'schedules')),
     url(r'^hall-of-fame/', include('hall_of_fame.urls_admin', 'hall-of-fame')),
+    url(r'^chats/', include('chats.urls_admin', 'chats'))
 ]
