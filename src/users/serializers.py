@@ -12,7 +12,7 @@ from sorl.thumbnail import get_thumbnail
 from core.serializers import HyperlinkedSorlImageField
 from core.translation_serializers import AdminTranslationMixin, \
     UserTranslationMixin
-from permissions import GROUPS
+from permissions import GROUPS, GROUP_LEVEL
 from users.models import Profile, ProfileAttachment, Story, StoryComment
 from users.models import User, ProfileComment
 from users.translation import StoryTranslationOptions
@@ -150,16 +150,36 @@ class AdminUserSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         read_only_fields = ('profile', 'profile_attachment')
 
-    def update(self, user, validated_data):
-        groups = validated_data.pop('groups', None)
-        user = super().update(user, validated_data)
-
+    def validate_groups(self, groups):
         if groups:
             if len(groups) > 1:
                 raise serializers.ValidationError(
                     _('Пользователь может состоять только в одной группе')
                 )
-            group = Group.objects.get_by_natural_key(groups[0]['name'])
+
+            group_name = groups[0]['name']
+
+            actor_groups = self.context['request'].user.groups.values_list(
+                'name', flat=True
+            )
+            if actor_groups:
+                actor_group_levels = [GROUP_LEVEL.get(g) for g in actor_groups]
+                actor_group_level = max(actor_group_levels)
+                if actor_group_level < GROUP_LEVEL.get(group_name):
+                    raise serializers.ValidationError(
+                        _('Можно устанавливать только группу более низкого '
+                          'ранга чем собственная')
+                    )
+
+        return groups
+
+    def update(self, user, validated_data):
+        groups = validated_data.pop('groups', None)
+        user = super().update(user, validated_data)
+
+        if groups:
+            group_name = groups[0]['name']
+            group = Group.objects.get_by_natural_key(group_name)
             user.groups.set([group])
 
         return user
