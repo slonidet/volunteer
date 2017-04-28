@@ -29,6 +29,9 @@ class AdminPanelStatistic(generics.RetrieveAPIView):
 
 
 class UserStatistic(generics.RetrieveAPIView):
+    """
+    Shows analytics about registration on given period
+    """
     queryset = User.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
@@ -114,6 +117,9 @@ class EquipmentStatistic(generics.RetrieveAPIView):
 
 
 class ProfileInterestingStatistic(generics.RetrieveAPIView):
+    """
+    Statistic on interesting field in Profiles
+    """
     queryset = Profile.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
@@ -211,15 +217,18 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
 
 
 class ProfileGeoStatistic(generics.RetrieveAPIView):
+    """
+    Shows percentage of foreigners among users
+    """
     queryset = Profile.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
         data = dict()
-        data['foreigners'] = self.get_country_percentage()
+        data['foreigners'] = self.get_foreigners_percentage()
 
         return Response(data)
 
-    def get_country_percentage(self):
+    def get_foreigners_percentage(self):
         count_all = self.queryset.count()
         number_of_russians = Profile.objects.annotate(
             passport_number_len=Length('passport_number')).filter(
@@ -247,6 +256,9 @@ class ProfileEnglishLanguageStatistic(generics.RetrieveAPIView):
 
 
 class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
+    """
+    Shows statistic on knowledge of second language
+    """
     queryset = Profile.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
