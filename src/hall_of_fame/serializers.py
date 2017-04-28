@@ -44,9 +44,8 @@ class AdminUsersHallOfFameSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(
         source='profile.first_name', read_only=True
     )
-    hall_of_fame = serializers.HyperlinkedRelatedField(
-        read_only=True, view_name='adm:hall-of-fame:user_hall_of_fame-detail'
-    )
+    hall_of_fame = serializers.IntegerField(source='hall_of_fame.id',
+                                            read_only=True)
     is_published = serializers.BooleanField(source='hall_of_fame.is_published')
 
     class Meta:
