@@ -1,10 +1,10 @@
 import pytz
+
 from django.db import transaction
 from django.utils.timezone import datetime
 from django.utils.translation import ugettext_lazy as _
 from django.db import IntegrityError
 from django.db.models import F
-from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework import exceptions
@@ -21,7 +21,6 @@ class AdminEventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = AdminEventSerializer
     filter_class = EventFilter
-    permission_classes = (permissions.IsAdminUser,)
 
 
 class EventViewSet(viewsets.ModelViewSet):

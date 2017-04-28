@@ -24,7 +24,6 @@ class NoticeViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
 class ArbitraryNoticeViewSet(ModelViewSet):
     queryset = Notice.objects.filter(is_arbitrary=True)
     serializer_class = ArbitraryNoticeSerializer
-    permission_classes = (permissions.IsAdminUser,)
     filter_fields = ('user__role',)
     allowed_roles = {choice[0] for choice in User.ROLE_CHOICES}
 
