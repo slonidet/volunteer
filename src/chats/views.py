@@ -21,4 +21,4 @@ class TeamMessagesView(generics.ListAPIView):
 
 class AdminTeamMessagesView(generics.ListAPIView):
     queryset = TeamMessages.objects.all()
-    serializer_class = TeamMessagesSerializer
+    serializer_class = TeamMessagesListSerializer
