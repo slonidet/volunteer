@@ -29,8 +29,8 @@ def deploy(role='test'):
     execute(_migrate_databases, role=role)
     execute(_collect_static, role=role)
     execute(_update_translation_fields, role=role)
-    execute(_restart_project, role=role)
     execute(_set_permissions, role=role)
+    execute(_restart_project, role=role)
 
 
 def update_project(role='test'):
