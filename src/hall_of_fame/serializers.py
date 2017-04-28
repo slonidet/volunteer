@@ -38,14 +38,16 @@ class HallOfFameSerializer(HallOfFameBaseSerializer, UserTranslationMixin):
 
 
 class AdminUsersHallOfFameSerializer(serializers.ModelSerializer):
-    last_name = serializers.CharField(source='profile.last_name',
-                                      read_only=True)
-    first_name = serializers.CharField(source='profile.first_name',
-                                       read_only=True)
-    is_published = serializers.BooleanField(source='hall_of_fame.is_published')
+    last_name = serializers.CharField(
+        source='profile.last_name', read_only=True
+    )
+    first_name = serializers.CharField(
+        source='profile.first_name', read_only=True
+    )
     hall_of_fame = serializers.HyperlinkedRelatedField(
-        read_only=True,
-        view_name='adm:hall-of-fame:user_hall_of_fame-detail')
+        read_only=True, view_name='adm:hall-of-fame:user_hall_of_fame-detail'
+    )
+    is_published = serializers.BooleanField(source='hall_of_fame.is_published')
 
     class Meta:
         model = User

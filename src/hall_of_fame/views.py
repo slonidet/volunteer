@@ -15,7 +15,8 @@ class AdminHallOfFameViewSet(ModelViewSet):
 
 
 class AdminUsersHallOfFameViewSet(ModelViewSet):
-    queryset = User.objects.all().prefetch_related('hall_of_fame')
+    queryset = User.objects.select_related('profile')\
+        .prefetch_related('hall_of_fame')
     serializer_class = AdminUsersHallOfFameSerializer
 
 
