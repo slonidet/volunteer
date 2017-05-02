@@ -26,6 +26,7 @@ class AdminHallOfFameSerializer(HallOfFameBaseSerializer,
                                 AdminTranslationMixin):
     rating = serializers.IntegerField(source='user.rating', read_only=True)
 
+
     class Meta(HallOfFameBaseSerializer.Meta):
         fields = '__all__'
 
