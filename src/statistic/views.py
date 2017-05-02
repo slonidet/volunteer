@@ -229,7 +229,7 @@ class ProfileEnglishLanguageStatistic(generics.RetrieveAPIView):
             english=Profile.ENGLISH_ELEMENTARY).count()
         data['intermediate'] = self.queryset.filter(
             english=Profile.ENGLISH_INTERMEDIATE).count()
-        data['upper intermediate'] = self.queryset.filter(
+        data['upper_intermediate'] = self.queryset.filter(
             english=Profile.ENGLISH_UPPER_INTERMEDIATE).count()
         data['fluent'] = self.queryset.filter(
             english=Profile.ENGLISH_FLUENT).count()
