@@ -1,8 +1,7 @@
-from django.db.models import Q
+from django.db.models import Q, Min
 from django.utils import timezone
 from django.db.models.functions import Length
 from rest_framework import generics
-from rest_framework import permissions
 from rest_framework.response import Response
 
 from events.models import Event
@@ -30,8 +29,10 @@ class AdminPanelStatistic(generics.RetrieveAPIView):
 
 
 class UserStatistic(generics.RetrieveAPIView):
+    """
+    Shows analytics about registration on given period
+    """
     queryset = User.objects.all()
-    permission_classes = (permissions.IsAdminUser,)
 
     def retrieve(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -66,7 +67,6 @@ class EquipmentStatistic(generics.RetrieveAPIView):
     Statistic about amount of equipment
     """
     queryset = Profile.objects.filter(user__role=User.ROLE_MAIN_TEAM)
-    permission_classes = (permissions.IsAdminUser,)
     male_sizes = [size[0] for size in Profile.CLOTHES_SIZE_MALE_CHOICES]
     female_sizes = [size[0] for size in Profile.CLOTHES_SIZE_FEMALE_CHOICES]
     shoe_sizes = [size[0] for size in Profile.SHOE_SIZE_CHOICES]
@@ -117,8 +117,10 @@ class EquipmentStatistic(generics.RetrieveAPIView):
 
 
 class ProfileInterestingStatistic(generics.RetrieveAPIView):
+    """
+    Statistic on interesting field in Profiles
+    """
     queryset = Profile.objects.all()
-    permission_classes = (permissions.IsAdminUser,)
 
     def retrieve(self, request, *args, **kwargs):
         count_all = self.queryset.count()
@@ -147,7 +149,6 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
     Show percentage for gender and age groups from user profiles
     """
     queryset = Profile.objects.all()
-    permission_classes = (permissions.IsAdminUser, )
 
     count_males = Profile.objects.filter(gender=Profile.GENDER_MALE).count()
     count_females = Profile.objects.filter(
@@ -158,6 +159,7 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
         data = dict()
         data['gender'] = self.get_gender_percentage()
         data['age'] = self.get_age_groups_percentage()
+        data['oldest'] = self.get_oldest()
         return Response(data)
 
     def get_gender_percentage(self):
@@ -199,18 +201,33 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
 
         return ages_percents_dict
 
+    def get_oldest(self):
+        earliest_birthday = self.queryset.aggregate(
+            min_birthday=Min('birthday'))['min_birthday']
+        oldest_profile = self.queryset.filter(
+            birthday=earliest_birthday).first()
+        profile_data = dict()
+        profile_data['first_name'] = oldest_profile.first_name
+        profile_data['middle_name'] = oldest_profile.middle_name
+        profile_data['last_name'] = oldest_profile.last_name
+        profile_data['age'] = oldest_profile.age
+
+        return profile_data
+
 
 class ProfileGeoStatistic(generics.RetrieveAPIView):
+    """
+    Shows percentage of foreigners among users
+    """
     queryset = Profile.objects.all()
-    permission_classes = (permissions.IsAdminUser,)
 
     def retrieve(self, request, *args, **kwargs):
         data = dict()
-        data['foreigners'] = self.get_country_percentage()
+        data['foreigners'] = self.get_foreigners_percentage()
 
         return Response(data)
 
-    def get_country_percentage(self):
+    def get_foreigners_percentage(self):
         count_all = self.queryset.count()
         number_of_russians = Profile.objects.annotate(
             passport_number_len=Length('passport_number')).filter(
@@ -220,9 +237,28 @@ class ProfileGeoStatistic(generics.RetrieveAPIView):
         return get_percentage(count_all, number_of_foreigners)
 
 
-class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
+class ProfileEnglishLanguageStatistic(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
-    permission_classes = (permissions.IsAdminUser,)
+
+    def retrieve(self, request, *args, **kwargs):
+        data = dict()
+        data['elementary'] = self.queryset.filter(
+            english=Profile.ENGLISH_ELEMENTARY).count()
+        data['intermediate'] = self.queryset.filter(
+            english=Profile.ENGLISH_INTERMEDIATE).count()
+        data['upper_intermediate'] = self.queryset.filter(
+            english=Profile.ENGLISH_UPPER_INTERMEDIATE).count()
+        data['fluent'] = self.queryset.filter(
+            english=Profile.ENGLISH_FLUENT).count()
+
+        return Response(data)
+
+
+class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
+    """
+    Shows statistic on knowledge of second language
+    """
+    queryset = Profile.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
         data = dict()
@@ -259,11 +295,4 @@ class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
 
 
 def get_percentage(total, values):
-    """
-    Return percents proportion of value if 'value' is number. Returns dict of
-    percents proportions of values if 'value' is list.
-    :param total:
-    :param values:
-    :return: dict or number
-    """
     return 100 * float(values) / float(total)
