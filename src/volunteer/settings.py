@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'social_django',
     'import_export',
+    'channels',
 
     'users.apps.UsersConfig',
     'gallery.apps.GalleryConfig',
@@ -176,6 +177,20 @@ CACHES = {
         'BACKEND': 'redis_cache.RedisCache',
         'LOCATION': 'localhost:6379',
     },
+}
+
+
+# django-channels configuration
+# https://channels.readthedocs.io/en/stable/
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'asgi_redis.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+        'ROUTING': 'volunteer.routing.channel_routing',
+    }
 }
 
 

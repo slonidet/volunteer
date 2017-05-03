@@ -16,3 +16,4 @@ celerybeat-schedule
 org.kde.konsole.desktop
 src/org.kde.konsole.desktop
 src/.vscode
+env/
