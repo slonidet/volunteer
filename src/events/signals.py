@@ -9,13 +9,13 @@ from events.models import Participation
 @receiver(pre_delete, sender=Participation)
 def decrease_event_users_counter(sender, instance, **kwargs):
     event = instance.event
-    participant_statuses = (
-        Participation.STATUS_VOLUNTEER, Participation.STATUS_PARTICIPANT
-    )
-
-    if instance.status in participant_statuses:
-        event.volunteers_count = F('{}s_count'.format(instance.status)) - 1
-        try:
+    try:
+        if instance.status == Participation.STATUS_VOLUNTEER:
+            event.volunteers_count = F('volunteers_count') - 1
             event.save()
-        except OperationalError:
-            pass
+        if instance.status == Participation.STATUS_PARTICIPANT:
+            event.participants_count = F('participants_count') - 1
+            event.save()
+
+    except OperationalError:
+        pass
