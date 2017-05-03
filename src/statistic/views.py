@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Min
 from django.utils import timezone
 from django.db.models.functions import Length
 from rest_framework import generics
@@ -159,6 +159,7 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
         data = dict()
         data['gender'] = self.get_gender_percentage()
         data['age'] = self.get_age_groups_percentage()
+        data['oldest'] = self.get_oldest()
         return Response(data)
 
     def get_gender_percentage(self):
@@ -199,6 +200,19 @@ class ProfileGenderAgeStatView(generics.RetrieveAPIView):
                 self.count_all, people_in_groups[age_group])
 
         return ages_percents_dict
+
+    def get_oldest(self):
+        earliest_birthday = self.queryset.aggregate(
+            min_birthday=Min('birthday'))['min_birthday']
+        oldest_profile = self.queryset.filter(
+            birthday=earliest_birthday).first()
+        profile_data = dict()
+        profile_data['first_name'] = oldest_profile.first_name
+        profile_data['middle_name'] = oldest_profile.middle_name
+        profile_data['last_name'] = oldest_profile.last_name
+        profile_data['age'] = oldest_profile.age
+
+        return profile_data
 
 
 class ProfileGeoStatistic(generics.RetrieveAPIView):
