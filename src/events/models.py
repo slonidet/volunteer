@@ -29,14 +29,8 @@ class Event(models.Model):
     participants_limit = models.PositiveSmallIntegerField(
         _('максимальное количество участников'), default=0
     )
-    volunteer_limit = models.PositiveSmallIntegerField(
+    volunteers_limit = models.PositiveSmallIntegerField(
         _('максимальное количество волонтеров'), default=0
-    )
-    participants_count = models.PositiveSmallIntegerField(
-        _('количество записавшихся участников'), default=0
-    )
-    volunteers_count = models.PositiveSmallIntegerField(
-        _('количество записавшихся волонтеров'), default=0
     )
     users = models.ManyToManyField(
         User, _('участники'), through='Participation')
@@ -53,6 +47,16 @@ class Event(models.Model):
     @property
     def is_actual(self):
         return self.start > datetime.now(tz=pytz.UTC)
+
+    def get_volunteers_count(self):
+        return self.users.filter(
+            participation__status=Participation.STATUS_VOLUNTEER
+        ).count()
+
+    def get_participants_count(self):
+        return self.users.filter(
+            participation__status=Participation.STATUS_PARTICIPANT
+        ).count()
 
 
 class Participation(models.Model):
