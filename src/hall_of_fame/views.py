@@ -30,6 +30,7 @@ class AdminUsersHallOfFameViewSet(ModelViewSet):
     queryset = User.objects.select_related('profile')\
         .prefetch_related('hall_of_fame')
     serializer_class = AdminUsersHallOfFameSerializer
+    ordering_fields = ('rating', )
 
 
 class HallOfFameView(ListAPIView):

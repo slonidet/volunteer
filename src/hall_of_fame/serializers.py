@@ -48,8 +48,12 @@ class AdminUsersHallOfFameSerializer(serializers.ModelSerializer):
     hall_of_fame = serializers.IntegerField(source='hall_of_fame.id',
                                             read_only=True)
     is_published = serializers.BooleanField(source='hall_of_fame.is_published')
+    image = HyperlinkedSorlImageField(
+        '300x300', options={"crop": "center"},
+        source='profile.story.image', read_only=True
+    )
 
     class Meta:
         model = User
         fields = ('id', 'last_name', 'first_name', 'rating', 'hall_of_fame',
-                  'is_published',)
+                  'is_published', 'image',)
