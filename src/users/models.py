@@ -105,7 +105,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta(MetaPermissions):
         verbose_name = _('пользователь')
         verbose_name_plural = _('пользователи')
-        ordering = ('-rating', )
 
     def get_full_name(self):
         """
