@@ -11,7 +11,7 @@ from users.models import Profile, User
 @receiver(post_save, sender=Profile)
 def profile_rating(sender, instance, created, **kwargs):
     user = instance.user
-    if created:
+    if created or user.role == User.ROLE_APPROVED:
         user.rating = F('rating') + 1
     if not created and user.role != User.ROLE_APPROVED:
         user.rating = F('rating') - 1
