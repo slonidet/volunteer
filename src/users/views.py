@@ -15,7 +15,8 @@ from users.models import User
 from users.serializers import ProfileSerializer, ProfileAttachmentSerializer, \
     AdminStorySerializer, StorySerializer, UserGroupSerializer, \
     ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer, \
-    StoryCommentSerializer, ProfileCityProfessionSearchSerializer
+    StoryCommentSerializer, ProfileCityProfessionSearchSerializer,\
+    EquipmentSerializer
 
 
 class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
@@ -147,3 +148,9 @@ class AdminProfileCityProfessionSearch(mixins.ListModelMixin, GenericViewSet):
             queryset = Profile.objects.filter(position__icontains=profession)
 
         return queryset
+
+
+class AdminEquipmentViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = EquipmentSerializer
+    pagination_class = None

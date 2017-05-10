@@ -9,6 +9,10 @@ from gallery.models import Photo, Video
 from users.models import User, Profile
 
 
+def get_percentage(total, values):
+    return 100 * float(values) / float(total)
+
+
 class AdminPanelStatistic(generics.RetrieveAPIView):
     """ Statistic for admin panel """
     queryset = Profile.objects.all()
@@ -293,7 +297,3 @@ class ProfileSecondLanguageStatistic(generics.RetrieveAPIView):
             Q(other_language__icontains='португальский')).count()
 
         return Response(data)
-
-
-def get_percentage(total, values):
-    return 100 * float(values) / float(total)

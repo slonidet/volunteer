@@ -282,3 +282,12 @@ class ProfileCityProfessionSearchSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('last_name', 'first_name', 'middle_name',
                   'residential_address', 'position',)
+
+
+class EquipmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = (
+            'first_name', 'last_name', 'middle_name', 'gender', 'clothes_size',
+            'shoe_size'
+        )
