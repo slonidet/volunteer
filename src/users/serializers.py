@@ -275,3 +275,12 @@ class UserGroupSerializer(serializers.ModelSerializer):
 
     def get_display_name(self, obj):
         return GROUPS.get(obj.name, '')
+
+
+class EquipmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = (
+            'first_name', 'last_name', 'middle_name', 'gender', 'clothes_size',
+            'shoe_size'
+        )

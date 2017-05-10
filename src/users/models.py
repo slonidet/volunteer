@@ -467,6 +467,13 @@ class Profile(models.Model):
     def age(self):
         return relativedelta(date.today(), self.birthday).years
 
+    @property
+    def clothes_size(self):
+        if self.gender == self.GENDER_MALE:
+            return self.clothes_size_male
+        else:
+            return self.clothes_size_female
+
 
 class ProfileAttachment(models.Model):
     """

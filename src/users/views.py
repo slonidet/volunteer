@@ -15,7 +15,7 @@ from users.models import User
 from users.serializers import ProfileSerializer, ProfileAttachmentSerializer, \
     AdminStorySerializer, StorySerializer, UserGroupSerializer, \
     ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer, \
-    StoryCommentSerializer
+    StoryCommentSerializer, EquipmentSerializer
 
 
 class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
@@ -128,3 +128,9 @@ class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserGroupSerializer
     pagination_class = None
     permission_classes = (permissions.IsAuthenticated,)
+
+
+class AdminEquipmentViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = EquipmentSerializer
+    pagination_class = None
