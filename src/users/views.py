@@ -131,6 +131,6 @@ class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class AdminEquipmentViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.filter(user__role=User.ROLE_MAIN_TEAM)
     serializer_class = EquipmentSerializer
     pagination_class = None
