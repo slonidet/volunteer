@@ -15,13 +15,14 @@ def alert_users():
     for event in events:
         users = event.users
         if event.is_actual:
-            remaining = timezone.timedelta(event.start - timezone.now())
-            if remaining in time_lapses:
-                day_form = pluralization(remaining, day_forms)
+            remaining_time = event.start - timezone.now()
+            remaining_days = remaining_time.days
+            if remaining_days in time_lapses:
+                day_form = pluralization(remaining_days, day_forms)
                 for user in users:
                     title = _('Напоминание о {}'.format(event.title))
                     message = _('До мероприятия {0} осталось {1} {2}'
-                                .format(event.title, remaining, day_form))
+                                .format(event.title, remaining_days, day_form))
                     Notice.objects.create(
                         title=title, message=message, user=user,
                         type=Notice.TYPE_ALERT, is_confirmed=None,

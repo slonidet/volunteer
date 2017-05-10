@@ -183,7 +183,7 @@ CACHES = {
 # Celery configuration
 # http://docs.celeryproject.org/
 
-CELERY_BROKER_URL = ""
+CELERY_BROKER_URL = "redis://localhost:6379/0"
 CELERY_BEAT_SCHEDULE = {
     'finish_expired_test': {
         'task': 'finish_expired_test',
