@@ -12,6 +12,7 @@ def alert_users():
     events = Event.objects.filter(is_public=True)
     time_lapses = (7, 3, 1)
     day_forms = _('день дня дней')
+
     for event in events:
         users = event.users
         if event.is_actual:
