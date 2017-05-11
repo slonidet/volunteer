@@ -5,10 +5,12 @@ from core.translation_serializers import AdminTranslationMixin, \
     UserTranslationMixin
 from events.models import Event, Participation
 from events.translation import EventTranslationOptions
-from users.models import User
 
 
 class BaseEventSerializer(serializers.ModelSerializer):
+    participants_cnt = serializers.IntegerField(read_only=True)
+    volunteers_cnt = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Event
         model_translation = EventTranslationOptions
@@ -27,22 +29,34 @@ class AdminEventSerializer(AdminTranslationMixin, BaseEventSerializer):
     participants = serializers.SerializerMethodField()
 
     class Meta(BaseEventSerializer.Meta):
-        fields = '__all__'
+        exclude = ('users',)
 
     def get_volunteers(self, obj):
-        users = User.objects.filter(
-            participation__event__id=obj.id,
+        users = obj.users.filter(
             participation__status=Participation.STATUS_VOLUNTEER
         ).values('username')
+
         return users
 
     def get_participants(self, obj):
-        users = User.objects.filter(
-            participation__event__id=obj.id,
+        users = obj.users.filter(
             participation__status=Participation.STATUS_PARTICIPANT
         ).values('username')
 
         return users
+
+
+class AdminParticipationSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(
+        source='user.profile.first_name', read_only=True
+    )
+    last_name = serializers.CharField(
+        source='user.profile.last_name', read_only=True
+    )
+
+    class Meta:
+        model = Participation
+        fields = '__all__'
 
 
 class EventSerializer(UserTranslationMixin, BaseEventSerializer):

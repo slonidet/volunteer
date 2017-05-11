@@ -1,10 +1,10 @@
 import pytz
 
 from django.db import transaction
+from django.db.models.expressions import RawSQL
 from django.utils.timezone import datetime
 from django.utils.translation import ugettext_lazy as _
 from django.db import IntegrityError
-from django.db.models import F
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework import exceptions
@@ -14,16 +14,41 @@ from rest_framework.response import Response
 from events.filters import EventFilter
 from events.models import Event, Participation
 from events.serializers import AdminEventSerializer, EventSerializer, \
-    ParticipateEventSerializer
+    ParticipateEventSerializer, AdminParticipationSerializer
 
 
-class AdminEventViewSet(viewsets.ModelViewSet):
+class BaseEventMixin(object):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.annotate(
+            participants_cnt=RawSQL(
+                "SELECT count(*) from events_participation AS ep WHERE "
+                "ep.event_id = events_event.id AND ep.status = %s",
+                (Participation.STATUS_PARTICIPANT,)
+            ),
+            volunteers_cnt=RawSQL(
+                "SELECT count(*) from events_participation AS ep WHERE "
+                "ep.event_id = events_event.id AND ep.status = %s",
+                (Participation.STATUS_VOLUNTEER,)
+            ),
+        )
+
+        return qs
+
+
+class AdminEventViewSet(BaseEventMixin, viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = AdminEventSerializer
     filter_class = EventFilter
 
 
-class EventViewSet(viewsets.ModelViewSet):
+class AdminParticipationViewSet(viewsets.ModelViewSet):
+    queryset = Participation.objects.select_related('user__profile').all()
+    serializer_class = AdminParticipationSerializer
+    filter_fields = ('event', 'status',)
+
+
+class EventViewSet(BaseEventMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Event.objects.filter(
         is_public=True, end__gt=datetime.now(tz=pytz.UTC)
     )
@@ -64,13 +89,11 @@ class EventViewSet(viewsets.ModelViewSet):
             event = Event.objects.select_for_update().get(id=pk)
             try:
                 if event.type == 'forum' and status == 'volunteer':
-                    if event.volunteers_count < event.volunteer_limit:
+                    if event.get_volunteers_count() < event.volunteers_limit:
                         Participation.objects.create(
                             user=user, event=event,
                             status=Participation.STATUS_VOLUNTEER
                         )
-                        event.volunteers_count = F('volunteers_count') + 1
-                        event.save()
                         role = _('волонтёр')
                     else:
                         raise exceptions.NotAcceptable(
@@ -78,13 +101,11 @@ class EventViewSet(viewsets.ModelViewSet):
                               '(мест для волонтеров нет)')
                         )
                 else:
-                    if event.participants_count < event.participants_limit:
+                    if event.get_participants_count() < event.participants_limit:
                         Participation.objects.create(
                             user=user, event=event,
                             status=Participation.STATUS_PARTICIPANT
                         )
-                        event.participants_count = F('participants_count') + 1
-                        event.save()
                         role = _('участник')
                     else:
                         raise exceptions.NotAcceptable(
@@ -95,5 +116,6 @@ class EventViewSet(viewsets.ModelViewSet):
                 return Response(_('Вы записались на: {} как {}').format(
                     event.title, role
                 ))
+
             except IntegrityError:
                 return Response(_('Вы уже записаны на это мероприятие'))
