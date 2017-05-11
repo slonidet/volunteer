@@ -40,6 +40,7 @@ def api_root(request, format=None):
         'admin:users:story-comments': reverse(
             'adm:users:story-comment-list', **params),
         'admin:users:groups': reverse('adm:users:group-list', **params),
+        'admin:users:equipments': reverse('adm:users:equipment-list', **params),
         'users:stories': reverse('users:story-list', **params),
 
         # Gallery
