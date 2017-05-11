@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
-from rest_framework import exceptions, permissions
+from rest_framework import exceptions
 from rest_framework import status, viewsets, mixins
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
@@ -15,7 +15,8 @@ from users.models import User
 from users.serializers import ProfileSerializer, ProfileAttachmentSerializer, \
     AdminStorySerializer, StorySerializer, UserGroupSerializer, \
     ProfileCommentSerializer, ApproveProfileSerializer, AdminUserSerializer, \
-    StoryCommentSerializer, EquipmentSerializer
+    StoryCommentSerializer, ProfileCityProfessionSearchSerializer, \
+    EquipmentSerializer
 
 
 class AdminUserViewSet(ExcludeAnonymousViewMixin, mixins.CreateModelMixin,
@@ -127,7 +128,26 @@ class AdminUserGroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all().order_by('id')
     serializer_class = UserGroupSerializer
     pagination_class = None
-    permission_classes = (permissions.IsAuthenticated,)
+
+
+class AdminProfileCityProfessionSearch(mixins.ListModelMixin, GenericViewSet):
+    """
+    View for table that refers profile's full name, address and profession
+    """
+    queryset = Profile.objects.all()
+    serializer_class = ProfileCityProfessionSearchSerializer
+
+    def get_queryset(self):
+        queryset = Profile.objects.all()
+        address = self.request.query_params.get('address', None)
+        profession = self.request.query_params.get('profession', None)
+        if address is not None:
+            queryset = Profile.objects.filter(
+                residential_address__icontains=address)
+        if profession is not None:
+            queryset = Profile.objects.filter(position__icontains=profession)
+
+        return queryset
 
 
 class AdminEquipmentViewSet(viewsets.ReadOnlyModelViewSet):
