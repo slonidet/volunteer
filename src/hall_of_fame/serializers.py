@@ -55,4 +55,4 @@ class AdminUsersHallOfFameSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'last_name', 'first_name', 'rating', 'hall_of_fame',
-                  'is_published', 'image', 'role')
+                  'is_published', 'image')
