@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext_lazy as _
+from rest_framework import exceptions
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
 
@@ -26,7 +28,8 @@ class AdminHallOfFameViewSet(ModelViewSet):
 
 class AdminUsersHallOfFameViewSet(ModelViewSet):
     queryset = User.objects.select_related('profile')\
-        .prefetch_related('hall_of_fame')
+        .prefetch_related('hall_of_fame').exclude(
+        role__in=(User.ROLE_REGISTERED, User.ROLE_CANDIDATE))
     serializer_class = AdminUsersHallOfFameSerializer
     ordering_fields = ('rating', )
 

@@ -26,7 +26,6 @@ class AdminHallOfFameSerializer(AdminTranslationMixin,
                                 HallOfFameBaseSerializer):
     rating = serializers.IntegerField(source='user.rating', read_only=True)
 
-
     class Meta(HallOfFameBaseSerializer.Meta):
         fields = '__all__'
 
@@ -56,4 +55,4 @@ class AdminUsersHallOfFameSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'last_name', 'first_name', 'rating', 'hall_of_fame',
-                  'is_published', 'image',)
+                  'is_published', 'image', 'role')
