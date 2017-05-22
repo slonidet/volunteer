@@ -29,7 +29,7 @@ class AdminHallOfFameViewSet(ModelViewSet):
 class AdminUsersHallOfFameViewSet(ModelViewSet):
     queryset = User.objects.select_related('profile')\
         .prefetch_related('hall_of_fame').exclude(
-        role__in=(User.ROLE_REGISTERED, User.ROLE_CANDIDATE,))
+        role__in=(User.ROLE_REGISTERED, User.ROLE_CANDIDATE))
     serializer_class = AdminUsersHallOfFameSerializer
     ordering_fields = ('rating', )
 
