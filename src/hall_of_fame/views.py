@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext_lazy as _
+from rest_framework import exceptions
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
 
