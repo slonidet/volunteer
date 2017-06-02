@@ -5,21 +5,21 @@ from django.dispatch import receiver
 from interviews.models import Interview
 from user_tests.models import UserTest
 from events.models import Event, Participation
-from users.models import Profile, User
+from users.models import Profile
 
 
 @receiver(post_save, sender=Profile)
 def profile_rating(sender, instance, created, **kwargs):
+    """Adding 1 rating score for creating profile"""
     user = instance.user
-    if created or user.role == User.ROLE_APPROVED:
+    if created:
         user.rating = F('rating') + 1
-    if not created and user.role != User.ROLE_APPROVED:
-        user.rating = F('rating') - 1
     user.save()
 
 
 @receiver(post_save, sender=UserTest)
 def test_rating(sender, instance, created, **kwargs):
+    """Adding 1 rating score for passing any test"""
     is_finished = instance.finished_at
     if is_finished:
         user = instance.user
@@ -29,6 +29,7 @@ def test_rating(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Interview)
 def interview_rating(sender, instance, created, **kwargs):
+    """Adding 3 rating scores for giving interview"""
     status = instance.status
     if status == Interview.STATUS_HAPPEN:
         user = instance.volunteer
@@ -38,6 +39,12 @@ def interview_rating(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Participation)
 def event_rating(sender, instance, created, **kwargs):
+    """
+    Adding rating scores for participating in events. 5 scores for
+    participating in type "Event" or "Education", 7 scores for participating in
+     "Forum" as a participant, 10 scores for participating in "Forum" as a
+     volunteer
+    """
     user = instance.user
     event = Event.objects.get(participation=instance.id)
 
