@@ -150,6 +150,10 @@ def api_root(request, format=None):
         'admin:hall-of-fame': reverse(
             'adm:hall-of-fame:hall-of-fame-list', **params
         ),
+
+        # Chats
+        'chats:rooms': reverse('chats:rooms-list', **params),
+        'admin:chats:rooms': reverse('adm:chats:rooms-list', **params),
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
 

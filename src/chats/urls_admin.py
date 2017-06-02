@@ -1,9 +1,9 @@
 from rest_framework import routers
 
-from chats.views import RoomViewSet
+from chats.views import AdminRoomViewSet
 
 router = routers.DefaultRouter()
-router.register('rooms', RoomViewSet, base_name='rooms')
+router.register('rooms', AdminRoomViewSet, base_name='rooms')
 
 
 urlpatterns = [] + router.urls
