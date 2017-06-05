@@ -1,24 +1,18 @@
-from django.shortcuts import get_object_or_404
-from django.core.exceptions import PermissionDenied
-from rest_framework import permissions, generics
-from schedules.models import Team
-from chats.models import TeamMessages
-from chats.serializers import TeamMessagesSerializer, \
-    TeamMessagesListSerializer
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
+from chats.mixins import ListMessagesMixin
+from chats.models import Room
+from chats.serializers import RoomSerializer
 
 
-class TeamMessagesView(generics.ListAPIView):
-    queryset = TeamMessages.objects.all()
-    permission_classes = (permissions.IsAuthenticated, )
-    serializer_class = TeamMessagesListSerializer
-
-    def get(self, request, team_id, *args, **kwargs):
-        team = get_object_or_404(Team.objects.all(), pk=int(team_id))
-        if not team.members.filter(id=request.user.id).exists():
-            raise PermissionDenied
-        return super().get(request, *args, **kwargs)
+class AdminRoomViewSet(ModelViewSet, ListMessagesMixin):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    permission_classes = (IsAdminUser,)
 
 
-class AdminTeamMessagesView(generics.ListAPIView):
-    queryset = TeamMessages.objects.all()
-    serializer_class = TeamMessagesListSerializer
+class RoomViewSet(ReadOnlyModelViewSet, ListMessagesMixin):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    permission_classes = (IsAuthenticated,)

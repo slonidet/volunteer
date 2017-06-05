@@ -1,31 +1,15 @@
-from django.utils.translation import ugettext_lazy as _
+from rest_framework.serializers import ModelSerializer
 
-from rest_framework import serializers
-
-from users.serializers import UserSerializer
-from schedules.serializers import TeamSerializer
-from chats.models import TeamMessages
+from chats.models import Room, Message
 
 
-class TeamMessagesSerializer(serializers.ModelSerializer):
-
-    def validate_team(self, value):
-        user_id = self.context['request'].user.id
-        if not value.members.filter(id=user_id).exists():
-            raise serializers.ValidationError(
-                'You can\'t write message to team that isn\'t include you'
-            )
-        return value
-
+class MessageSerializer(ModelSerializer):
     class Meta:
-        model = TeamMessages
-        fields = '__all__'
+        model = Message
+        fields = "__all__"
 
 
-class TeamMessagesListSerializer(serializers.ModelSerializer):
-    sender = UserSerializer()
-    team = TeamSerializer()
-
+class RoomSerializer(ModelSerializer):
     class Meta:
-        model = TeamMessages
-        fields = '__all__'
+        model = Room
+        fields = "__all__"
