@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('schedules', '0013_auto_20170424_1108'),
+        ('schedules', '0013_auto_20170421_1600'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
