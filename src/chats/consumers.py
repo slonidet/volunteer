@@ -7,12 +7,11 @@ from chats.models import Room, Message
 
 
 @channel_session_user_from_http
-def ws_connect(message):
-    print('connect')
+def ws_connect(message, room):
     message.reply_channel.send({"accept": True})
     prefix, label = message['path'].strip('/').split('/')
     room = Room.objects.get(name=label)
-    Group('chat-'+label).add(message.reply_channel)
+    Group('chats-'+label).add(message.reply_channel)
     message.channel_session['room'] = room.name
 
 
@@ -20,14 +19,14 @@ def ws_connect(message):
 def ws_message(message):
     label = message.channel_session['room']
     room = Room.objects.get(name=label)
-    print(message['path'])
-    print(type(message.content))
-    # chat_message = Message.objects.create(
-    #     room=room, message=message.content['text'], user=message.user)
-    # Group('chat-'+label).send({'text': message['text']})
+    chat_message = Message.objects.create(
+        room=room, message=message.content['text'], user=message.user)
+
+    Group('chats-'+label).send({'text': chat_message['text']})
 
 
 @channel_session_user
 def ws_disconnect(message):
     label = message.channel_session['room']
-    Group('chat-'+label).discard(message.reply_channel)
+    room = Room.objects.get(name=label)
+    Group('chats-'+label).discard(message.reply_channel)

@@ -15,4 +15,3 @@ class ListMessagesMixin(object):
         page = self.paginate_queryset(queryset)
         serializer = MessageSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
-

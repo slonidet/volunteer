@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from chats.mixins import ListMessagesMixin
@@ -12,9 +12,7 @@ class AdminRoomViewSet(ModelViewSet, ListMessagesMixin):
     permission_classes = (IsAdminUser,)
 
 
-class RoomViewSet(ReadOnlyModelViewSet):
+class RoomViewSet(ReadOnlyModelViewSet, ListMessagesMixin):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
-
-    def get_queryset(self):
-        return super().filter(team__members=self.request.user)
+    permission_classes = (IsAuthenticated,)
