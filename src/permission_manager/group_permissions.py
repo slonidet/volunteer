@@ -1,6 +1,8 @@
 PERMISSIONS = {
     'super': [
         {'app_label': 'badges', 'model': 'Badge', 'actions': ('view', 'add', 'change', 'delete')},
+        {'app_label': 'chats', 'model': 'Room', 'actions': ('view', 'add', 'change', 'delete')},
+        {'app_label': 'chats', 'model': 'Message', 'actions': ('view', 'add', 'change', 'delete')},
         {'app_label': 'events', 'model': 'Event', 'actions': ('view', 'add', 'change', 'delete')},
         {'app_label': 'events', 'model': 'Participation', 'actions': ('view', 'add', 'change', 'delete')},
         {'app_label': 'gallery', 'model': 'Photo', 'actions': ('view', 'add', 'change', 'delete')},
@@ -31,9 +33,10 @@ PERMISSIONS = {
         {'app_label': 'users', 'model': 'ProfileComment', 'actions': ('view', 'add', 'change', 'delete')},
         {'app_label': 'users', 'model': 'Story', 'actions': ('view', 'add', 'change', 'delete')},
         {'app_label': 'users', 'model': 'StoryComment', 'actions': ('view', 'add', 'change', 'delete')},
-        {'app_label': 'chats', 'model': 'TeamMessages', 'actions': ('view', 'add', 'change', 'delete')},
     ],
     'admin': [
+        {'app_label': 'chats', 'model': 'Room', 'actions': ('view', 'add', 'change', 'delete')},
+        {'app_label': 'chats', 'model': 'Message', 'actions': ('view', 'add', 'change', 'delete')},
         {'app_label': 'events', 'model': 'event', 'actions': ('view', 'add', 'change')},
         {'app_label': 'events', 'model': 'participation', 'actions': ('view', 'change')},
         {'app_label': 'gallery', 'model': 'photo', 'actions': ('view', 'add', 'change')},
@@ -62,7 +65,6 @@ PERMISSIONS = {
         {'app_label': 'users', 'model': 'ProfileComment', 'actions': ('view', 'add', 'change')},
         {'app_label': 'users', 'model': 'Story', 'actions': ('view', 'change')},
         {'app_label': 'users', 'model': 'StoryComment', 'actions': ('view', 'add', 'change', 'delete')},
-        {'app_label': 'chats', 'model': 'TeamMessages', 'actions': ('view', )},
     ],
     'senior': [
         {'app_label': 'schedules', 'model': 'Place', 'actions': ('view', )},
@@ -77,5 +79,6 @@ PERMISSIONS = {
         {'app_label': 'schedules', 'model': 'Shift', 'actions': ('view', )},
         {'app_label': 'schedules', 'model': 'Period', 'actions': ('view', )},
         {'app_label': 'schedules', 'model': 'Day', 'actions': ('view', )},
+
     ],
 }
