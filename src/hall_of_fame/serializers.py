@@ -8,14 +8,11 @@ from users.models import User
 
 
 class HallOfFameBaseSerializer(serializers.ModelSerializer):
-    image = HyperlinkedSorlImageField(
-        '300x300', options={"crop": "center"},
-        source='user.profile.story.image', read_only=True
-    )
     first_name = serializers.CharField(
         source='user.profile.first_name', read_only=True)
     last_name = serializers.CharField(
         source='user.profile.last_name', read_only=True)
+    image = serializers.ReadOnlyField()
 
     class Meta:
         model = HallOfFame
@@ -25,7 +22,6 @@ class HallOfFameBaseSerializer(serializers.ModelSerializer):
 class AdminHallOfFameSerializer(AdminTranslationMixin,
                                 HallOfFameBaseSerializer):
     rating = serializers.IntegerField(source='user.rating', read_only=True)
-
 
     class Meta(HallOfFameBaseSerializer.Meta):
         fields = '__all__'
@@ -45,15 +41,16 @@ class AdminUsersHallOfFameSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(
         source='profile.first_name', read_only=True
     )
-    hall_of_fame = serializers.IntegerField(source='hall_of_fame.id',
-                                            read_only=True)
+    hall_of_fame = serializers.IntegerField(
+        source='hall_of_fame.id', read_only=True
+    )
     is_published = serializers.BooleanField(source='hall_of_fame.is_published')
     image = HyperlinkedSorlImageField(
         '300x300', options={"crop": "center"},
-        source='profile.story.image', read_only=True
+        source='hall_of_fame.image', read_only=True
     )
 
     class Meta:
         model = User
         fields = ('id', 'last_name', 'first_name', 'rating', 'hall_of_fame',
-                  'is_published', 'image',)
+                  'is_published', 'image')

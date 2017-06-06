@@ -5,3 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 class NewsConfig(AppConfig):
     name = 'news'
     verbose_name = _('новости')
+
+    def ready(self):
+        from news import signals

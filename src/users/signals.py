@@ -1,15 +1,13 @@
-from django.db.models.signals import pre_delete, post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
+from core.signals import file_field_delete
 from interviews.models import Interview
 from user_tests.models import UserTest, Test
 from users.models import ProfileAttachment, Profile, User
 
 
-@receiver(pre_delete, sender=ProfileAttachment)
-def attachment_delete(sender, instance, **kwargs):
-    """ Delete attachment from file system """
-    instance.photo.delete(False)
+pre_delete.connect(file_field_delete, ProfileAttachment)
 
 
 @receiver(post_save, sender=User)
