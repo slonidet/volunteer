@@ -26,5 +26,5 @@ urlpatterns = [
     url(r'^notices/', include('notices.urls', namespace='notices')),
     url(r'^schedules/', include('schedules.urls', namespace='schedules')),
     url(r'^hall-of-fame/', include('hall_of_fame.urls', 'hall-of-fame')),
-    url(r'^chats/', include('chats.urls', namespace='chats'))
+    url(r'^chats/', include('chats.urls', namespace='chats')),
 ]

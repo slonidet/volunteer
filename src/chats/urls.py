@@ -1,7 +1,9 @@
-from django.conf.urls import url
+from rest_framework import routers
 
-from chats.views import TeamMessagesView
+from chats.views import RoomViewSet
 
-urlpatterns = [
-    url(r'^(?P<team_id>\d+)/$', TeamMessagesView.as_view(), name='team-messages-list'),
-]
+router = routers.DefaultRouter()
+router.register('rooms', RoomViewSet, base_name='rooms')
+
+
+urlpatterns = [] + router.urls

@@ -162,8 +162,15 @@ def api_root(request, format=None):
         ),
 
         # Chats
-        'chats': reverse('chats:team-messages-list', [1], **params),
-        'admin:chats': reverse('adm:chats:team-messages-list', **params),
+        'chats:rooms': reverse('chats:rooms-list', **params),
+        'chats:rooms:messages': reverse(
+            'chats:rooms-messages', **params, kwargs={'pk': 0}
+        ),
+        'admin:chats:rooms': reverse('adm:chats:rooms-list', **params),
+        'admin:chats:rooms:messages': reverse(
+            'adm:chats:rooms-messages', **params, kwargs={'pk': 0}
+        ),
+
     }
     ordered_links = OrderedDict(sorted(links.items(), key=lambda x: x[0]))
 
