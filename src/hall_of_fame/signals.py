@@ -48,28 +48,33 @@ def event_rating(sender, instance, created, **kwargs):
     user = instance.user
     event = Event.objects.get(participation=instance.id)
 
-    if event.type == Event.EVENT:
-        if instance.is_done:
-            user.rating = F('rating') + 5
-        else:
-            user.rating = F('rating') - 5
+    if not created:
 
-    if event.type == Event.EDUCATIONAL:
-        if instance.is_done:
-            user.rating = F('rating') + 1
-        else:
-            user.rating = F('rating') - 1
+        if event.type == Event.EVENT:
+            if instance.is_done:
+                user.rating = F('rating') + 5
+            else:
+                user.rating = F('rating') - 5
 
-    if event.type == Event.FORUM:
-        if instance.is_done:
-            if instance.status == Participation.STATUS_PARTICIPANT:
-                user.rating = F('rating') + 7
-            if instance.status == Participation.STATUS_VOLUNTEER:
-                user.rating = F('rating') + 10
-        else:
-            if instance.status == Participation.STATUS_PARTICIPANT:
-                user.rating = F('rating') - 7
-            if instance.status == Participation.STATUS_VOLUNTEER:
-                user.rating = F('rating') - 10
+        if event.type == Event.EDUCATIONAL:
+            if instance.is_done:
+                user.rating = F('rating') + 1
+            else:
+                user.rating = F('rating') - 1
 
-    user.save()
+        if event.type == Event.FORUM:
+            if instance.is_done:
+                if instance.status == Participation.STATUS_PARTICIPANT:
+                    user.rating = F('rating') + 7
+                if instance.status == Participation.STATUS_VOLUNTEER:
+                    user.rating = F('rating') + 10
+            else:
+                if instance.status == Participation.STATUS_PARTICIPANT:
+                    user.rating = F('rating') - 7
+                if instance.status == Participation.STATUS_VOLUNTEER:
+                    user.rating = F('rating') - 10
+
+        user.save()
+
+    if created:
+        pass
