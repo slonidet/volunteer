@@ -46,8 +46,4 @@ class Message(models.Model):
         verbose_name_plural = _('Сообщения')
 
     def __str__(self):
-        return 'Message {id} from {sender} in {team}'.format(
-            id=self.id,
-            sender=self.sender,
-            team=self.team
-        )
+        return str(self.id)
