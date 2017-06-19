@@ -16,6 +16,7 @@ class Room(models.Model):
         verbose_name=_('Команда')
     )
     is_active = models.BooleanField(_('чат запущен'), default=True)
+    name = models.CharField(_('имя'), max_length=200, default='default')
 
     class Meta(MetaPermissions):
         verbose_name = _('Комната')

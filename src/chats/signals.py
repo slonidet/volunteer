@@ -9,4 +9,4 @@ from schedules.models import Team
 def create_room(sender, instance, created, **kwargs):
     team = instance
     if created:
-        Room.objects.create(team=team)
+        Room.objects.create(team=team, name=instance.__str__())
