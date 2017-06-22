@@ -185,13 +185,10 @@ CACHES = {
 # https://channels.readthedocs.io/en/stable/
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'asgi_redis.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('localhost', 6379)],
-        },
-        'ROUTING': 'volunteer.routing.channel_routing',
-    }
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "volunteer.routing.channel_routing",
+    },
 }
 
 
