@@ -45,6 +45,7 @@ class Message(models.Model):
     class Meta(MetaPermissions):
         verbose_name = _('Сообщение')
         verbose_name_plural = _('Сообщения')
+        ordering = ['-timestamp', ]
 
     def __str__(self):
         return str(self.id)
