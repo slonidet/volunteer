@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, \
-    UserChangeForm as BaseUserChangeForm, \
+from django.contrib.auth.admin import UserChangeForm as BaseUserChangeForm, \
     UserCreationForm as BaseUserCreationForm
 from import_export.admin import ImportExportActionModelAdmin
 from modeltranslation.admin import TranslationAdmin
@@ -27,7 +26,7 @@ class ProfileInline(admin.StackedInline):
     model = Profile
 
 
-class UserAdmin(BaseUserAdmin):
+class UserAdmin(ImportExportActionModelAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Права доступа'), {'fields': (
