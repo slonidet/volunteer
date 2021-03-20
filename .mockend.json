@@ -9,10 +9,5 @@
   "Comment": {
     "body": "string",
     "post": "Post"
-  },
-  "Adapter": {
-    "name": "string",
-    "serial_number": "string",
-    "code": "string"
   }
 }
