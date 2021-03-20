@@ -1,13 +1,7 @@
 {
-  "Post": {
-    "title": "string",
-    "views": "int",
-    "published": "boolean",
-    "createdAt": "date",
-    "comments": "Comment[]"
+  "Adapter": {
+    "name": "string",
+    "serialNubmer": "string",
+    "code": "string",
   },
-  "Comment": {
-    "body": "string",
-    "post": "Post"
-  }
 }
