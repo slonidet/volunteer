@@ -7,8 +7,8 @@
     "comments": "Comment[]"
   },
   "Adapter": {
+    "id": "int",
     "name": "string",
-    "serial_number": "string",
     "code": "string"
   }
 }
