@@ -10,7 +10,7 @@ django-import-export==0.5.1
 
 pytz==2016.10
 python-dateutil==2.6.0
-pillow==3.4.2
+pillow==8.2.0
 redis==2.10.5
 celery==4.0.2
 sorl-thumbnail==12.3
